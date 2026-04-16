@@ -435,14 +435,14 @@ function render(txns, mfH, fds, banks, xirrH) {
   const booked   = mfH.reduce((s,f)=>s+(+f.booked_pl),0)   + fds.reduce((s,f)=>s+(+f.booked_pl),0);
   const totalPL  = notional+booked;
 
-  // XIRR from transactions
-  // XIRR — overall from full transaction history
-  const allCFs = [...txns.map(t=>({date:t.transaction_date, amount:+t.amount})), {date:today(), amount:total}];
-  const xirrAll = calcXirr(allCFs);
-  const xirrMF  = mfTotal > 0 ? mfH.reduce((s,f)=>s+(+f.xirr_pct * +f.current_value),0) / mfTotal : 0;
-  const xirrFD  = fdTotal > 0 ? fds.reduce((s,f)=>s+(+(f.xirr_pct||7.40) * +f.current_value),0) / fdTotal : 0;
+  // XIRR — read from xirr_history (most recent logged snapshot)
+  // Calculated externally via Python scipy and stored in Supabase
+  const latestXirr = xirrH && xirrH.length > 0 ? xirrH[xirrH.length - 1] : null;
+  const xirrAll = latestXirr ? +latestXirr.overall_xirr / 100 : null;
+  const xirrMF  = latestXirr ? +latestXirr.mf_xirr : 0;
+  const xirrFD  = latestXirr ? +latestXirr.fd_xirr : 0;
 
-  _xirrs = {overall:xirrAll, mf:xirrMF/100, fd:xirrFD/100};
+  _xirrs = {overall: xirrAll, mf: xirrMF/100, fd: xirrFD/100};
 
   // MoM
   const prevMonthEnd = new Date(new Date().getFullYear(), new Date().getMonth(), 0).toISOString().slice(0,10);
@@ -472,6 +472,8 @@ function render(txns, mfH, fds, banks, xirrH) {
   document.getElementById('xhMFW').textContent     = `${(mfTotal/total*100).toFixed(1)}%`;
   document.getElementById('xhFDW').textContent     = `${(fdTotal/total*100).toFixed(1)}%`;
   document.getElementById('footerXirr').textContent = xirrAll ? `XIRR ${(xirrAll*100).toFixed(2)}% · MF ${xirrMF.toFixed(2)}% · FD ${xirrFD.toFixed(2)}%` : '';
+  // Log XIRR button now uses stored values
+  if(latestXirr) document.getElementById('xirrHistCount').textContent = `Last logged ${fmtD(latestXirr.logged_at)}`;
 
   // ── Bank balances panel
   const syncDate = banks.length ? banks[0].as_of_date : null;
