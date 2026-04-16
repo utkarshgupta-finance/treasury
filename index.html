@@ -226,22 +226,8 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     </div>
   </div>
 
-  <!-- XIRR hero -->
-  <div class="xirr-hero">
-    <div>
-      <div class="xh-label">Portfolio XIRR — Since Inception</div>
-      <div class="xh-val" id="xhVal">—</div>
-    </div>
-    <div class="xh-grid">
-      <div class="xh-sub"><div class="xh-sub-label">Mutual Funds</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">transaction-calculated</div></div>
-      <div class="xh-sub"><div class="xh-sub-label">Fixed Deposits</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">transaction-calculated</div></div>
-      <div class="xh-sub"><div class="xh-sub-label">MF Weight</div><div class="xh-sub-val" id="xhMFW">—</div><div class="xh-sub-tag">of portfolio</div></div>
-      <div class="xh-sub"><div class="xh-sub-label">FD Weight</div><div class="xh-sub-val" id="xhFDW">—</div><div class="xh-sub-tag">of portfolio</div></div>
-    </div>
-  </div>
-
-  <!-- Row: bank + MF + FD -->
-  <div class="row row-3" style="margin-bottom:16px">
+  <!-- Row: bank + XIRR side by side -->
+  <div class="row row-2" style="margin-bottom:16px">
     <div class="panel">
       <div class="ph">
         <span class="ph-title">Bank Balances</span>
@@ -250,6 +236,23 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <div class="pb" id="bankBalBody" style="padding:12px"></div>
     </div>
 
+    <!-- XIRR hero sits beside bank balances -->
+    <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch">
+      <div>
+        <div class="xh-label">Portfolio XIRR — Since Inception</div>
+        <div class="xh-val" id="xhVal">—</div>
+      </div>
+      <div class="xh-grid">
+        <div class="xh-sub"><div class="xh-sub-label">Mutual Funds</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
+        <div class="xh-sub"><div class="xh-sub-label">Fixed Deposits</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
+        <div class="xh-sub"><div class="xh-sub-label">MF Weight</div><div class="xh-sub-val" id="xhMFW">—</div><div class="xh-sub-tag">of portfolio</div></div>
+        <div class="xh-sub"><div class="xh-sub-label">FD Weight</div><div class="xh-sub-val" id="xhFDW">—</div><div class="xh-sub-tag">of portfolio</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row: MF + FD side by side -->
+  <div class="row row-2" style="margin-bottom:16px">
     <div class="panel">
       <div class="ph"><span class="ph-title">Mutual Funds</span><span class="ph-tag" id="mfTag">—</span></div>
       <div class="pb" id="mfBody"></div>
@@ -389,7 +392,7 @@ async function loadAll() {
 
     const [txns, mfH, fdH, fdD, banks, xirrH, lots] = await Promise.all([
       sb('transactions', 'select=transaction_date,description,asset_type,transaction_type,amount&order=transaction_date.asc,id.asc'),
-      sb('mf_holdings_latest', 'select=fund_name,category,current_value,first_buy_date,booked_pl,notional_pl,xirr_pct&order=current_value.desc'),
+      sb('mf_holdings_latest', 'select=fund_name,category,current_value,current_nav,first_buy_date,booked_pl,notional_pl,xirr_pct&order=current_value.desc'),
       sb('fd_holdings_latest', 'select=bank,fd_number,principal,current_value,status,booked_pl,notional_pl&status=eq.Active&order=bank.asc,fd_number.asc'),
       sb('fd_details', 'select=bank,fd_number,interest_rate,start_date,maturity_date,status'),
       sb('bank_balances_latest', 'select=bank_name,account_number,balance,as_of_date&order=balance.desc'),
@@ -488,7 +491,8 @@ function render(txns, mfH, fds, banks, xirrH) {
       </div></div>`
     : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
-  // ── MF — collapsible with invested / current / P&L
+  // ── MF — collapsed shows name + invested + current + profit + xirr
+  //         expanded shows per-tranche: buy date, units, buy nav, current nav, buy value, profit, xirr
   const mfMax = Math.max(...mfH.map(f=>+f.current_value));
   document.getElementById('mfTag').textContent = cr(mfTotal);
   document.getElementById('mfBody').innerHTML = mfH.map((f,i)=>{
@@ -497,120 +501,187 @@ function render(txns, mfH, fds, banks, xirrH) {
     const rule    = rk ? HOLDING_RULES[rk] : null;
     const held    = days(f.first_buy_date, today());
     const invested = +f.current_value - +f.notional_pl;
-    const plPct   = ((+f.notional_pl / invested)*100).toFixed(1);
+    const profit   = +f.notional_pl;
+    const plPct    = invested > 0 ? ((profit/invested)*100).toFixed(1) : '0.0';
+    const curNav   = +f.current_nav || 0;
     let warn = '';
     if(rule && held>rule.max) {
       warn = `<span class="warn ${rule.sev(held)}">⚠ ${held}d · ideal ${rule.str}</span>`;
     }
     const fundId = `fund-${i}`;
     const lots   = _mfLots[f.fund_name]||[];
-    const lotsHtml = `
+
+    // Per-tranche: current value = units_held * current_nav
+    // Per-tranche profit = current_value - cost_amount
+    // Per-tranche XIRR: simple annualised return from buy date to today
+    const trancheRows = lots.map(l=>{
+      const trancheCurVal = (+l.units_held) * curNav;
+      const trancheProfit = trancheCurVal - (+l.cost_amount);
+      const trancheDays   = days(l.purchase_date, today());
+      const trancheXirr   = trancheDays > 0 && +l.cost_amount > 0
+        ? ((Math.pow(trancheCurVal / +l.cost_amount, 365/trancheDays) - 1)*100).toFixed(1)
+        : '—';
+      return `<tr style="border-top:1px solid var(--line);font-size:11px">
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;color:var(--muted)">${fmtD(l.purchase_date)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">${(+l.units_held).toFixed(3)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">₹${(+l.purchase_nav).toFixed(2)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--blue)">₹${curNav.toFixed(2)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">${cr(+l.cost_amount)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--green);font-weight:600">+${cr(trancheProfit)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--gold);font-weight:600">${trancheXirr}%</td>
+      </tr>`;
+    }).join('');
+
+    const expandHtml = `
       <div class="lots-panel" id="${fundId}">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 12px;background:#F8FAFC;border-top:1px solid var(--line)">
-          <div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)">
+          <div style="background:#F8FAFC;padding:10px 12px">
             <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Invested</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(invested)}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)">${cr(invested)}</div>
           </div>
-          <div>
+          <div style="background:#F8FAFC;padding:10px 12px">
             <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Current Value</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(+f.current_value)}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)">${cr(+f.current_value)}</div>
           </div>
-          <div>
+          <div style="background:#F8FAFC;padding:10px 12px">
             <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Unrealised P&L</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)">+${cr(+f.notional_pl)} (${plPct}%)</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green)">+${cr(profit)} (${plPct}%)</div>
           </div>
         </div>
         ${lots.length ? `
-        <div style="border-top:1px solid var(--line)">
-          <div style="display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 12px;background:var(--bg);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">
-            <span>Buy Date</span><span>Units</span><span>Buy NAV</span><span style="text-align:right">Cost</span>
-          </div>
-          ${lots.map(l=>`
-          <div style="display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 12px;border-top:1px solid var(--line);font-size:11px">
-            <span style="font-family:'DM Mono',monospace;color:var(--muted)">${fmtD(l.purchase_date)}</span>
-            <span style="font-family:'DM Mono',monospace;color:var(--ink)">${(+l.units_held).toFixed(3)}</span>
-            <span style="font-family:'DM Mono',monospace;color:var(--ink)">₹${(+l.purchase_nav).toFixed(2)}</span>
-            <span style="font-family:'DM Mono',monospace;color:var(--ink);text-align:right">${cr(+l.cost_amount)}</span>
-          </div>`).join('')}
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:11px">
+            <thead><tr style="background:var(--ink)">
+              <th style="padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Buy Date</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Units</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Buy NAV</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Cur NAV</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Buy Value</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Profit</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">XIRR</th>
+            </tr></thead>
+            <tbody>${trancheRows}</tbody>
+          </table>
         </div>` : ''}
       </div>`;
-    return `<div class="alloc-item">
-      <div class="alloc-top">
-        <span class="alloc-name" onclick="toggleLots('${fundId}','icon-${i}')">
-          <span class="expand-icon" id="icon-${i}">▶</span>
-          ${f.fund_name.replace(' - Reg - Growth','').replace(' Fund','')}
-        </span>
-        <span class="alloc-val">${cr(+f.current_value)}</span>
+
+    return `<div style="border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;cursor:pointer" onclick="toggleLots('${fundId}','icon-${i}')">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
+            <span class="expand-icon" id="icon-${i}">▶</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">${f.fund_name.replace(' - Reg - Growth','').replace(' Fund','')}</span>
+            <span style="font-size:10px;font-weight:600;padding:1px 6px;border-radius:2px;background:var(--bg);color:var(--muted)">${f.category}</span>
+            ${warn}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-left:18px">
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(invested)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Current</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(+f.current_value)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Profit</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)">+${cr(profit)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">XIRR</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)">${f.xirr_pct}%</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="alloc-bar-bg"><div class="alloc-bar-fill" style="width:${(+f.current_value/mfMax*100).toFixed(1)}%;background:${COLORS[i]}"></div></div>
-      <div class="alloc-footer">
-        <span class="alloc-cat">${f.category} · ${held}d held · XIRR ${f.xirr_pct}%</span>
-        ${warn}
-      </div>
-      ${lotsHtml}
+      ${expandHtml}
     </div>`;
   }).join('');
 
-  // ── FD — collapsible rows with invested / current / P&L
+  // ── FD — one row per bank (grouped), expanded shows individual FDs
   document.getElementById('fdTag').textContent = cr(fdTotal);
-  document.getElementById('fdBody').innerHTML = fds.map((fd,i)=>{
-    const fdId     = `fd-${i}`;
-    const invested = +fd.principal;
-    const gain     = +fd.current_value - invested;
-    const gainPct  = ((gain/invested)*100).toFixed(1);
-    const dtm      = fd.maturity_date ? days(today(), fd.maturity_date) : null;
-    return `<div style="border:1px solid #BBF7D0;background:#F0FDF4;border-radius:4px;margin-bottom:10px;overflow:hidden">
-      <div style="padding:13px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onclick="toggleLots('${fdId}','fdicon-${i}')">
+
+  // Group FDs by bank
+  const fdByBank = {};
+  fds.forEach(fd => {
+    if(!fdByBank[fd.bank]) fdByBank[fd.bank] = [];
+    fdByBank[fd.bank].push(fd);
+  });
+
+  document.getElementById('fdBody').innerHTML = Object.entries(fdByBank).map(([bank, bankFds], bi)=>{
+    const bankInvested = bankFds.reduce((s,f)=>s+(+f.principal),0);
+    const bankCurrent  = bankFds.reduce((s,f)=>s+(+f.current_value),0);
+    const bankGain     = bankCurrent - bankInvested;
+    const bankGainPct  = ((bankGain/bankInvested)*100).toFixed(1);
+    const fdId         = `fd-bank-${bi}`;
+    const dtm          = bankFds[0]?.maturity_date ? days(today(), bankFds[0].maturity_date) : null;
+
+    const individualFds = bankFds.map((fd,j)=>{
+      const gain    = +fd.current_value - +fd.principal;
+      const gainPct = ((gain/+fd.principal)*100).toFixed(1);
+      return `<div style="display:grid;grid-template-columns:80px 1fr 1fr 1fr 1fr 1fr;gap:8px;padding:8px 14px;border-top:1px solid #BBF7D0;font-size:11px;background:#E8FAF0">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">${fd.fd_number}</div>
         <div>
-          <div style="display:flex;align-items:center;gap:7px">
-            <span class="expand-icon" id="fdicon-${i}">▶</span>
-            <span style="font-size:13px;font-weight:700;color:var(--ink)">${fd.bank}</span>
-            <span style="font-size:10px;font-weight:600;color:var(--muted)">${fd.fd_number}</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;padding-left:18px">
-            ${fd.interest_rate||7.40}% p.a.
-            ${dtm!==null ? `· <span style="color:var(--amber);font-weight:600">${dtm}d to maturity</span>` : ''}
-          </div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--ink)">${cr(+fd.principal)}</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);letter-spacing:-.5px">${cr(+fd.current_value)}</div>
-          <div style="font-size:11px;color:var(--green);font-family:'DM Mono',monospace;font-weight:600">+${cr(gain)}</div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Current</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--ink)">${cr(+fd.current_value)}</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Interest</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">+${cr(gain)}</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Rate</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${fd.interest_rate||7.4}% p.a.</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Matures</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${fd.maturity_date?fmtD(fd.maturity_date):'—'}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div style="border:1px solid #BBF7D0;background:#F0FDF4;border-radius:4px;margin-bottom:10px;overflow:hidden">
+      <!-- Collapsed row -->
+      <div style="padding:13px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start" onclick="toggleLots('${fdId}','fdicon-${bi}')">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+            <span class="expand-icon" id="fdicon-${bi}">▶</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">${bank}</span>
+            <span style="font-size:10px;color:var(--muted)">${bankFds.length} FD${bankFds.length>1?'s':''}</span>
+            ${dtm!==null?`<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtm}d to maturity</span>`:''}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-left:18px">
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(bankInvested)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Current</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(bankCurrent)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Interest Earned</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)">+${cr(bankGain)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Return</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)">${bankGainPct}%</div>
+            </div>
+          </div>
         </div>
       </div>
+      <!-- Expanded: individual FDs -->
       <div class="lots-panel" id="${fdId}">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:10px 14px;background:#E8FAF0;border-top:1px solid #BBF7D0">
-          <div>
-            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px">Invested</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(invested)}</div>
-          </div>
-          <div>
-            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px">Current Value</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(+fd.current_value)}</div>
-          </div>
-          <div>
-            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px">Unrealised P&L</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)">+${cr(gain)} (${gainPct}%)</div>
-          </div>
-          <div>
-            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px">Maturity Date</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${fd.maturity_date ? fmtD(fd.maturity_date) : '—'}</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 14px 12px;background:#E8FAF0;border-top:1px solid #BBF7D0">
-          <div>
-            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px">Start Date</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--ink)">${fd.start_date ? fmtD(fd.start_date) : '—'}</div>
-          </div>
-          <div>
-            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px">XIRR</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)">${fd.xirr_pct||7.40}%</div>
-          </div>
-        </div>
+        ${individualFds}
       </div>
     </div>`;
   }).join('');
 
-  // ── Old bank panel (remove if exists)
+  // ── Old bank panel (hide if exists)
   const oldBankPanel = document.getElementById('bankPanel');
   if(oldBankPanel) oldBankPanel.style.display='none';
 
