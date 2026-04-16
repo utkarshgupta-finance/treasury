@@ -356,15 +356,27 @@ const today = () => new Date().toISOString().slice(0,10);
 
 // ── XIRR ─────────────────────────────────────────────────────────
 function calcXirr(cfs) {
-  const s = [...cfs].sort((a,b)=>a.date.localeCompare(b.date));
+  const s  = [...cfs].sort((a,b)=>a.date.localeCompare(b.date));
   const d0 = new Date(s[0].date);
   const ds = s.map(c=>(new Date(c.date)-d0)/86400000);
   const am = s.map(c=>c.amount);
-  const npv = r => am.reduce((t,a,i)=>t+a/Math.pow(1+r,ds[i]/365),0);
-  let lo=-0.9999,hi=10;
-  if(npv(lo)*npv(hi)>0) return null;
-  for(let i=0;i<300;i++){const m=(lo+hi)/2;if(hi-lo<1e-9)return m;npv(m)>0?lo=m:hi=m;}
-  return (lo+hi)/2;
+
+  const npv  = r => am.reduce((t,a,i) => t + a / Math.pow(1+r, ds[i]/365), 0);
+  const dnpv = r => am.reduce((t,a,i) => t - (ds[i]/365) * a / Math.pow(1+r, ds[i]/365+1), 0);
+
+  // Newton-Raphson starting from 0.1 (10%) — stays near realistic returns
+  let r = 0.1;
+  for (let i = 0; i < 100; i++) {
+    const f  = npv(r);
+    const df = dnpv(r);
+    if (Math.abs(df) < 1e-12) break;
+    const rNew = r - f/df;
+    // Keep within realistic bounds: -50% to +200%
+    r = Math.max(-0.5, Math.min(2.0, rNew));
+    if (Math.abs(rNew - r) < 1e-8 && Math.abs(f) < 1) return r;
+    if (Math.abs(f) < 0.01) return r;
+  }
+  return r;
 }
 
 // State
