@@ -192,7 +192,16 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
   <!-- KPIs -->
   <div class="kpi-strip">
     <div class="kpi primary">
-      <div class="kpi-label">Total Portfolio</div>
+      <div class="kpi-label">Total Cash Position</div>
+      <div class="kpi-value" id="kCash">—</div>
+      <div class="kpi-sub" id="kCashSub">Treasury + Bank</div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <span class="badge bb" id="kTreasury">Treasury —</span>
+        <span class="badge ba" id="kBank">Bank —</span>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Treasury Portfolio</div>
       <div class="kpi-value" id="kTotal">—</div>
       <div class="kpi-sub" id="kMom">vs last month</div>
       <div style="display:flex;gap:6px;margin-top:8px">
@@ -203,7 +212,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <div class="kpi">
       <div class="kpi-label">XIRR (Inception)</div>
       <div class="kpi-value" style="color:var(--gold)" id="kXirr">—</div>
-      <div class="kpi-sub">Since inception · annualised</div>
+      <div class="kpi-sub">Treasury only · annualised</div>
       <span class="badge bg">Annualised</span>
     </div>
     <div class="kpi">
@@ -216,20 +225,6 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <div class="kpi-value" style="color:var(--green)" id="kTotalPL">—</div>
       <div class="kpi-sub" id="kPLSub">Booked + unrealised</div>
     </div>
-    <div class="kpi">
-      <div class="kpi-label">Total Cash Position</div>
-      <div class="kpi-value" id="kCash">—</div>
-      <div class="kpi-sub" id="kCashSub">Portfolio + bank</div>
-    </div>
-  </div>
-
-  <!-- Total liquidity strip -->
-  <div class="cash-strip" id="cashStrip" style="display:none">
-    <div>
-      <div class="cs-label">Total Liquidity</div>
-      <div class="cs-val" id="csTotal">—</div>
-    </div>
-    <div class="cs-breakdown" id="csBreakdown"></div>
   </div>
 
   <!-- XIRR hero -->
@@ -246,14 +241,14 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     </div>
   </div>
 
-  <!-- Row: alloc + MF + FD -->
+  <!-- Row: bank + MF + FD -->
   <div class="row row-3" style="margin-bottom:16px">
     <div class="panel">
-      <div class="ph"><span class="ph-title">Portfolio Allocation</span><span class="ph-tag">By Value</span></div>
-      <div class="pb">
-        <div class="chart-wrap" style="height:180px"><canvas id="allocChart" role="img" aria-label="Allocation"></canvas></div>
-        <div id="allocLegend" style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px"></div>
+      <div class="ph">
+        <span class="ph-title">Bank Balances</span>
+        <span class="ph-tag" id="bankSyncTag">—</span>
       </div>
+      <div class="pb" id="bankBalBody" style="padding:12px"></div>
     </div>
 
     <div class="panel">
@@ -265,12 +260,6 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <div class="ph"><span class="ph-title">Active Fixed Deposits</span><span class="ph-tag" id="fdTag">—</span></div>
       <div class="pb" id="fdBody" style="padding:12px"></div>
     </div>
-  </div>
-
-  <!-- Bank balances -->
-  <div class="panel" id="bankPanel" style="margin-bottom:16px;display:none">
-    <div class="ph"><span class="ph-title">Bank Balances</span><span class="ph-tag" id="bankTag">—</span></div>
-    <div class="pb"><div class="bank-grid" id="bankGrid"></div></div>
   </div>
 
   <!-- Charts -->
@@ -434,15 +423,11 @@ function render(txns, mfH, fds, banks, xirrH) {
   const totalPL  = notional+booked;
 
   // XIRR from transactions
-  const cfsNoTerm = txns.map(t=>({date:t.transaction_date, amount:+t.amount}));
-  const allCFs = [...cfsNoTerm, {date:today(), amount:total}];
-  const mfCFs  = [...cfsNoTerm.filter(t=>txns.find(x=>x.transaction_date===t.date&&x.amount===t.amount&&x.asset_type==='Mutual Fund')), {date:today(),amount:mfTotal}];
-  const fdCFs  = [...cfsNoTerm.filter(t=>txns.find(x=>x.transaction_date===t.date&&x.amount===t.amount&&x.asset_type==='Fixed Deposit')), {date:today(),amount:fdTotal}];
-
-  // Simpler: just use the overall XIRR calc
+  // XIRR — overall from full transaction history
+  const allCFs = [...txns.map(t=>({date:t.transaction_date, amount:+t.amount})), {date:today(), amount:total}];
   const xirrAll = calcXirr(allCFs);
-  const xirrMF  = mfH.reduce((s,f)=>s+(+f.xirr_pct * +f.current_value),0) / mfTotal;
-  const xirrFD  = fds.reduce((s,f)=>s+(+(f.xirr_pct||7.40) * +f.current_value),0) / fdTotal;
+  const xirrMF  = mfTotal > 0 ? mfH.reduce((s,f)=>s+(+f.xirr_pct * +f.current_value),0) / mfTotal : 0;
+  const xirrFD  = fdTotal > 0 ? fds.reduce((s,f)=>s+(+(f.xirr_pct||7.40) * +f.current_value),0) / fdTotal : 0;
 
   _xirrs = {overall:xirrAll, mf:xirrMF/100, fd:xirrFD/100};
 
@@ -464,8 +449,10 @@ function render(txns, mfH, fds, banks, xirrH) {
   document.getElementById('kUnreal').textContent  = cr(notional);
   document.getElementById('kTotalPL').textContent = cr(totalPL);
   document.getElementById('kPLSub').textContent   = `Booked ${cr(booked)} + Notional ${cr(notional)}`;
-  document.getElementById('kCash').textContent    = cr(total+bankTotal);
-  document.getElementById('kCashSub').textContent = `Portfolio + Bank ${cr(bankTotal)}`;
+  // Total cash = treasury + bank (first card)
+  document.getElementById('kCash').textContent    = cr(total + bankTotal);
+  document.getElementById('kTreasury').textContent = `Treasury ${cr(total)}`;
+  document.getElementById('kBank').textContent    = `Bank ${cr(bankTotal)}`;
   document.getElementById('xhVal').textContent    = xirrAll ? `${(xirrAll*100).toFixed(2)}%` : '—';
   document.getElementById('xhMF').textContent     = `${xirrMF.toFixed(2)}%`;
   document.getElementById('xhFD').textContent     = `${xirrFD.toFixed(2)}%`;
@@ -473,29 +460,22 @@ function render(txns, mfH, fds, banks, xirrH) {
   document.getElementById('xhFDW').textContent    = `${(fdTotal/total*100).toFixed(1)}%`;
   document.getElementById('footerXirr').textContent = xirrAll ? `XIRR ${(xirrAll*100).toFixed(2)}% · MF ${xirrMF.toFixed(2)}% · FD ${xirrFD.toFixed(2)}%` : '';
 
-  // Cash strip
-  if(bankTotal>0) {
-    document.getElementById('cashStrip').style.display='flex';
-    document.getElementById('csTotal').textContent = cr(total+bankTotal);
-    const hsbcUK = banks.find(b=>b.bank_name==='HSBC UK')?.balance||0;
-    const india  = bankTotal - hsbcUK;
-    document.getElementById('csBreakdown').innerHTML = `
-      <div class="cs-item"><div class="cs-item-label">Treasury</div><div class="cs-item-val">${cr(total)}</div></div>
-      <div class="cs-item"><div class="cs-item-label">India Bank</div><div class="cs-item-val">${cr(india)}</div></div>
-      <div class="cs-item"><div class="cs-item-label">HSBC UK</div><div class="cs-item-val">${cr(hsbcUK)}</div></div>`;
-  }
-
-  // ── Alloc donut
-  const allocFunds = [...mfH.map(f=>({name:f.fund_name.replace(' - Reg - Growth','').replace(' Fund',''),val:+f.current_value})),{name:'HDFC FD',val:fdTotal}];
-  if(window._ac) window._ac.destroy();
-  window._ac = new Chart(document.getElementById('allocChart'),{
-    type:'doughnut',
-    data:{labels:allocFunds.map(f=>f.name),datasets:[{data:allocFunds.map(f=>f.val),backgroundColor:COLORS,borderWidth:0,hoverOffset:4}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${cr(c.raw)}`}}}}
-  });
-  document.getElementById('allocLegend').innerHTML = allocFunds.map((f,i)=>
-    `<span style="font-size:10px;display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:1px;background:${COLORS[i]};display:inline-block"></span>${f.name.length>16?f.name.slice(0,15)+'…':f.name} ${(f.val/total*100).toFixed(1)}%</span>`
-  ).join('');
+  // ── Bank balances panel (replaces allocation donut)
+  const syncDate = banks.length ? banks[0].as_of_date : null;
+  const syncTime = syncDate ? `Synced ${fmtD(syncDate)}` : 'No data';
+  document.getElementById('bankSyncTag').textContent = syncTime;
+  document.getElementById('bankBalBody').innerHTML = banks.length ?
+    `<div style="display:flex;flex-direction:column;gap:8px">` +
+    banks.map(b=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--bg);border-radius:3px;border:1px solid var(--line)">
+        <span style="font-size:12px;font-weight:600;color:var(--ink)">${b.bank_name}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--ink)">${cr(+b.balance)}</span>
+      </div>`).join('') +
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--ink);border-radius:3px;margin-top:2px">
+        <span style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em">Total</span>
+        <span style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--gold)">${cr(bankTotal)}</span>
+      </div></div>`
+    : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
   // ── MF alloc bars with lots drilldown
   const mfMax = Math.max(...mfH.map(f=>+f.current_value));
