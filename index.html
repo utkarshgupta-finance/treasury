@@ -265,32 +265,42 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
   </div>
 
   <!-- Charts -->
-  <div class="row row-2" style="margin-bottom:16px">
-    <div class="panel">
-      <div class="ph"><span class="ph-title">Running Net Capital Deployed</span><span class="ph-tag">₹ Crore</span></div>
-      <div class="pb"><div class="chart-wrap" style="height:230px"><canvas id="runChart" role="img" aria-label="Running capital"></canvas></div></div>
+  <!-- Cash Position chart with 3 tabs -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="ph" style="align-items:center">
+      <span class="ph-title">Cash Position</span>
+      <div style="display:flex;gap:4px;margin-left:16px">
+        <button onclick="setCashTab('overall')" id="tab-overall" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer;letter-spacing:.04em">Overall</button>
+        <button onclick="setCashTab('treasury')" id="tab-treasury" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Treasury</button>
+        <button onclick="setCashTab('bank')" id="tab-bank" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Bank</button>
+      </div>
+      <span class="ph-tag" style="margin-left:auto">₹ Crore · end-of-month</span>
     </div>
+    <div class="pb"><div class="chart-wrap" style="height:250px"><canvas id="cashPosChart" role="img" aria-label="Cash position"></canvas></div></div>
+  </div>
+
+  <div class="row row-2" style="margin-bottom:16px">
     <div class="panel">
       <div class="ph"><span class="ph-title">Monthly Cashflows</span><span class="ph-tag">₹ Crore</span></div>
       <div class="pb"><div class="chart-wrap" style="height:230px"><canvas id="moChart" role="img" aria-label="Monthly flows"></canvas></div></div>
     </div>
-  </div>
 
-  <!-- XIRR History -->
-  <div class="panel" style="margin-bottom:16px">
-    <div class="ph">
-      <span class="ph-title">XIRR Trend</span>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="ph-tag" id="xirrHistCount">No snapshots yet</span>
-        <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">Auto-logged nightly at 11:59 PM IST on data refresh days</span>
+    <!-- XIRR History -->
+    <div class="panel">
+      <div class="ph">
+        <span class="ph-title">XIRR Trend</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="ph-tag" id="xirrHistCount">No snapshots yet</span>
+          <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">Auto-logged nightly at 11:59 PM IST on data refresh days</span>
+        </div>
       </div>
-    </div>
-    <div id="xirrHistBody" class="pb">
-      <div id="xirrEmpty" style="text-align:center;padding:28px;color:var(--muted);font-size:13px">
-        No XIRR history yet. Click <strong>+ Log Today's XIRR</strong> to record the first snapshot.
-      </div>
-      <div class="chart-wrap" style="height:220px;display:none" id="xirrChartWrap">
-        <canvas id="xirrChart" role="img" aria-label="XIRR trend"></canvas>
+      <div id="xirrHistBody" class="pb">
+        <div id="xirrEmpty" style="text-align:center;padding:28px;color:var(--muted);font-size:13px">
+          No XIRR history yet — auto-logged nightly when data is refreshed.
+        </div>
+        <div class="chart-wrap" style="height:175px;display:none" id="xirrChartWrap">
+          <canvas id="xirrChart" role="img" aria-label="XIRR trend"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -388,7 +398,7 @@ async function loadAll() {
   try {
     document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Connecting to Supabase...`;
 
-    const [txns, mfH, fdH, fdD, banks, xirrH, lots] = await Promise.all([
+    const [txns, mfH, fdH, fdD, banks, xirrH, lots, cashPos] = await Promise.all([
       sb('transactions', 'select=transaction_date,description,asset_type,transaction_type,amount&order=transaction_date.asc,id.asc'),
       sb('mf_holdings_latest', 'select=fund_name,category,current_value,current_nav,first_buy_date,booked_pl,notional_pl,xirr_pct&order=current_value.desc'),
       sb('fd_holdings_latest', 'select=bank,fd_number,principal,current_value,status,booked_pl,notional_pl&status=eq.Active&order=bank.asc,fd_number.asc'),
@@ -396,6 +406,7 @@ async function loadAll() {
       sb('bank_balances_latest', 'select=bank_name,account_number,balance,as_of_date&order=balance.desc'),
       sb('xirr_history', 'select=logged_at,overall_xirr,mf_xirr,fd_xirr,total_portfolio&order=logged_at.asc'),
       sb('mf_active_lots', 'select=fund_name,purchase_date,units_held,purchase_nav,cost_amount,folio_number&order=fund_name.asc,purchase_date.asc'),
+      sb('cash_position_chart', 'select=chart_date,label,bank_total,treasury_total,overall_total,data_type&order=chart_date.asc'),
     ]);
 
     // Group lots by fund
@@ -409,7 +420,7 @@ async function loadAll() {
     fdD.forEach(d=>fdDMap[`${d.bank}|${d.fd_number}`]=d);
     const fds = fdH.map(h=>({...h,...(fdDMap[`${h.bank}|${h.fd_number}`]||{})}));
 
-    render(txns, mfH, fds, banks, xirrH);
+    render(txns, mfH, fds, banks, xirrH, cashPos);
 
     document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Live · Supabase`;
     document.getElementById('dataTs').textContent = `Refreshed ${new Date().toLocaleTimeString()}`;
@@ -425,7 +436,7 @@ async function loadAll() {
   }
 }
 
-function render(txns, mfH, fds, banks, xirrH) {
+function render(txns, mfH, fds, banks, xirrH, cashPos) {
   const mfTotal  = mfH.reduce((s,f)=>s+(+f.current_value),0);
   const fdTotal  = fds.reduce((s,f)=>s+(+f.current_value),0);
   const total    = mfTotal+fdTotal;
@@ -685,18 +696,10 @@ function render(txns, mfH, fds, banks, xirrH) {
   const oldBankPanel = document.getElementById('bankPanel');
   if(oldBankPanel) oldBankPanel.style.display='none';
 
-  // ── Running capital chart
-  let run=0; const runMap={};
-  txns.forEach(t=>{ run-=(+t.amount); runMap[t.transaction_date]=run; });
-  const rDates=Object.keys(runMap).sort();
-  if(window._rc) window._rc.destroy();
-  window._rc = new Chart(document.getElementById('runChart'),{
-    type:'line',
-    data:{labels:rDates.map(d=>{const[y,m,day]=d.split('-');return`${day}/${m}/${y.slice(2)}`}),
-      datasets:[{data:rDates.map(d=>+(runMap[d]/1e7).toFixed(3)),borderColor:'#1447A6',backgroundColor:'rgba(20,71,166,.07)',fill:true,tension:.3,pointRadius:3,pointBackgroundColor:'#1447A6',pointBorderColor:'#fff',pointBorderWidth:2,borderWidth:2}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ₹${c.raw.toFixed(2)} Cr`}}},
-      scales:{x:{ticks:{font:{family:'DM Mono',size:9},maxRotation:45},grid:{display:false}},y:{ticks:{font:{family:'DM Mono',size:10},callback:v=>`₹${v}Cr`},grid:{color:'#F1F5F9'}}}}
-  });
+  // ── Cash Position chart (3 tabs: Overall / Treasury / Bank)
+  window._cashPosData = cashPos || [];
+  window._cashPosTab  = 'overall';
+  renderCashPosChart();
 
   // ── Monthly cashflow chart
   const mIn={},mOut={};
@@ -763,6 +766,80 @@ function renderXirrHistory(rows) {
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw?.toFixed(2)}%`}}},
       scales:{x:{ticks:{font:{family:'DM Mono',size:9}},grid:{display:false}},y:{ticks:{font:{family:'DM Mono',size:10},callback:v=>`${v}%`},grid:{color:'#F1F5F9'}}}}
+  });
+}
+
+// ── CASH POSITION CHART ──────────────────────────────────────────
+function setCashTab(tab) {
+  window._cashPosTab = tab;
+  ['overall','treasury','bank'].forEach(t => {
+    const btn = document.getElementById(`tab-${t}`);
+    if(btn) {
+      const active = t === tab;
+      btn.style.background     = active ? 'var(--ink)'   : 'var(--white)';
+      btn.style.color          = active ? 'var(--white)' : 'var(--muted)';
+      btn.style.borderColor    = active ? 'var(--ink)'   : 'var(--line)';
+    }
+  });
+  renderCashPosChart();
+}
+
+function renderCashPosChart() {
+  const data  = window._cashPosData || [];
+  const tab   = window._cashPosTab  || 'overall';
+  const labels = data.map(d => d.label);
+  const vals   = data.map(d => {
+    const v = tab === 'overall'  ? +d.overall_total  :
+              tab === 'treasury' ? +d.treasury_total  :
+                                   +d.bank_total;
+    return +(v/1e7).toFixed(2);
+  });
+
+  // Mark the live data point differently
+  const pointColors = data.map(d => d.data_type === 'live' ? '#C9962B' : '#1447A6');
+  const pointRadii  = data.map(d => d.data_type === 'live' ? 6 : 3);
+
+  const colors = { overall:'#1447A6', treasury:'#14803C', bank:'#C9962B' };
+  const color  = colors[tab];
+
+  if(window._cpChart) window._cpChart.destroy();
+  window._cpChart = new Chart(document.getElementById('cashPosChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data:                vals,
+        borderColor:         color,
+        backgroundColor:     color + '15',
+        fill:                true,
+        tension:             .3,
+        pointRadius:         pointRadii,
+        pointBackgroundColor: pointColors,
+        pointBorderColor:    '#fff',
+        pointBorderWidth:    2,
+        borderWidth:         2.5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => ` ₹${c.raw.toFixed(2)} Cr`,
+            afterLabel: (c) => {
+              const d = data[c.dataIndex];
+              return d.data_type === 'live' ? '● Live' : '◆ Month-end';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { font: { family: 'DM Mono', size: 9 }, maxRotation: 45 }, grid: { display: false } },
+        y: { ticks: { font: { family: 'DM Mono', size: 10 }, callback: v => `₹${v}Cr` }, grid: { color: '#F1F5F9' } }
+      }
+    }
   });
 }
 
