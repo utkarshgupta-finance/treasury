@@ -63,7 +63,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 .xirr-hero{background:var(--ink);border-radius:4px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .xh-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#64748B;margin-bottom:4px}
 .xh-val{font-family:'DM Serif Display',serif;font-size:46px;color:var(--gold);letter-spacing:-2px;line-height:1}
-.xh-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xh-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:220px}
 .xh-sub{text-align:center;padding:10px 16px;background:rgba(255,255,255,.05);border-radius:4px;border:1px solid rgba(255,255,255,.07)}
 .xh-sub-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
 .xh-sub-val{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:#E2E8F0}
@@ -175,7 +175,6 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 <div class="hdr">
   <div>
     <h1>Treasury Portfolio</h1>
-    <p>Mobisy Technologies Private Limited &nbsp;·&nbsp; B&amp;K Finserv</p>
   </div>
   <div class="hdr-right">
     <div class="hdr-date-label">As of</div>
@@ -194,7 +193,6 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <div class="kpi primary">
       <div class="kpi-label">Total Cash Position</div>
       <div class="kpi-value" id="kCash">—</div>
-      <div class="kpi-sub">Treasury + Bank combined</div>
       <div style="display:flex;gap:6px;margin-top:8px">
         <span class="badge bb" id="kTreasury">Treasury —</span>
         <span class="badge ba" id="kBank">Bank —</span>
@@ -206,7 +204,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <div class="kpi-sub" id="kBankSub">Across all accounts</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Treasury Portfolio</div>
+      <div class="kpi-label">Bizom Funds Position</div>
       <div class="kpi-value" id="kTotal">—</div>
       <div class="kpi-sub" id="kMom">vs last month</div>
       <div style="display:flex;gap:6px;margin-top:8px">
@@ -217,7 +215,6 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <div class="kpi">
       <div class="kpi-label">Unrealised P&amp;L</div>
       <div class="kpi-value" style="color:var(--green)" id="kUnreal">—</div>
-      <div class="kpi-sub">Notional P&amp;L on holdings</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Total P&amp;L</div>
@@ -239,14 +236,12 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <!-- XIRR hero sits beside bank balances -->
     <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch">
       <div>
-        <div class="xh-label">Portfolio XIRR — Since Inception</div>
+        <div class="xh-label">Portfolio XIRR Since Inception</div>
         <div class="xh-val" id="xhVal">—</div>
       </div>
       <div class="xh-grid">
         <div class="xh-sub"><div class="xh-sub-label">Mutual Funds</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
         <div class="xh-sub"><div class="xh-sub-label">Fixed Deposits</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
-        <div class="xh-sub"><div class="xh-sub-label">MF Weight</div><div class="xh-sub-val" id="xhMFW">—</div><div class="xh-sub-tag">of portfolio</div></div>
-        <div class="xh-sub"><div class="xh-sub-label">FD Weight</div><div class="xh-sub-val" id="xhFDW">—</div><div class="xh-sub-tag">of portfolio</div></div>
       </div>
     </div>
   </div>
@@ -521,8 +516,6 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)}%` : '—';
   document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)}%`;
   document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)}%`;
-  document.getElementById('xhMFW').textContent     = `${(mfTotal/total*100).toFixed(1)}%`;
-  document.getElementById('xhFDW').textContent     = `${(fdTotal/total*100).toFixed(1)}%`;
   document.getElementById('footerXirr').textContent = xirrAll ? `XIRR ${(xirrAll*100).toFixed(2)}% · MF ${xirrMF.toFixed(2)}% · FD ${xirrFD.toFixed(2)}%` : '';
   // Log XIRR button now uses stored values
   if(latestXirr) document.getElementById('xirrHistCount').textContent = `Last logged ${fmtD(latestXirr.logged_at)}`;
@@ -737,8 +730,8 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
               <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)">+${cr(bankGain)}</div>
             </div>
             <div>
-              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Return</div>
-              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)">${bankGainPct}%</div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">XIRR</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)">${(bankFds[0]?.interest_rate||7.4).toFixed(2)}%</div>
             </div>
           </div>
         </div>
