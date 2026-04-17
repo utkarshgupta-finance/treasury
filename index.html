@@ -602,16 +602,42 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
     const fundId = `fund-${i}`;
     const lots   = _mfLots[f.fund_name]||[];
 
-    // Per-tranche: current value = units_held * current_nav
-    // Per-tranche profit = current_value - cost_amount
-    // Per-tranche XIRR: simple annualised return from buy date to today
-    const trancheRows = lots.map(l=>{
+    // Per-tranche XIRR: proper bisection from purchase date cashflow to today's value
+    // Collapsed XIRR: weighted average of per-tranche XIRRs by current value
+    const trancheData = lots.map(l=>{
       const trancheCurVal = (+l.units_held) * curNav;
       const trancheProfit = trancheCurVal - (+l.cost_amount);
       const trancheDays   = days(l.purchase_date, today());
-      const trancheXirr   = trancheDays > 0 && +l.cost_amount > 0
-        ? ((Math.pow(trancheCurVal / +l.cost_amount, 365/trancheDays) - 1)*100).toFixed(1)
-        : '—';
+      // Proper XIRR via bisection: -cost on purchase date, +curVal today
+      let txirr = null;
+      if (trancheDays > 0 && +l.cost_amount > 0 && trancheCurVal > 0) {
+        const cfs = [{ d: 0, a: -(+l.cost_amount) }, { d: trancheDays, a: trancheCurVal }];
+        const npv = r => cfs.reduce((t,c) => t + c.a / Math.pow(1+r, c.d/365), 0);
+        let lo = -0.5, hi = 5.0;
+        if (npv(lo) * npv(hi) < 0) {
+          for (let iter = 0; iter < 200; iter++) {
+            const mid = (lo+hi)/2;
+            if (hi-lo < 1e-9) { txirr = mid; break; }
+            npv(mid) > 0 ? lo = mid : hi = mid;
+          }
+          if (txirr === null) txirr = (lo+hi)/2;
+        }
+      }
+      return { l, trancheCurVal, trancheProfit, txirr };
+    });
+
+    // Collapsed XIRR: weighted average by current value across all tranches
+    const totalLotVal = trancheData.reduce((s,t) => s + t.trancheCurVal, 0);
+    const weightedXirr = totalLotVal > 0 && trancheData.some(t => t.txirr !== null)
+      ? trancheData.reduce((s,t) => s + (t.txirr !== null ? t.txirr * t.trancheCurVal : 0), 0) / totalLotVal
+      : null;
+    // Fall back to B&K reported if no lots available
+    const displayXirr = weightedXirr !== null
+      ? (weightedXirr * 100).toFixed(2)
+      : (+f.xirr_pct).toFixed(2);
+
+    const trancheRows = trancheData.map(({l, trancheCurVal, trancheProfit, txirr})=>{
+      const xirrStr = txirr !== null ? `${(txirr*100).toFixed(2)}%` : '—';
       return `<tr style="border-top:1px solid var(--line);font-size:11px">
         <td style="padding:6px 10px;font-family:'DM Mono',monospace;color:var(--muted)">${fmtD(l.purchase_date)}</td>
         <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">${(+l.units_held).toFixed(3)}</td>
@@ -619,7 +645,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
         <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--blue)">₹${curNav.toFixed(2)}</td>
         <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">${cr(+l.cost_amount)}</td>
         <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--green);font-weight:600">+${cr(trancheProfit)}</td>
-        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--gold);font-weight:600">${trancheXirr}%</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--gold);font-weight:600">${xirrStr}</td>
       </tr>`;
     }).join('');
 
@@ -680,7 +706,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
             </div>
             <div>
               <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">XIRR</div>
-              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--gold)">${f.xirr_pct}%</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--gold)">${displayXirr}%</div>
             </div>
             <div>
               <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Held</div>
