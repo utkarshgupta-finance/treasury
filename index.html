@@ -631,7 +631,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
             <span style="font-size:10px;font-weight:600;padding:1px 6px;border-radius:2px;background:var(--bg);color:var(--muted)">${f.category}</span>
             ${warn}
           </div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-left:18px">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding-left:18px">
             <div>
               <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
               <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(invested)}</div>
@@ -647,6 +647,10 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
             <div>
               <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">XIRR</div>
               <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)">${f.xirr_pct}%</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Holding</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink3)">${fmtHeld(f.first_buy_date)}</div>
             </div>
           </div>
         </div>
@@ -678,6 +682,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
     const bankGainPct  = ((bankGain/bankInvested)*100).toFixed(1);
     const fdId         = `fd-bank-${bi}`;
     const dtm          = bankFds[0]?.maturity_date ? days(today(), bankFds[0].maturity_date) : null;
+    const dtmStr       = dtm !== null ? fmtHeld(new Date(Date.now() - dtm*86400000).toISOString().slice(0,10)) : null;
 
     const individualFds = bankFds.map((fd,j)=>{
       const gain    = +fd.current_value - +fd.principal;
@@ -716,7 +721,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
             <span style="font-size:13px;font-weight:700;color:var(--ink)">${bank}</span>
             <span style="font-size:10px;color:var(--muted)">${bankFds.length} FD${bankFds.length>1?'s':''}</span>
             ${bankFds[0]?.channel === 'Direct' ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:#EDE9FE;color:#4C1D95">Direct</span>` : `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--blue-lt);color:var(--blue)">B&K</span>`}
-            ${dtm!==null?`<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtm}d to maturity</span>`:''}
+            ${dtmStr!==null?`<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtmStr} to maturity</span>`:''}
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-left:18px">
             <div>
@@ -850,7 +855,7 @@ function renderCashPosChart() {
 
   // Mark the live data point differently
   const pointColors = data.map(d => d.data_type === 'live' ? '#C9962B' : '#1447A6');
-  const pointRadii  = data.map(d => d.data_type === 'live' ? 6 : 3);
+  const pointRadii  = data.map(d => d.data_type === 'live' ? 6 : 4);
 
   const colors = { overall:'#1447A6', treasury:'#14803C', bank:'#C9962B' };
   const color  = colors[tab];
@@ -863,7 +868,7 @@ function renderCashPosChart() {
       datasets: [{
         data:                vals,
         borderColor:         color,
-        backgroundColor:     color + '15',
+        backgroundColor:     color + '12',
         fill:                true,
         tension:             .3,
         pointRadius:         pointRadii,
@@ -871,11 +876,15 @@ function renderCashPosChart() {
         pointBorderColor:    '#fff',
         pointBorderWidth:    2,
         borderWidth:         2.5,
+        datalabels: {
+          display: true,
+        }
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 22 } },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -890,7 +899,30 @@ function renderCashPosChart() {
       },
       scales: {
         x: { ticks: { font: { family: 'DM Mono', size: 9 }, maxRotation: 45 }, grid: { display: false } },
-        y: { ticks: { font: { family: 'DM Mono', size: 10 }, callback: v => `₹${v}Cr` }, grid: { color: '#F1F5F9' } }
+        y: {
+          ticks: { font: { family: 'DM Mono', size: 10 }, callback: v => `₹${v}Cr` },
+          grid: { color: '#F1F5F9' }
+        }
+      },
+      animation: {
+        onComplete: function() {
+          // Draw labels manually above each point
+          const chart = this;
+          const ctx   = chart.ctx;
+          const ds    = chart.data.datasets[0];
+          const meta  = chart.getDatasetMeta(0);
+          ctx.save();
+          ctx.font = '600 10px DM Mono, monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          meta.data.forEach((pt, i) => {
+            const val = ds.data[i];
+            const isLive = data[i]?.data_type === 'live';
+            ctx.fillStyle = isLive ? '#C9962B' : color;
+            ctx.fillText(`₹${val}Cr`, pt.x, pt.y - 6);
+          });
+          ctx.restore();
+        }
       }
     }
   });
