@@ -195,13 +195,16 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <div class="kpi-value" id="kCash">—</div>
       <div style="display:flex;gap:6px;margin-top:8px">
         <span class="badge bb" id="kTreasury">Treasury —</span>
-        <span class="badge ba" id="kBank">Bank —</span>
+        <span class="badge bb" id="kBank">Bank —</span>
       </div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Cash in Bank</div>
       <div class="kpi-value" id="kBankTotal">—</div>
-      <div class="kpi-sub" id="kBankSub">Across all accounts</div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <span class="badge bb" id="kBankIndia">India —</span>
+        <span class="badge bb" id="kBankUK">UK —</span>
+      </div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Bizom Funds Position</div>
@@ -209,7 +212,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <div class="kpi-sub" id="kMom">vs last month</div>
       <div style="display:flex;gap:6px;margin-top:8px">
         <span class="badge bb" id="kMF">MF —</span>
-        <span class="badge ba" id="kFD">FD —</span>
+        <span class="badge bb" id="kFD">FD —</span>
       </div>
     </div>
     <div class="kpi">
@@ -219,7 +222,10 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <div class="kpi">
       <div class="kpi-label">Total P&amp;L</div>
       <div class="kpi-value" style="color:var(--green)" id="kTotalPL">—</div>
-      <div class="kpi-sub" id="kPLSub">Booked + unrealised</div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <span class="badge bb" id="kBooked">Booked —</span>
+        <span class="badge bg" id="kNotional">Unrealised —</span>
+      </div>
     </div>
   </div>
 
@@ -506,13 +512,21 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   document.getElementById('kMF').textContent       = `MF ${cr(mfTotal)}`;
   document.getElementById('kFD').textContent       = `FD ${cr(fdTotal)}`;
   document.getElementById('kUnreal').textContent   = cr(notional);
-  document.getElementById('kTotalPL').textContent  = cr(totalPL);
-  document.getElementById('kPLSub').textContent    = `Booked ${cr(booked)} + Notional ${cr(notional)}`;
+  document.getElementById('kPLSub') && (document.getElementById('kPLSub').textContent = `Booked ${cr(booked)} + Notional ${cr(notional)}`);
   document.getElementById('kCash').textContent     = cr(total + bankTotal);
   document.getElementById('kTreasury').textContent = `Treasury ${cr(total)}`;
   document.getElementById('kBank').textContent     = `Bank ${cr(bankTotal)}`;
   document.getElementById('kBankTotal').textContent = cr(bankTotal);
-  document.getElementById('kBankSub').textContent  = `${banks.length} accounts`;
+  document.getElementById('kBankSub') && (document.getElementById('kBankSub').textContent = `${banks.length} accounts`);
+  // India vs UK bank split
+  const hsbcUK    = banks.find(b => b.bank_name === 'HSBC UK')?.balance || 0;
+  const indiaBank = bankTotal - hsbcUK;
+  document.getElementById('kBankIndia').textContent = `India ${cr(indiaBank)}`;
+  document.getElementById('kBankUK').textContent    = `UK ${cr(hsbcUK)}`;
+  // P&L badges
+  document.getElementById('kTotalPL').textContent  = cr(totalPL);
+  document.getElementById('kBooked').textContent   = `Booked ${cr(booked)}`;
+  document.getElementById('kNotional').textContent = `Unrealised ${cr(notional)}`;
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)}%` : '—';
   document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)}%`;
   document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)}%`;
