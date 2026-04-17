@@ -188,45 +188,45 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 
 <div class="main">
 
-  <!-- KPIs -->
-  <div class="kpi-strip">
-    <div class="kpi primary">
-      <div class="kpi-label">Total Cash Position</div>
-      <div class="kpi-value" id="kCash">—</div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <span class="badge bb" id="kTreasury">Treasury —</span>
-        <span class="badge bb" id="kBank">Bank —</span>
+  <!-- KPIs — 3 wide cards -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px">
+
+    <!-- Card 1: Total Cash Position -->
+    <div class="kpi primary" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        <div class="kpi-label">Total Cash Position</div>
+        <div class="kpi-value" id="kCash">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <span class="badge bb" id="kTreasury" style="text-align:right">Treasury —</span>
+        <span class="badge bb" id="kBank" style="text-align:right">Bank —</span>
       </div>
     </div>
-    <div class="kpi">
-      <div class="kpi-label">Cash in Bank</div>
-      <div class="kpi-value" id="kBankTotal">—</div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <span class="badge bb" id="kBankIndia">India —</span>
-        <span class="badge bb" id="kBankUK">UK —</span>
+
+    <!-- Card 2: Cash in Bank -->
+    <div class="kpi" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        <div class="kpi-label">Cash in Bank</div>
+        <div class="kpi-value" id="kBankTotal">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <span class="badge bb" id="kBankIndia" style="text-align:right">India —</span>
+        <span class="badge bb" id="kBankUK" style="text-align:right">UK —</span>
       </div>
     </div>
-    <div class="kpi">
-      <div class="kpi-label">Bizom Funds Position</div>
-      <div class="kpi-value" id="kTotal">—</div>
-      <div class="kpi-sub" id="kMom">vs last month</div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <span class="badge bb" id="kMF">MF —</span>
-        <span class="badge bb" id="kFD">FD —</span>
+
+    <!-- Card 3: Cash in Treasury -->
+    <div class="kpi" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        <div class="kpi-label">Cash in Treasury</div>
+        <div class="kpi-value" id="kTotal">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <span class="badge bb" id="kMF" style="text-align:right">MF —</span>
+        <span class="badge bb" id="kFD" style="text-align:right">FD —</span>
       </div>
     </div>
-    <div class="kpi">
-      <div class="kpi-label">Unrealised P&amp;L</div>
-      <div class="kpi-value" style="color:var(--green)" id="kUnreal">—</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Total P&amp;L</div>
-      <div class="kpi-value" style="color:var(--green)" id="kTotalPL">—</div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <span class="badge bb" id="kBooked">Booked —</span>
-        <span class="badge bg" id="kNotional">Unrealised —</span>
-      </div>
-    </div>
+
   </div>
 
   <!-- Row: bank + XIRR side by side -->
@@ -239,15 +239,35 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <div class="pb" id="bankBalBody" style="padding:12px"></div>
     </div>
 
-    <!-- XIRR hero sits beside bank balances -->
-    <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch">
-      <div>
-        <div class="xh-label">Portfolio XIRR Since Inception</div>
-        <div class="xh-val" id="xhVal">—</div>
+    <!-- XIRR hero with P&L rows added -->
+    <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div class="xh-label">Portfolio XIRR Since Inception</div>
+          <div class="xh-val" id="xhVal">—</div>
+        </div>
+        <div class="xh-grid">
+          <div class="xh-sub"><div class="xh-sub-label">Mutual Funds</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
+          <div class="xh-sub"><div class="xh-sub-label">Fixed Deposits</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
+        </div>
       </div>
-      <div class="xh-grid">
-        <div class="xh-sub"><div class="xh-sub-label">Mutual Funds</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
-        <div class="xh-sub"><div class="xh-sub-label">Fixed Deposits</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
+      <!-- P&L row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px">
+        <div class="xh-sub">
+          <div class="xh-sub-label">Total P&amp;L</div>
+          <div class="xh-sub-val" id="kTotalPL" style="color:#4ADE80">—</div>
+          <div class="xh-sub-tag">Booked + Unrealised</div>
+        </div>
+        <div class="xh-sub">
+          <div class="xh-sub-label">Booked P&amp;L</div>
+          <div class="xh-sub-val" id="kBooked" style="color:#93C5FD">—</div>
+          <div class="xh-sub-tag">Realised gains</div>
+        </div>
+        <div class="xh-sub">
+          <div class="xh-sub-label">Unrealised P&amp;L</div>
+          <div class="xh-sub-val" id="kUnreal" style="color:#86EFAC">—</div>
+          <div class="xh-sub-tag">Mark to market</div>
+        </div>
       </div>
     </div>
   </div>
@@ -508,10 +528,12 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
 
   // ── KPIs
   document.getElementById('kTotal').textContent    = cr(total);
-  document.getElementById('kMom').innerHTML        = `<span class="${momCls}">${momArr} ${fmt(Math.abs(mom))} (${momPct}%)</span> vs month end`;
   document.getElementById('kMF').textContent       = `MF ${cr(mfTotal)}`;
   document.getElementById('kFD').textContent       = `FD ${cr(fdTotal)}`;
-  document.getElementById('kUnreal').textContent   = cr(notional);
+  // P&L in XIRR box
+  document.getElementById('kTotalPL').textContent  = `+${cr(totalPL)}`;
+  document.getElementById('kBooked').textContent   = `+${cr(booked)}`;
+  document.getElementById('kUnreal').textContent   = `+${cr(notional)}`;
   document.getElementById('kPLSub') && (document.getElementById('kPLSub').textContent = `Booked ${cr(booked)} + Notional ${cr(notional)}`);
   document.getElementById('kCash').textContent     = cr(total + bankTotal);
   document.getElementById('kTreasury').textContent = `Treasury ${cr(total)}`;
