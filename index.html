@@ -398,11 +398,10 @@ async function loadAll() {
   try {
     document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Connecting to Supabase...`;
 
-    const [txns, mfH, fdH, fdD, banks, xirrH, lots, cashPos] = await Promise.all([
+    const [txns, mfH, fdH, banks, xirrH, lots, cashPos] = await Promise.all([
       sb('transactions', 'select=transaction_date,description,asset_type,transaction_type,amount&order=transaction_date.asc,id.asc'),
       sb('mf_holdings_latest', 'select=fund_name,category,current_value,current_nav,first_buy_date,booked_pl,notional_pl,xirr_pct&order=current_value.desc'),
-      sb('fd_holdings_latest', 'select=bank,fd_number,principal,current_value,status,booked_pl,notional_pl&status=eq.Active&order=bank.asc,fd_number.asc'),
-      sb('fd_details', 'select=bank,fd_number,interest_rate,start_date,maturity_date,status'),
+      sb('fd_current_values', 'select=bank,fd_number,principal,current_value,status,booked_pl,interest_earned,channel,interest_rate,start_date,maturity_date,days_to_maturity&order=bank.asc,fd_number.asc'),
       sb('bank_balances_latest', 'select=bank_name,account_number,balance,as_of_date&order=balance.desc'),
       sb('xirr_history', 'select=logged_at,overall_xirr,mf_xirr,fd_xirr,total_portfolio&order=logged_at.asc'),
       sb('mf_active_lots', 'select=fund_name,purchase_date,units_held,purchase_nav,cost_amount,folio_number&order=fund_name.asc,purchase_date.asc'),
@@ -415,10 +414,8 @@ async function loadAll() {
       _mfLots[l.fund_name].push(l);
     });
 
-    // Merge FD details into holdings
-    const fdDMap = {};
-    fdD.forEach(d=>fdDMap[`${d.bank}|${d.fd_number}`]=d);
-    const fds = fdH.map(h=>({...h,...(fdDMap[`${h.bank}|${h.fd_number}`]||{})}));
+    // fd_current_values already has all fields — use directly
+    const fds = fdH;
 
     render(txns, mfH, fds, banks, xirrH, cashPos);
 
@@ -441,8 +438,8 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   const fdTotal  = fds.reduce((s,f)=>s+(+f.current_value),0);
   const total    = mfTotal+fdTotal;
   const bankTotal= banks.reduce((s,b)=>s+(+b.balance),0);
-  const notional = mfH.reduce((s,f)=>s+(+f.notional_pl),0) + fds.reduce((s,f)=>s+(+f.notional_pl),0);
-  const booked   = mfH.reduce((s,f)=>s+(+f.booked_pl),0)   + fds.reduce((s,f)=>s+(+f.booked_pl),0);
+  const notional = mfH.reduce((s,f)=>s+(+f.notional_pl),0) + fds.reduce((s,f)=>s+(+f.interest_earned),0);
+  const booked   = mfH.reduce((s,f)=>s+(+f.booked_pl),0)   + fds.reduce((s,f)=>s+(+f.booked_pl||0),0);
   const totalPL  = notional+booked;
 
   // XIRR — read from xirr_history (most recent logged snapshot)
@@ -612,14 +609,16 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   // ── FD — one row per bank (grouped), expanded shows individual FDs
   document.getElementById('fdTag').textContent = cr(fdTotal);
 
-  // Group FDs by bank
+  // Group by bank + channel so Direct FDs show separately from B&K FDs
   const fdByBank = {};
   fds.forEach(fd => {
-    if(!fdByBank[fd.bank]) fdByBank[fd.bank] = [];
-    fdByBank[fd.bank].push(fd);
+    const key = `${fd.bank}||${fd.channel}`;
+    if(!fdByBank[key]) fdByBank[key] = [];
+    fdByBank[key].push(fd);
   });
 
-  document.getElementById('fdBody').innerHTML = Object.entries(fdByBank).map(([bank, bankFds], bi)=>{
+  document.getElementById('fdBody').innerHTML = Object.entries(fdByBank).map(([key, bankFds], bi)=>{
+    const bank      = bankFds[0].bank;
     const bankInvested = bankFds.reduce((s,f)=>s+(+f.principal),0);
     const bankCurrent  = bankFds.reduce((s,f)=>s+(+f.current_value),0);
     const bankGain     = bankCurrent - bankInvested;
@@ -631,7 +630,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
       const gain    = +fd.current_value - +fd.principal;
       const gainPct = ((gain/+fd.principal)*100).toFixed(1);
       return `<div style="display:grid;grid-template-columns:80px 1fr 1fr 1fr 1fr 1fr;gap:8px;padding:8px 14px;border-top:1px solid #BBF7D0;font-size:11px;background:#E8FAF0">
-        <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">${fd.fd_number}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">${fd.fd_number} ${fd.channel === 'Direct' ? '<span style="font-size:9px;background:#EDE9FE;color:#4C1D95;padding:1px 5px;border-radius:2px;margin-left:4px">Direct</span>' : '<span style="font-size:9px;background:var(--blue-lt);color:var(--blue);padding:1px 5px;border-radius:2px;margin-left:4px">B&K</span>'}</div>
         <div>
           <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
           <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--ink)">${cr(+fd.principal)}</div>
@@ -663,6 +662,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
             <span class="expand-icon" id="fdicon-${bi}">▶</span>
             <span style="font-size:13px;font-weight:700;color:var(--ink)">${bank}</span>
             <span style="font-size:10px;color:var(--muted)">${bankFds.length} FD${bankFds.length>1?'s':''}</span>
+            ${bankFds[0]?.channel === 'Direct' ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:#EDE9FE;color:#4C1D95">Direct</span>` : `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--blue-lt);color:var(--blue)">B&K</span>`}
             ${dtm!==null?`<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtm}d to maturity</span>`:''}
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-left:18px">
