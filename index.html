@@ -282,7 +282,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
       <span class="ph-title">XIRR Trend</span>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="ph-tag" id="xirrHistCount">No snapshots yet</span>
-        <button class="xirr-log-btn" onclick="logXirr()">+ Log Today's XIRR</button>
+        <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">Auto-logged nightly at 11:59 PM IST on data refresh days</span>
       </div>
     </div>
     <div id="xirrHistBody" class="pb">
@@ -293,7 +293,6 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
         <canvas id="xirrChart" role="img" aria-label="XIRR trend"></canvas>
       </div>
     </div>
-    <div id="xirrToast"></div>
   </div>
 
   <!-- Cashflow ledger -->
@@ -765,30 +764,6 @@ function renderXirrHistory(rows) {
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw?.toFixed(2)}%`}}},
       scales:{x:{ticks:{font:{family:'DM Mono',size:9}},grid:{display:false}},y:{ticks:{font:{family:'DM Mono',size:10},callback:v=>`${v}%`},grid:{color:'#F1F5F9'}}}}
   });
-}
-
-async function logXirr() {
-  const btn = document.querySelector('.xirr-log-btn');
-  const toast = document.getElementById('xirrToast');
-  if(!_xirrs.overall) { toast.style.display='block'; toast.style.color='var(--amber)'; toast.textContent='⚠ No XIRR calculated yet. Wait for data to load.'; return; }
-  btn.textContent='Logging...'; btn.disabled=true;
-  try {
-    await sbPost('xirr_history',{
-      logged_at:      today(),
-      overall_xirr:   +(_xirrs.overall*100).toFixed(2),
-      mf_xirr:        +(_xirrs.mf*100).toFixed(2),
-      fd_xirr:        +(_xirrs.fd*100).toFixed(2),
-      total_portfolio: null,
-    });
-    toast.style.display='block'; toast.style.color='var(--green)';
-    toast.textContent=`✓ XIRR logged for ${today()} — Overall ${(_xirrs.overall*100).toFixed(2)}% · MF ${(_xirrs.mf*100).toFixed(2)}% · FD ${(_xirrs.fd*100).toFixed(2)}%`;
-    // Reload history
-    const h = await sb('xirr_history','select=logged_at,overall_xirr,mf_xirr,fd_xirr,total_portfolio&order=logged_at.asc');
-    renderXirrHistory(h);
-  } catch(e) {
-    toast.style.display='block'; toast.style.color='var(--red)'; toast.textContent=`✗ Failed: ${e.message}`;
-  }
-  btn.textContent='+ Log Today\'s XIRR'; btn.disabled=false;
 }
 
 // ── BOOT ─────────────────────────────────────────────────────────
