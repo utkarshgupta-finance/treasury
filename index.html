@@ -254,12 +254,48 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
   <!-- Row: MF + FD side by side -->
   <div class="row row-2" style="margin-bottom:16px">
     <div class="panel">
-      <div class="ph"><span class="ph-title">Mutual Funds</span><span class="ph-tag" id="mfTag">—</span></div>
+      <div class="ph" style="flex-wrap:wrap;gap:8px">
+        <span class="ph-title">Mutual Funds</span>
+        <div style="display:flex;gap:12px;margin-left:auto;align-items:center" id="mfHeaderStats">
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="mfTagInvested">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="mfTag">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">P&amp;L</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)" id="mfTagPL">—</div>
+          </div>
+        </div>
+      </div>
       <div class="pb" id="mfBody"></div>
     </div>
 
     <div class="panel">
-      <div class="ph"><span class="ph-title">Active Fixed Deposits</span><span class="ph-tag" id="fdTag">—</span></div>
+      <div class="ph" style="flex-wrap:wrap;gap:8px">
+        <span class="ph-title">Active Fixed Deposits</span>
+        <div style="display:flex;gap:12px;margin-left:auto;align-items:center">
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTagInvested">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTag">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Interest</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)" id="fdTagInterest">—</div>
+          </div>
+        </div>
+      </div>
       <div class="pb" id="fdBody" style="padding:12px"></div>
     </div>
   </div>
@@ -502,7 +538,11 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   // ── MF — collapsed shows name + invested + current + profit + xirr
   //         expanded shows per-tranche: buy date, units, buy nav, current nav, buy value, profit, xirr
   const mfMax = Math.max(...mfH.map(f=>+f.current_value));
-  document.getElementById('mfTag').textContent = cr(mfTotal);
+  const mfInvested = mfH.reduce((s,f)=>s+(+f.current_value - +f.notional_pl),0);
+  const mfPL       = mfH.reduce((s,f)=>s+(+f.notional_pl),0);
+  document.getElementById('mfTag').textContent         = cr(mfTotal);
+  document.getElementById('mfTagInvested').textContent = cr(mfInvested);
+  document.getElementById('mfTagPL').textContent       = `+${cr(mfPL)}`;
   document.getElementById('mfBody').innerHTML = mfH.map((f,i)=>{
     const catL    = (f.category||'').toLowerCase();
     const rk      = Object.keys(HOLDING_RULES).find(k=>catL.includes(k));
@@ -607,7 +647,11 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   }).join('');
 
   // ── FD — one row per bank (grouped), expanded shows individual FDs
-  document.getElementById('fdTag').textContent = cr(fdTotal);
+  const fdInvested = fds.reduce((s,f)=>s+(+f.principal),0);
+  const fdInterest = fds.reduce((s,f)=>s+(+f.interest_earned),0);
+  document.getElementById('fdTag').textContent          = cr(fdTotal);
+  document.getElementById('fdTagInvested').textContent  = cr(fdInvested);
+  document.getElementById('fdTagInterest').textContent  = `+${cr(fdInterest)}`;
 
   // Group by bank + channel so Direct FDs show separately from B&K FDs
   const fdByBank = {};
