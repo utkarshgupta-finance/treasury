@@ -401,6 +401,15 @@ const fmtD = d => { const [y,m,day]=d.split('-'); return `${day}-${MONTHS[+m-1]}
 const days = (a,b) => Math.round((new Date(b)-new Date(a))/86400000);
 const today = () => new Date().toISOString().slice(0,10);
 
+// Format holding period: "23d" or "1m 5d" or "2m 14d" etc
+const fmtHeld = (fromDate) => {
+  const d = days(fromDate, today());
+  if (d < 30) return `${d}d`;
+  const months = Math.floor(d / 30);
+  const rem    = d - months * 30;
+  return rem > 0 ? `${months}m ${rem}d` : `${months}m`;
+};
+
 // ── XIRR ─────────────────────────────────────────────────────────
 function calcXirr(cfs) {
   const s  = [...cfs].sort((a,b)=>a.date.localeCompare(b.date));
@@ -554,7 +563,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
     const curNav   = +f.current_nav || 0;
     let warn = '';
     if(rule && held>rule.max) {
-      warn = `<span class="warn ${rule.sev(held)}">⚠ ${held}d · ideal ${rule.str}</span>`;
+      warn = `<span class="warn ${rule.sev(held)}">⚠ ${fmtHeld(f.first_buy_date)} · ideal ${rule.str}</span>`;
     }
     const fundId = `fund-${i}`;
     const lots   = _mfLots[f.fund_name]||[];
