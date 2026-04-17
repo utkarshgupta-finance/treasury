@@ -28,6 +28,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 .lbar{width:180px;height:2px;background:#1C2333;border-radius:2px;margin-top:20px;overflow:hidden}
 .lfill{height:100%;background:var(--gold);animation:lb 1.4s ease-in-out infinite}
 @keyframes lb{0%{width:0}60%{width:80%}100%{width:100%}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
 /* HEADER */
 .hdr{background:var(--ink);padding:20px 48px 18px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--gold)}
@@ -247,26 +248,29 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
           <div class="xh-val" id="xhVal">—</div>
         </div>
         <div class="xh-grid">
-          <div class="xh-sub"><div class="xh-sub-label">Mutual Funds</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
-          <div class="xh-sub"><div class="xh-sub-label">Fixed Deposits</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">B&amp;K reported</div></div>
+          <div class="xh-sub"><div class="xh-sub-label">Mutual Funds</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">Transaction-calculated</div></div>
+          <div class="xh-sub"><div class="xh-sub-label">Fixed Deposits</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">Weighted avg rate</div></div>
         </div>
       </div>
-      <!-- P&L row -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px">
-        <div class="xh-sub">
-          <div class="xh-sub-label">Total P&amp;L</div>
-          <div class="xh-sub-val" id="kTotalPL" style="color:#4ADE80">—</div>
-          <div class="xh-sub-tag">Booked + Unrealised</div>
-        </div>
-        <div class="xh-sub">
-          <div class="xh-sub-label">Booked P&amp;L</div>
-          <div class="xh-sub-val" id="kBooked" style="color:#93C5FD">—</div>
-          <div class="xh-sub-tag">Realised gains</div>
-        </div>
-        <div class="xh-sub">
-          <div class="xh-sub-label">Unrealised P&amp;L</div>
-          <div class="xh-sub-val" id="kUnreal" style="color:#86EFAC">—</div>
-          <div class="xh-sub-tag">Mark to market</div>
+      <!-- Returns row -->
+      <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:14px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:10px">Returns</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="xh-sub">
+            <div class="xh-sub-label">Unrealised</div>
+            <div class="xh-sub-val" id="kUnreal" style="color:#86EFAC">—</div>
+            <div class="xh-sub-tag">Mark to market</div>
+          </div>
+          <div class="xh-sub">
+            <div class="xh-sub-label">Realised</div>
+            <div class="xh-sub-val" id="kBooked" style="color:#93C5FD">—</div>
+            <div class="xh-sub-tag">Booked gains</div>
+          </div>
+          <div class="xh-sub">
+            <div class="xh-sub-label">Total</div>
+            <div class="xh-sub-val" id="kTotalPL" style="color:#4ADE80">—</div>
+            <div class="xh-sub-tag">Unrealised + Realised</div>
+          </div>
         </div>
       </div>
     </div>
@@ -468,7 +472,7 @@ async function loadAll() {
       sb('transactions', 'select=transaction_date,description,asset_type,transaction_type,amount&order=transaction_date.asc,id.asc'),
       sb('mf_holdings_latest', 'select=fund_name,category,current_value,current_nav,first_buy_date,booked_pl,notional_pl,xirr_pct&order=current_value.desc'),
       sb('fd_current_values', 'select=bank,fd_number,principal,current_value,status,booked_pl,interest_earned,channel,interest_rate,start_date,maturity_date,days_to_maturity&order=bank.asc,fd_number.asc'),
-      sb('bank_balances_latest', 'select=bank_name,account_number,balance,as_of_date&order=balance.desc'),
+      sb('bank_balances_latest', 'select=bank_name,account_number,balance,as_of_date&order=bank_name.asc'),
       sb('xirr_history', 'select=logged_at,overall_xirr,mf_xirr,fd_xirr,total_portfolio&order=logged_at.asc'),
       sb('mf_active_lots', 'select=fund_name,purchase_date,units_held,purchase_nav,cost_amount,folio_number&order=fund_name.asc,purchase_date.asc'),
       sb('cash_position_chart', 'select=chart_date,label,bank_total,treasury_total,overall_total,data_type&order=chart_date.asc'),
@@ -540,7 +544,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   document.getElementById('kBankTotal').textContent = cr(bankTotal);
   // India vs UK bank split
   const hsbcUK    = banks.find(b => b.bank_name === 'HSBC UK')?.balance || 0;
-  const indiaBank = bankTotal - hsbcUK;
+  const indiaBank = bankTotal - (+hsbcUK);
   document.getElementById('kBankIndia').textContent = `India ${cr(indiaBank)}`;
   document.getElementById('kBankUK').textContent    = `UK ${cr(hsbcUK)}`;
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)}%` : '—';
@@ -553,9 +557,16 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
   const syncDate = banks.length ? banks[0].as_of_date : null;
   const syncTime = syncDate ? `Synced ${fmtD(syncDate)}` : 'No data';
   document.getElementById('bankSyncTag').textContent = syncTime;
+  // Sort banks in fixed display order
+  const BANK_ORDER = ['HDFC','HDFC OD','HSBC India','HSBC UK','Kotak Nodal','Kotak Autopay','Kotak Bizom E RTM','HDFC Capital'];
+  const sortedBanks = [...banks].sort((a,b) => {
+    const ai = BANK_ORDER.findIndex(n => a.bank_name.includes(n) || n.includes(a.bank_name));
+    const bi2 = BANK_ORDER.findIndex(n => b.bank_name.includes(n) || n.includes(b.bank_name));
+    return (ai === -1 ? 99 : ai) - (bi2 === -1 ? 99 : bi2);
+  });
   document.getElementById('bankBalBody').innerHTML = banks.length ?
     `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">` +
-    banks.map(b=>`
+    sortedBanks.map(b=>`
       <div style="padding:10px 12px;background:var(--bg);border-radius:3px;border:1px solid var(--line)">
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.bank_name}</div>
         <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)">${cr(+b.balance)}</div>
@@ -709,7 +720,8 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
     const bankGainPct  = ((bankGain/bankInvested)*100).toFixed(1);
     const fdId         = `fd-bank-${bi}`;
     const dtm          = bankFds[0]?.maturity_date ? days(today(), bankFds[0].maturity_date) : null;
-    const dtmStr       = dtm !== null ? fmtHeld(new Date(Date.now() - dtm*86400000).toISOString().slice(0,10)) : null;
+    const dtmStr       = dtm !== null ? fmtHeld(new Date(Date.now() - Math.abs(dtm)*86400000).toISOString().slice(0,10)) : null;
+    const isMatured    = dtm !== null && dtm < 0;
 
     const individualFds = bankFds.map((fd,j)=>{
       const gain    = +fd.current_value - +fd.principal;
@@ -748,7 +760,10 @@ function render(txns, mfH, fds, banks, xirrH, cashPos) {
             <span style="font-size:13px;font-weight:700;color:var(--ink)">${bank}</span>
             <span style="font-size:10px;color:var(--muted)">${bankFds.length} FD${bankFds.length>1?'s':''}</span>
             ${bankFds[0]?.channel === 'Direct' ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:#EDE9FE;color:#4C1D95">Direct</span>` : `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--blue-lt);color:var(--blue)">B&K</span>`}
-            ${dtmStr!==null?`<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtmStr} to maturity</span>`:''}
+            ${isMatured
+              ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--red-lt);color:var(--red);animation:pulse 1.5s ease-in-out infinite">⚠ FD Matured — awaiting update</span>`
+              : dtmStr!==null ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtmStr} to maturity</span>` : ''
+            }
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-left:18px">
             <div>
