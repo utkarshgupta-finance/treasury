@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bizom Funds</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -19,11 +19,11 @@
   --orange:#EA580C;--orange-lt:#FFEDD5;
 }
 html{font-size:16px}
-body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
 
 /* LOADER */
 #loader{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s}
-#loader h2{font-family:'DM Serif Display',serif;color:var(--gold);font-size:26px;margin-bottom:8px}
+#loader h2{font-family:'Inter',sans-serif;font-weight:700;color:var(--gold);font-size:26px;margin-bottom:8px}
 #loader p{color:#475569;font-size:12px;font-family:'DM Mono',monospace}
 .lbar{width:180px;height:2px;background:#1C2333;border-radius:2px;margin-top:20px;overflow:hidden}
 .lfill{height:100%;background:var(--gold);animation:lb 1.4s ease-in-out infinite}
@@ -32,7 +32,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 
 /* HEADER */
 .hdr{background:var(--ink);padding:20px 48px 18px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--gold)}
-.hdr h1{font-family:'DM Serif Display',serif;font-size:26px;color:var(--white);letter-spacing:-.5px}
+.hdr h1{font-family:'Inter',sans-serif;font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.5px}
 .hdr p{font-size:11px;color:#94A3B8;margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
 .hdr-right{text-align:right}
 .hdr-date-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
@@ -50,7 +50,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}
 .kpi.primary::before{background:var(--ink);height:4px}
 .kpi-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-.kpi-value{font-family:'DM Serif Display',serif;font-size:28px;color:var(--ink);line-height:1;letter-spacing:-1px}
+.kpi-value{font-family:'Inter',sans-serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-1px}
 .kpi.primary .kpi-value{font-size:34px}
 .kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
 .mom-up{color:var(--green);font-weight:700}
@@ -63,7 +63,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 /* XIRR HERO */
 .xirr-hero{background:var(--ink);border-radius:4px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .xh-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#64748B;margin-bottom:4px}
-.xh-val{font-family:'DM Serif Display',serif;font-size:46px;color:var(--gold);letter-spacing:-2px;line-height:1}
+.xh-val{font-family:'Inter',sans-serif;font-size:46px;font-weight:800;color:var(--gold);letter-spacing:-2px;line-height:1}
 .xh-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:220px}
 .xh-sub{text-align:center;padding:10px 16px;background:rgba(255,255,255,.05);border-radius:4px;border:1px solid rgba(255,255,255,.07)}
 .xh-sub-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
@@ -114,7 +114,7 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 .fd-card-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:5px}
 .fd-bank{font-size:13px;font-weight:700;color:var(--ink)}
 .fd-no{font-size:10px;color:var(--muted);font-weight:600;margin-bottom:3px}
-.fd-val{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);letter-spacing:-.5px;margin:4px 0}
+.fd-val{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.5px;margin:4px 0}
 .fd-meta{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:2px}
 .fd-xirr{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green);margin-top:6px}
 .fd-days{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;margin-top:4px;background:var(--amber-lt);color:var(--amber)}
@@ -124,18 +124,18 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
 .bank-card{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:12px}
 .bank-name{font-size:10px;font-weight:700;color:var(--ink3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
 .bank-acct{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:4px}
-.bank-val{font-family:'DM Serif Display',serif;font-size:18px;color:var(--ink);letter-spacing:-.5px}
+.bank-val{font-family:'Inter',sans-serif;font-size:18px;color:var(--ink);letter-spacing:-.5px}
 
 /* TOTAL CASH STRIP */
 .cash-strip{background:var(--ink2);border:1px solid #2D3748;border-radius:4px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .cs-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#64748B;margin-bottom:3px}
-.cs-val{font-family:'DM Serif Display',serif;font-size:28px;color:var(--white);letter-spacing:-1px}
+.cs-val{font-family:'Inter',sans-serif;font-size:28px;color:var(--white);letter-spacing:-1px}
 .cs-breakdown{display:flex;gap:16px}
 .cs-item-label{font-size:10px;color:#64748B;margin-bottom:2px}
 .cs-item-val{font-family:'DM Mono',monospace;font-size:13px;color:#94A3B8}
 
 /* XIRR HISTORY */
-.xirr-log-btn{background:var(--ink);color:var(--white);border:none;padding:5px 12px;border-radius:3px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:.04em}
+.xirr-log-btn{background:var(--ink);color:var(--white);border:none;padding:5px 12px;border-radius:3px;font-family:'Inter',sans-serif;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:.04em}
 .xirr-log-btn:hover{background:var(--ink2)}
 #xirrToast{padding:8px 18px;font-size:11px;border-top:1px solid var(--line);display:none}
 
@@ -335,9 +335,9 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <div class="ph" style="align-items:center">
       <span class="ph-title">Cash Position</span>
       <div style="display:flex;gap:4px;margin-left:16px">
-        <button onclick="setCashTab('overall')" id="tab-overall" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer;letter-spacing:.04em">Overall</button>
-        <button onclick="setCashTab('treasury')" id="tab-treasury" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Treasury</button>
-        <button onclick="setCashTab('bank')" id="tab-bank" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Bank</button>
+        <button onclick="setCashTab('overall')" id="tab-overall" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer;letter-spacing:.04em">Overall</button>
+        <button onclick="setCashTab('treasury')" id="tab-treasury" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Treasury</button>
+        <button onclick="setCashTab('bank')" id="tab-bank" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Bank</button>
       </div>
       <span class="ph-tag" style="margin-left:auto">₹ Crore · end-of-month</span>
     </div>
@@ -396,20 +396,20 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <!-- Header -->
     <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
       <div>
-        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--white)">Realised Gains</div>
+        <div style="font-family:'Inter',sans-serif;font-size:20px;color:var(--white)">Realised Gains</div>
         <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Booked P&amp;L from redemptions and FD maturities</div>
       </div>
       <div style="text-align:right">
         <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Total Realised</div>
-        <div style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--gold)" id="modalTotal">—</div>
+        <div style="font-family:'Inter',sans-serif;font-size:26px;color:var(--gold)" id="modalTotal">—</div>
       </div>
     </div>
     <!-- Filters -->
     <div style="padding:12px 24px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-shrink:0;background:var(--bg)">
-      <button onclick="filterRealised('all')"  id="rf-all"  style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">All</button>
-      <button onclick="filterRealised('mf')"   id="rf-mf"   style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Mutual Funds</button>
-      <button onclick="filterRealised('fd')"   id="rf-fd"   style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Fixed Deposits</button>
-      <button onclick="closeRealisedModal()" style="margin-left:auto;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">✕ Close</button>
+      <button onclick="filterRealised('all')"  id="rf-all"  style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">All</button>
+      <button onclick="filterRealised('mf')"   id="rf-mf"   style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Mutual Funds</button>
+      <button onclick="filterRealised('fd')"   id="rf-fd"   style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Fixed Deposits</button>
+      <button onclick="closeRealisedModal()" style="margin-left:auto;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">✕ Close</button>
     </div>
     <!-- Table -->
     <div style="overflow-y:auto;flex:1">
@@ -433,15 +433,15 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(860px,95vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
       <div>
-        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--white)">Unrealised Gains</div>
+        <div style="font-family:'Inter',sans-serif;font-size:20px;color:var(--white)">Unrealised Gains</div>
         <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Mark-to-market gains on current holdings</div>
       </div>
       <div style="display:flex;align-items:center;gap:16px">
         <div style="text-align:right">
           <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Total Unrealised</div>
-          <div style="font-family:'DM Serif Display',serif;font-size:26px;color:#86EFAC" id="unrealisedTotal">—</div>
+          <div style="font-family:'Inter',sans-serif;font-size:26px;color:#86EFAC" id="unrealisedTotal">—</div>
         </div>
-        <button onclick="closeUnrealisedModal()" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
+        <button onclick="closeUnrealisedModal()" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
       </div>
     </div>
     <div style="overflow-y:auto;flex:1">
@@ -469,15 +469,15 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <div style="padding:18px 24px;background:var(--ink);flex-shrink:0">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div>
-          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold)" id="xirrModalTitle">XIRR Workings</div>
+          <div style="font-family:'Inter',sans-serif;font-size:20px;color:var(--gold)" id="xirrModalTitle">XIRR Workings</div>
           <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace" id="xirrModalSubtitle">—</div>
         </div>
-        <button onclick="closeXirrModal()" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
+        <button onclick="closeXirrModal()" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
       </div>
       <div style="display:flex;gap:6px;margin-top:12px">
-        <button onclick="renderXirrModal('overall')" id="xf-overall" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">Overall</button>
-        <button onclick="renderXirrModal('mf')"      id="xf-mf"      style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Mutual Funds</button>
-        <button onclick="renderXirrModal('fd')"      id="xf-fd"      style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Fixed Deposits</button>
+        <button onclick="renderXirrModal('overall')" id="xf-overall" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">Overall</button>
+        <button onclick="renderXirrModal('mf')"      id="xf-mf"      style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Mutual Funds</button>
+        <button onclick="renderXirrModal('fd')"      id="xf-fd"      style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Fixed Deposits</button>
       </div>
     </div>
     <div style="overflow-y:auto;flex:1">
@@ -692,7 +692,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     `</div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--ink);border-radius:3px;margin-top:8px">
       <span style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em">Total</span>
-      <span style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--gold)">${cr(bankTotal)}</span>
+      <span style="font-family:'Inter',sans-serif;font-size:16px;color:var(--gold)">${cr(bankTotal)}</span>
     </div>`
     : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
