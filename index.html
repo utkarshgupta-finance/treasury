@@ -261,10 +261,10 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
             <div class="xh-sub-val" id="kUnreal" style="color:#86EFAC">—</div>
             <div class="xh-sub-tag">Mark to market</div>
           </div>
-          <div class="xh-sub">
-            <div class="xh-sub-label">Realised</div>
+          <div class="xh-sub" onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div class="xh-sub-label">Realised ↗</div>
             <div class="xh-sub-val" id="kBooked" style="color:#93C5FD">—</div>
-            <div class="xh-sub-tag">Booked gains</div>
+            <div class="xh-sub-tag">Booked gains · click for breakup</div>
           </div>
           <div class="xh-sub">
             <div class="xh-sub-label">Total</div>
@@ -383,6 +383,44 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
   <div class="footer">
     <span>B&amp;K Finserv · P&amp;L from Performance Reports · XIRR transaction-calculated from inception · Live data from Supabase</span>
     <span id="footerXirr">—</span>
+  </div>
+</div>
+
+<!-- ── REALISED P&L MODAL ──────────────────────────────────── -->
+<div id="realisedModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeRealisedModal()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(740px,95vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <!-- Header -->
+    <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--white)">Realised Gains</div>
+        <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Booked P&amp;L from redemptions and FD maturities</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Total Realised</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--gold)" id="modalTotal">—</div>
+      </div>
+    </div>
+    <!-- Filters -->
+    <div style="padding:12px 24px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-shrink:0;background:var(--bg)">
+      <button onclick="filterRealised('all')"  id="rf-all"  style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">All</button>
+      <button onclick="filterRealised('mf')"   id="rf-mf"   style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Mutual Funds</button>
+      <button onclick="filterRealised('fd')"   id="rf-fd"   style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Fixed Deposits</button>
+      <button onclick="closeRealisedModal()" style="margin-left:auto;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">✕ Close</button>
+    </div>
+    <!-- Table -->
+    <div style="overflow-y:auto;flex:1">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:var(--ink);position:sticky;top:0;z-index:2">
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Date</th>
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Type</th>
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8">Scheme / Instrument</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Booked P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody id="realisedBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -996,6 +1034,95 @@ function renderCashPosChart() {
     }
   });
 }
+
+// ── REALISED P&L MODAL ───────────────────────────────────────
+let _realisedData = [];
+
+async function showRealisedModal() {
+  document.getElementById('realisedModal').style.display = 'block';
+  if (_realisedData.length === 0) {
+    document.getElementById('realisedBody').innerHTML = 
+      '<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--muted)">Loading...</td></tr>';
+    try {
+      _realisedData = await sb('realised_pl', 'select=booked_date,asset_type,instrument,amount,notes&order=booked_date.desc');
+    } catch(e) {
+      document.getElementById('realisedBody').innerHTML = 
+        '<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--red)">Error loading data</td></tr>';
+      return;
+    }
+  }
+  filterRealised('all');
+}
+
+function filterRealised(type) {
+  // Update filter buttons
+  ['all','mf','fd'].forEach(t => {
+    const btn = document.getElementById('rf-' + t);
+    const active = t === type;
+    btn.style.background   = active ? 'var(--ink)' : 'var(--white)';
+    btn.style.color        = active ? 'var(--white)' : 'var(--muted)';
+    btn.style.borderColor  = active ? 'var(--ink)' : 'var(--line)';
+  });
+
+  const filtered = _realisedData.filter(r => {
+    if (type === 'mf') return r.asset_type === 'Mutual Fund';
+    if (type === 'fd') return r.asset_type === 'Fixed Deposit';
+    return true;
+  });
+
+  const total = filtered.reduce((s, r) => s + +r.amount, 0);
+  document.getElementById('modalTotal').textContent = `+${cr(total)}`;
+
+  // Group by instrument for subtotals
+  const byInstrument = {};
+  filtered.forEach(r => {
+    const key = r.instrument;
+    if (!byInstrument[key]) byInstrument[key] = { type: r.asset_type, rows: [] };
+    byInstrument[key].rows.push(r);
+  });
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtDate = d => { const [y,m,day]=d.split('-'); return `${day}-${MONTHS[+m-1]}-${y}`; };
+  const shortName = n => n.replace(' - Reg - Growth','').replace(' Fund','');
+
+  let html = '';
+  for (const [instrument, group] of Object.entries(byInstrument)) {
+    const subtotal = group.rows.reduce((s,r) => s + +r.amount, 0);
+    const isMF = group.type === 'Mutual Fund';
+    const tagBg = isMF ? 'var(--blue-lt)' : '#EDE9FE';
+    const tagColor = isMF ? 'var(--blue)' : '#4C1D95';
+    const tagLabel = isMF ? 'MF' : 'FD';
+
+    // Instrument header row
+    html += `<tr style="background:var(--bg);border-top:2px solid var(--line)">
+      <td colspan="3" style="padding:8px 16px;font-size:12px;font-weight:700;color:var(--ink)">
+        <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:2px;background:${tagBg};color:${tagColor};margin-right:8px">${tagLabel}</span>
+        ${shortName(instrument)}
+      </td>
+      <td style="padding:8px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--green)">+${cr(subtotal)}</td>
+    </tr>`;
+
+    // Individual rows
+    group.rows.forEach(r => {
+      html += `<tr style="border-top:1px solid var(--line)">
+        <td style="padding:7px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap">${fmtDate(r.booked_date)}</td>
+        <td style="padding:7px 16px;font-size:10px;color:var(--muted)">${r.asset_type}</td>
+        <td style="padding:7px 16px;font-size:11px;color:var(--ink3)">${r.notes || '—'}</td>
+        <td style="padding:7px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">+${fmt(+r.amount)}</td>
+      </tr>`;
+    });
+  }
+
+  if (!html) html = '<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--muted)">No records found</td></tr>';
+  document.getElementById('realisedBody').innerHTML = html;
+}
+
+function closeRealisedModal() {
+  document.getElementById('realisedModal').style.display = 'none';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeRealisedModal(); });
 
 // ── BOOT ─────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', loadAll);
