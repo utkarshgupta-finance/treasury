@@ -243,6 +243,1408 @@ body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-hei
     <!-- XIRR hero with P&L rows added -->
     <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;flex-direction:column;gap:16px">
       <div style="display:flex;align-items:center;justify-content:space-between">
+        <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+          <div class="xh-label">Portfolio XIRR Since Inception ↗</div>
+          <div class="xh-val" id="xhVal">—</div>
+        </div>
+        <div class="xh-grid">
+          <div class="xh-sub" onclick="showXirrModal('mf')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div class="xh-sub-label">Mutual Funds ↗</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">Transaction-calculated</div>
+          </div>
+          <div class="xh-sub" onclick="showXirrModal('fd')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div class="xh-sub-label">Fixed Deposits ↗</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">Weighted avg rate</div>
+          </div>
+        </div>
+      </div>
+      <!-- Returns row -->
+      <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:14px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:10px">Returns</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="xh-sub" onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div class="xh-sub-label">Unrealised ↗</div>
+            <div class="xh-sub-val" id="kUnreal" style="color:#86EFAC">—</div>
+            <div class="xh-sub-tag">Mark to market · click for breakup</div>
+          </div>
+          <div class="xh-sub" onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div class="xh-sub-label">Realised ↗</div>
+            <div class="xh-sub-val" id="kBooked" style="color:#93C5FD">—</div>
+            <div class="xh-sub-tag">Booked gains · click for breakup</div>
+          </div>
+          <div class="xh-sub">
+            <div class="xh-sub-label">Total</div>
+            <div class="xh-sub-val" id="kTotalPL" style="color:#4ADE80">—</div>
+            <div class="xh-sub-tag">Unrealised + Realised</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row: MF + FD side by side -->
+  <div class="row row-2" style="margin-bottom:16px">
+    <div class="panel">
+      <div class="ph" style="flex-wrap:wrap;gap:8px">
+        <span class="ph-title">Mutual Funds</span>
+        <div style="display:flex;gap:12px;margin-left:auto;align-items:center" id="mfHeaderStats">
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="mfTagInvested">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="mfTag">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">P&amp;L</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)" id="mfTagPL">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="pb" id="mfBody"></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph" style="flex-wrap:wrap;gap:8px">
+        <span class="ph-title">Active Fixed Deposits</span>
+        <div style="display:flex;gap:12px;margin-left:auto;align-items:center">
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTagInvested">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTag">—</div>
+          </div>
+          <div style="width:1px;height:24px;background:var(--line)"></div>
+          <div style="text-align:right">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Interest</div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)" id="fdTagInterest">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="pb" id="fdBody" style="padding:12px"></div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <!-- Cash Position chart with 3 tabs -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="ph" style="align-items:center">
+      <span class="ph-title">Cash Position</span>
+      <div style="display:flex;gap:4px;margin-left:16px">
+        <button onclick="setCashTab('overall')" id="tab-overall" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer;letter-spacing:.04em">Overall</button>
+        <button onclick="setCashTab('treasury')" id="tab-treasury" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Treasury</button>
+        <button onclick="setCashTab('bank')" id="tab-bank" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Bank</button>
+      </div>
+      <span class="ph-tag" style="margin-left:auto">₹ Crore · end-of-month</span>
+    </div>
+    <div class="pb"><div class="chart-wrap" style="height:250px"><canvas id="cashPosChart" role="img" aria-label="Cash position"></canvas></div></div>
+  </div>
+
+  <div class="row row-2" style="margin-bottom:16px">
+    <div class="panel">
+      <div class="ph"><span class="ph-title">Monthly Cashflows</span><span class="ph-tag">₹ Crore</span></div>
+      <div class="pb"><div class="chart-wrap" style="height:230px"><canvas id="moChart" role="img" aria-label="Monthly flows"></canvas></div></div>
+    </div>
+
+    <!-- XIRR History -->
+    <div class="panel">
+      <div class="ph">
+        <span class="ph-title">XIRR Trend</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="ph-tag" id="xirrHistCount">No snapshots yet</span>
+          <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">Auto-logged nightly at 11:59 PM IST on data refresh days</span>
+        </div>
+      </div>
+      <div id="xirrHistBody" class="pb">
+        <div id="xirrEmpty" style="text-align:center;padding:28px;color:var(--muted);font-size:13px">
+          No XIRR history yet — auto-logged nightly when data is refreshed.
+        </div>
+        <div class="chart-wrap" style="height:175px;display:none" id="xirrChartWrap">
+          <canvas id="xirrChart" role="img" aria-label="XIRR trend"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cashflow ledger -->
+  <div class="panel">
+    <div class="ph"><span class="ph-title">Cashflow Ledger</span><span class="ph-tag" id="cfCount">—</span></div>
+    <div class="cf-wrap">
+      <table class="cf-table">
+        <thead><tr>
+          <th>#</th><th>Date</th><th>Instrument</th><th>Asset</th><th>Type</th>
+          <th class="r">Cashflow (₹)</th><th class="r">Net Deployed (₹)</th>
+        </tr></thead>
+        <tbody id="cfBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>B&amp;K Finserv · P&amp;L from Performance Reports · XIRR transaction-calculated from inception · Live data from Supabase</span>
+    <span id="footerXirr">—</span>
+  </div>
+</div>
+
+<!-- ── REALISED P&L MODAL ──────────────────────────────────── -->
+<div id="realisedModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeRealisedModal()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(740px,95vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <!-- Header -->
+    <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--white)">Realised Gains</div>
+        <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Booked P&amp;L from redemptions and FD maturities</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Total Realised</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--gold)" id="modalTotal">—</div>
+      </div>
+    </div>
+    <!-- Filters -->
+    <div style="padding:12px 24px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-shrink:0;background:var(--bg)">
+      <button onclick="filterRealised('all')"  id="rf-all"  style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">All</button>
+      <button onclick="filterRealised('mf')"   id="rf-mf"   style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Mutual Funds</button>
+      <button onclick="filterRealised('fd')"   id="rf-fd"   style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Fixed Deposits</button>
+      <button onclick="closeRealisedModal()" style="margin-left:auto;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">✕ Close</button>
+    </div>
+    <!-- Table -->
+    <div style="overflow-y:auto;flex:1">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:var(--ink);position:sticky;top:0;z-index:2">
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Date</th>
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Type</th>
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8">Scheme / Instrument</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Booked P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody id="realisedBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── UNREALISED P&L MODAL ─────────────────────────────────── -->
+<div id="unrealisedModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeUnrealisedModal()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(860px,95vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--white)">Unrealised Gains</div>
+        <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Mark-to-market gains on current holdings</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Total Unrealised</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:26px;color:#86EFAC" id="unrealisedTotal">—</div>
+        </div>
+        <button onclick="closeUnrealisedModal()" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
+      </div>
+    </div>
+    <div style="overflow-y:auto;flex:1">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:var(--ink);position:sticky;top:0;z-index:2">
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8">Instrument</th>
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Since</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Invested</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Current</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Unrealised</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">XIRR</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Return %</th>
+          </tr>
+        </thead>
+        <tbody id="unrealisedBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── XIRR WORKINGS MODAL ───────────────────────────────────── -->
+<div id="xirrModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeXirrModal()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(820px,95vw);max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="padding:18px 24px;background:var(--ink);flex-shrink:0">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold)" id="xirrModalTitle">XIRR Workings</div>
+          <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace" id="xirrModalSubtitle">—</div>
+        </div>
+        <button onclick="closeXirrModal()" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <button onclick="renderXirrModal('overall')" id="xf-overall" style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">Overall</button>
+        <button onclick="renderXirrModal('mf')"      id="xf-mf"      style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Mutual Funds</button>
+        <button onclick="renderXirrModal('fd')"      id="xf-fd"      style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Fixed Deposits</button>
+      </div>
+    </div>
+    <div style="overflow-y:auto;flex:1">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:#F8FAFC;position:sticky;top:0;z-index:2;border-bottom:1px solid var(--line)">
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Date / Instrument</th>
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Detail</th>
+            <th style="padding:9px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Type</th>
+            <th style="padding:9px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Amount / Value</th>
+          </tr>
+        </thead>
+        <tbody id="xirrBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SUPABASE CONFIG ──────────────────────────────────────────────
+const SB_URL  = 'https://djjwbhgqbboqowwxooji.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqandiaGdxYmJvcW93d3hvb2ppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDY2MzQsImV4cCI6MjA5MTkyMjYzNH0.oU85EUSHuSXJ6W9fVOAiSLXl5KQSjsc8tHhEESYPmmE';
+const HDRS    = {'apikey': SB_ANON, 'Authorization': `Bearer ${SB_ANON}`, 'Content-Type': 'application/json'};
+
+async function sb(table, params='') {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {headers: HDRS});
+  if (!r.ok) throw new Error(`${table}: ${r.status}`);
+  return r.json();
+}
+async function sbPost(table, body) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+    method:'POST', headers:{...HDRS,'Prefer':'resolution=merge-duplicates,return=representation'}, body:JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(`POST ${table}: ${r.status}`);
+  return r.json();
+}
+
+// ── CONSTANTS ────────────────────────────────────────────────────
+const COLORS = ['#1447A6','#2563EB','#60A5FA','#93C5FD','#C9962B'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const HOLDING_RULES = {
+  'overnight':    {max:14,  str:'1 day – few weeks',  sev:d=>d>60?'warn-r':d>30?'warn-o':'warn-a'},
+  'liquid':       {max:91,  str:'1 week – 3 months',  sev:d=>d>180?'warn-r':d>120?'warn-o':'warn-a'},
+  'money market': {max:365, str:'6 months – 1 year',  sev:d=>d>500?'warn-r':d>400?'warn-o':'warn-a'},
+  'low duration': {max:365, str:'6 – 12 months',      sev:d=>d>500?'warn-r':d>400?'warn-o':'warn-a'},
+};
+
+// ── UTILS ────────────────────────────────────────────────────────
+const cr  = n => `₹${(Math.abs(+n)/1e7).toFixed(2)} Cr`;
+const fmt = n => {
+  const a = Math.abs(+n);
+  const s = a>=1e7?cr(a):a>=1e5?`₹${(a/1e5).toFixed(1)}L`:`₹${Math.round(a).toLocaleString('en-IN')}`;
+  return +n<0?`(${s})`:s;
+};
+const fmtD = d => { const [y,m,day]=d.split('-'); return `${day}-${MONTHS[+m-1]}-${y}`; };
+const days = (a,b) => Math.round((new Date(b)-new Date(a))/86400000);
+const today = () => new Date().toISOString().slice(0,10);
+
+// Format holding period: "23d" or "1m 5d" or "2m 14d" etc
+const fmtHeld = (fromDate) => {
+  const d = days(fromDate, today());
+  if (d < 30) return `${d}d`;
+  const months = Math.floor(d / 30);
+  const rem    = d - months * 30;
+  return rem > 0 ? `${months}m ${rem}d` : `${months}m`;
+};
+
+// ── XIRR ─────────────────────────────────────────────────────────
+function calcXirr(cfs) {
+  const s  = [...cfs].sort((a,b)=>a.date.localeCompare(b.date));
+  const d0 = new Date(s[0].date);
+  const ds = s.map(c=>(new Date(c.date)-d0)/86400000);
+  const am = s.map(c=>c.amount);
+  const npv = r => am.reduce((t,a,i) => t + a / Math.pow(1+r, ds[i]/365), 0);
+
+  // Bisection within realistic treasury bounds: -20% to +30%
+  // This prevents converging on spurious mathematical roots outside real-world range
+  let lo = -0.20, hi = 0.30;
+  if (npv(lo) * npv(hi) > 0) {
+    // Widen slightly if no root found in tight range
+    lo = -0.50; hi = 0.60;
+    if (npv(lo) * npv(hi) > 0) return null;
+  }
+  for (let i = 0; i < 200; i++) {
+    const mid = (lo + hi) / 2;
+    if (hi - lo < 1e-9) return mid;
+    npv(mid) > 0 ? lo = mid : hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+// State
+let _xirrs = {};
+let _mfLots = {};
+
+// ── MAIN LOAD ────────────────────────────────────────────────────
+async function loadAll() {
+  try {
+    document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Connecting to Supabase...`;
+
+    const [txns, mfH, fdH, banks, xirrH, lots, cashPos, realisedTotal] = await Promise.all([
+      sb('transactions', 'select=transaction_date,description,asset_type,transaction_type,amount&order=transaction_date.asc,id.asc'),
+      sb('mf_holdings_latest', 'select=fund_name,category,current_value,current_nav,first_buy_date,booked_pl,notional_pl,xirr_pct&order=current_value.desc&current_value=gt.0'),
+      sb('fd_current_values', 'select=bank,fd_number,principal,current_value,status,booked_pl,interest_earned,channel,interest_rate,start_date,maturity_date,days_to_maturity&order=bank.asc,fd_number.asc'),
+      sb('bank_balances_latest', 'select=bank_name,account_number,balance,as_of_date,last_txn_date&order=bank_name.asc'),
+      sb('xirr_history', 'select=logged_at,overall_xirr,mf_xirr,fd_xirr,total_portfolio&order=logged_at.asc'),
+      sb('mf_active_lots', 'select=fund_name,purchase_date,units_held,purchase_nav,cost_amount,folio_number&order=fund_name.asc,purchase_date.asc'),
+      sb('cash_position_chart', 'select=chart_date,label,bank_total,treasury_total,overall_total,data_type&order=chart_date.asc'),
+      sb('realised_pl', 'select=amount'),
+    ]);
+
+    // Group lots by fund
+    lots.forEach(l => {
+      if(!_mfLots[l.fund_name]) _mfLots[l.fund_name]=[];
+      _mfLots[l.fund_name].push(l);
+    });
+
+    // fd_current_values already has all fields — use directly
+    const fds = fdH;
+
+    // Store for modal access
+    window._txns = txns;
+    _mfHoldings  = mfH;
+    _fdHoldings  = fds;
+
+    render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal);
+
+    document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Live · Supabase`;
+    document.getElementById('dataTs').textContent = `Refreshed ${new Date().toLocaleTimeString()}`;
+    document.getElementById('hdrDate').textContent = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('dataLabel').innerHTML = `<span class="stale">⚠</span> Error: ${e.message}`;
+  } finally {
+    const l = document.getElementById('loader');
+    l.style.opacity='0';
+    setTimeout(()=>l.style.display='none',500);
+  }
+}
+
+function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
+  const mfTotal  = mfH.reduce((s,f)=>s+(+f.current_value),0);
+  const fdTotal  = fds.reduce((s,f)=>s+(+f.current_value),0);
+  const total    = mfTotal+fdTotal;
+  const bankTotal= banks.reduce((s,b)=>s+(+b.balance),0);
+  const notional = mfH.reduce((s,f)=>s+(+f.notional_pl),0) + fds.reduce((s,f)=>s+(+f.interest_earned),0);
+  // Use realised_pl table as source of truth for booked P&L (full historical)
+  const booked   = (realisedTotal||[]).reduce((s,r)=>s+(+r.amount),0);
+  const totalPL  = notional+booked;
+
+  // XIRR — read from xirr_history (most recent logged snapshot)
+  // Calculated externally via Python scipy and stored in Supabase
+  const latestXirr = xirrH && xirrH.length > 0 ? xirrH[xirrH.length - 1] : null;
+  const xirrAll = latestXirr ? +latestXirr.overall_xirr / 100 : null;
+  const xirrMF  = latestXirr ? +latestXirr.mf_xirr : 0;
+  const xirrFD  = latestXirr ? +latestXirr.fd_xirr : 0;
+
+  _xirrs = {overall: xirrAll, mf: xirrMF/100, fd: xirrFD/100};
+
+  // MoM
+  const prevMonthEnd = new Date(new Date().getFullYear(), new Date().getMonth(), 0).toISOString().slice(0,10);
+  const netAfterPrev = txns.filter(t=>t.transaction_date>prevMonthEnd).reduce((s,t)=>s-(+t.amount),0);
+  const prevVal = total - netAfterPrev;
+  const mom = total - prevVal;
+  const momPct = (mom/prevVal*100).toFixed(1);
+  const momCls = mom>0?'mom-up':mom<0?'mom-dn':'';
+  const momArr = mom>0?'▲':mom<0?'▼':'—';
+
+  // ── KPIs
+  document.getElementById('kTotal').textContent    = cr(total);
+  document.getElementById('kMF').textContent       = `MF ${cr(mfTotal)}`;
+  document.getElementById('kFD').textContent       = `FD ${cr(fdTotal)}`;
+  // P&L in XIRR box
+  document.getElementById('kTotalPL').textContent  = `+${cr(totalPL)}`;
+  document.getElementById('kBooked').textContent   = `+${cr(booked)}`;
+  document.getElementById('kUnreal').textContent   = `+${cr(notional)}`;
+  document.getElementById('kCash').textContent     = cr(total + bankTotal);
+  document.getElementById('kTreasury').textContent = `Treasury ${cr(total)}`;
+  document.getElementById('kBank').textContent     = `Bank ${cr(bankTotal)}`;
+  document.getElementById('kBankTotal').textContent = cr(bankTotal);
+  // India vs UK bank split
+  const hsbcUK    = banks.find(b => b.bank_name === 'HSBC UK')?.balance || 0;
+  const indiaBank = bankTotal - (+hsbcUK);
+  document.getElementById('kBankIndia').textContent = `India ${cr(indiaBank)}`;
+  document.getElementById('kBankUK').textContent    = `UK ${cr(hsbcUK)}`;
+  document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)}%` : '—';
+  document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)}%`;
+  document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)}%`;
+  document.getElementById('footerXirr').textContent = xirrAll ? `XIRR ${(xirrAll*100).toFixed(2)}% · MF ${xirrMF.toFixed(2)}% · FD ${xirrFD.toFixed(2)}%` : '';
+  if(latestXirr) document.getElementById('xirrHistCount').textContent = `Last logged ${fmtD(latestXirr.logged_at)}`;
+
+  // ── Bank balances panel
+  const syncDate = banks.length ? banks[0].as_of_date : null;
+  const syncTime = syncDate ? `Synced ${fmtD(syncDate)}` : 'No data';
+  document.getElementById('bankSyncTag').textContent = syncTime;
+  // Sort banks in fixed display order
+  const BANK_ORDER = ['HDFC','HDFC OD','HSBC India','HSBC UK','Kotak Nodal','Kotak Autopay','Kotak Bizom E RTM','HDFC Capital'];
+  const sortedBanks = [...banks].sort((a,b) => {
+    const ai = BANK_ORDER.findIndex(n => a.bank_name.includes(n) || n.includes(a.bank_name));
+    const bi2 = BANK_ORDER.findIndex(n => b.bank_name.includes(n) || n.includes(b.bank_name));
+    return (ai === -1 ? 99 : ai) - (bi2 === -1 ? 99 : bi2);
+  });
+  document.getElementById('bankBalBody').innerHTML = banks.length ?
+    `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">` +
+    sortedBanks.map(b=>`
+      <div style="padding:10px 12px;background:var(--bg);border-radius:3px;border:1px solid var(--line)">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.bank_name}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)">${cr(+b.balance)}</div>
+        ${b.last_txn_date ? `<div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:3px">Last txn: ${fmtD(b.last_txn_date)}</div>` : ''}
+      </div>`).join('') +
+    `</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--ink);border-radius:3px;margin-top:8px">
+      <span style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em">Total</span>
+      <span style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--gold)">${cr(bankTotal)}</span>
+    </div>`
+    : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
+
+  // ── MF — collapsed shows name + invested + current + profit + xirr
+  //         expanded shows per-tranche: buy date, units, buy nav, current nav, buy value, profit, xirr
+  const mfMax = Math.max(...mfH.map(f=>+f.current_value));
+  const mfInvested = mfH.reduce((s,f)=>s+(+f.current_value - +f.notional_pl),0);
+  const mfPL       = mfH.reduce((s,f)=>s+(+f.notional_pl),0);
+  document.getElementById('mfTag').textContent         = cr(mfTotal);
+  document.getElementById('mfTagInvested').textContent = cr(mfInvested);
+  document.getElementById('mfTagPL').textContent       = `+${cr(mfPL)}`;
+  document.getElementById('mfBody').innerHTML = mfH.map((f,i)=>{
+    const catL    = (f.category||'').toLowerCase();
+    const rk      = Object.keys(HOLDING_RULES).find(k=>catL.includes(k));
+    const rule    = rk ? HOLDING_RULES[rk] : null;
+    const held    = days(f.first_buy_date, today());
+    const invested = +f.current_value - +f.notional_pl;
+    const profit   = +f.notional_pl;
+    const plPct    = invested > 0 ? ((profit/invested)*100).toFixed(1) : '0.0';
+    const curNav   = +f.current_nav || 0;
+    let warn = '';
+    if(rule && held>rule.max) {
+      warn = `<span class="warn ${rule.sev(held)}">⚠ ${fmtHeld(f.first_buy_date)} · ideal ${rule.str}</span>`;
+    }
+    const fundId = `fund-${i}`;
+    const lots   = _mfLots[f.fund_name]||[];
+
+    // Per-tranche XIRR: proper bisection from purchase date cashflow to today's value
+    // Collapsed XIRR: weighted average of per-tranche XIRRs by current value
+    const trancheData = lots.map(l=>{
+      const trancheCurVal = (+l.units_held) * curNav;
+      const trancheProfit = trancheCurVal - (+l.cost_amount);
+      const trancheDays   = days(l.purchase_date, today());
+      // Proper XIRR via bisection: -cost on purchase date, +curVal today
+      let txirr = null;
+      if (trancheDays > 0 && +l.cost_amount > 0 && trancheCurVal > 0) {
+        const cfs = [{ d: 0, a: -(+l.cost_amount) }, { d: trancheDays, a: trancheCurVal }];
+        const npv = r => cfs.reduce((t,c) => t + c.a / Math.pow(1+r, c.d/365), 0);
+        let lo = -0.5, hi = 5.0;
+        if (npv(lo) * npv(hi) < 0) {
+          for (let iter = 0; iter < 200; iter++) {
+            const mid = (lo+hi)/2;
+            if (hi-lo < 1e-9) { txirr = mid; break; }
+            npv(mid) > 0 ? lo = mid : hi = mid;
+          }
+          if (txirr === null) txirr = (lo+hi)/2;
+        }
+      }
+      return { l, trancheCurVal, trancheProfit, txirr };
+    });
+
+    // Collapsed XIRR: weighted average by current value across all tranches
+    const totalLotVal = trancheData.reduce((s,t) => s + t.trancheCurVal, 0);
+    const weightedXirr = totalLotVal > 0 && trancheData.some(t => t.txirr !== null)
+      ? trancheData.reduce((s,t) => s + (t.txirr !== null ? t.txirr * t.trancheCurVal : 0), 0) / totalLotVal
+      : null;
+    // Fall back to B&K reported if no lots available
+    const displayXirr = weightedXirr !== null
+      ? (weightedXirr * 100).toFixed(2)
+      : (+f.xirr_pct).toFixed(2);
+
+    const trancheRows = trancheData.map(({l, trancheCurVal, trancheProfit, txirr})=>{
+      const xirrStr = txirr !== null ? `${(txirr*100).toFixed(2)}%` : '—';
+      return `<tr style="border-top:1px solid var(--line);font-size:11px">
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;color:var(--muted)">${fmtD(l.purchase_date)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">${(+l.units_held).toFixed(3)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">₹${(+l.purchase_nav).toFixed(2)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--blue)">₹${curNav.toFixed(2)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right">${cr(+l.cost_amount)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--green);font-weight:600">+${cr(trancheProfit)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;text-align:right;color:var(--gold);font-weight:600">${xirrStr}</td>
+      </tr>`;
+    }).join('');
+
+    const expandHtml = `
+      <div class="lots-panel" id="${fundId}">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)">
+          <div style="background:#F8FAFC;padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Invested</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)">${cr(invested)}</div>
+          </div>
+          <div style="background:#F8FAFC;padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Current Value</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)">${cr(+f.current_value)}</div>
+          </div>
+          <div style="background:#F8FAFC;padding:10px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Unrealised P&L</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green)">+${cr(profit)} (${plPct}%)</div>
+          </div>
+        </div>
+        ${lots.length ? `
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:11px">
+            <thead><tr style="background:var(--ink)">
+              <th style="padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Buy Date</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Units</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Buy NAV</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Cur NAV</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Buy Value</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">Profit</th>
+              <th style="padding:7px 10px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;white-space:nowrap">XIRR</th>
+            </tr></thead>
+            <tbody>${trancheRows}</tbody>
+          </table>
+        </div>` : ''}
+      </div>`;
+
+    return `<div style="border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;cursor:pointer" onclick="toggleLots('${fundId}','icon-${i}')">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
+            <span class="expand-icon" id="icon-${i}">▶</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">${f.fund_name.replace(' - Reg - Growth','').replace(' Fund','')}</span>
+            <span style="font-size:10px;font-weight:600;padding:1px 6px;border-radius:2px;background:var(--bg);color:var(--muted)">${f.category}</span>
+            ${warn}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding-left:18px;margin-top:4px">
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--ink)">${cr(invested)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Current</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--ink)">${cr(+f.current_value)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Profit</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">+${cr(profit)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">XIRR</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--gold)">${displayXirr}%</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Held</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:${held > (rule?.max||9999) ? 'var(--amber)' : 'var(--ink3)'}">${fmtHeld(f.first_buy_date)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Ideal Hold</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--muted)">${rule ? rule.str : '—'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      ${expandHtml}
+    </div>`;
+  }).join('');
+
+  // ── FD — one row per bank (grouped), expanded shows individual FDs
+  const fdInvested = fds.reduce((s,f)=>s+(+f.principal),0);
+  const fdInterest = fds.reduce((s,f)=>s+(+f.interest_earned),0);
+  document.getElementById('fdTag').textContent          = cr(fdTotal);
+  document.getElementById('fdTagInvested').textContent  = cr(fdInvested);
+  document.getElementById('fdTagInterest').textContent  = `+${cr(fdInterest)}`;
+
+  // Group by bank + channel so Direct FDs show separately from B&K FDs
+  const fdByBank = {};
+  fds.forEach(fd => {
+    const key = `${fd.bank}||${fd.channel}`;
+    if(!fdByBank[key]) fdByBank[key] = [];
+    fdByBank[key].push(fd);
+  });
+
+  document.getElementById('fdBody').innerHTML = Object.entries(fdByBank).map(([key, bankFds], bi)=>{
+    const bank      = bankFds[0].bank;
+    const bankInvested = bankFds.reduce((s,f)=>s+(+f.principal),0);
+    const bankCurrent  = bankFds.reduce((s,f)=>s+(+f.current_value),0);
+    const bankGain     = bankCurrent - bankInvested;
+    const bankGainPct  = ((bankGain/bankInvested)*100).toFixed(1);
+    const fdId         = `fd-bank-${bi}`;
+    const dtm          = bankFds[0]?.maturity_date ? days(today(), bankFds[0].maturity_date) : null;
+    const dtmStr       = dtm !== null ? fmtHeld(new Date(Date.now() - Math.abs(dtm)*86400000).toISOString().slice(0,10)) : null;
+    const isMatured    = dtm !== null && dtm < 0;
+
+    const individualFds = bankFds.map((fd,j)=>{
+      const gain    = +fd.current_value - +fd.principal;
+      const gainPct = ((gain/+fd.principal)*100).toFixed(1);
+      return `<div style="display:grid;grid-template-columns:80px 1fr 1fr 1fr 1fr 1fr;gap:8px;padding:8px 14px;border-top:1px solid #BBF7D0;font-size:11px;background:#E8FAF0">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">${fd.fd_number} ${fd.channel === 'Direct' ? '<span style="font-size:9px;background:#EDE9FE;color:#4C1D95;padding:1px 5px;border-radius:2px;margin-left:4px">Direct</span>' : '<span style="font-size:9px;background:var(--blue-lt);color:var(--blue);padding:1px 5px;border-radius:2px;margin-left:4px">B&K</span>'}</div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--ink)">${cr(+fd.principal)}</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Current</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--ink)">${cr(+fd.current_value)}</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Interest</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">+${cr(gain)}</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Rate</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${fd.interest_rate||7.4}% p.a.</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Matures</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${fd.maturity_date?fmtD(fd.maturity_date):'—'}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div style="border:1px solid #BBF7D0;background:#F0FDF4;border-radius:4px;margin-bottom:10px;overflow:hidden">
+      <!-- Collapsed row -->
+      <div style="padding:13px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start" onclick="toggleLots('${fdId}','fdicon-${bi}')">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+            <span class="expand-icon" id="fdicon-${bi}">▶</span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink)">${bank}</span>
+            <span style="font-size:10px;color:var(--muted)">${bankFds.length} FD${bankFds.length>1?'s':''}</span>
+            ${bankFds[0]?.channel === 'Direct' ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:#EDE9FE;color:#4C1D95">Direct</span>` : `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--blue-lt);color:var(--blue)">B&K</span>`}
+            ${isMatured
+              ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--red-lt);color:var(--red);animation:pulse 1.5s ease-in-out infinite">⚠ FD Matured — awaiting update</span>`
+              : dtmStr!==null ? `<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtmStr} to maturity</span>` : ''
+            }
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-left:18px">
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Invested</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(bankInvested)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Current</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(bankCurrent)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Interest Earned</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)">+${cr(bankGain)}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">XIRR</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)">${(bankFds[0]?.interest_rate||7.4).toFixed(2)}%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Expanded: individual FDs -->
+      <div class="lots-panel" id="${fdId}">
+        ${individualFds}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Old bank panel (hide if exists)
+  const oldBankPanel = document.getElementById('bankPanel');
+  if(oldBankPanel) oldBankPanel.style.display='none';
+
+  // ── Cash Position chart (3 tabs: Overall / Treasury / Bank)
+  window._cashPosData = cashPos || [];
+  window._cashPosTab  = 'overall';
+  renderCashPosChart();
+
+  // ── Monthly cashflow chart
+  const mIn={},mOut={};
+  txns.forEach(t=>{const ym=t.transaction_date.slice(0,7);if(!mIn[ym]){mIn[ym]=0;mOut[ym]=0;}+t.amount>0?mIn[ym]+=(+t.amount)/1e7:mOut[ym]+=Math.abs(+t.amount)/1e7;});
+  const mos=[...new Set([...Object.keys(mIn),...Object.keys(mOut)])].sort();
+  if(window._mc) window._mc.destroy();
+  window._mc = new Chart(document.getElementById('moChart'),{
+    type:'bar',
+    data:{labels:mos.map(m=>{const[y,mo]=m.split('-');return`${MONTHS[+mo-1]} ${y.slice(2)}`}),
+      datasets:[{label:'In',data:mos.map(m=>+(mIn[m]||0).toFixed(3)),backgroundColor:'#14803C',borderRadius:2},{label:'Out',data:mos.map(m=>+-(mOut[m]||0).toFixed(3)),backgroundColor:'#B91C1C',borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ₹${Math.abs(c.raw).toFixed(2)} Cr`}}},
+      scales:{x:{ticks:{font:{family:'DM Mono',size:9},maxRotation:60},grid:{display:false}},y:{ticks:{font:{family:'DM Mono',size:10},callback:v=>`₹${Math.abs(v)}Cr`},grid:{color:'#F1F5F9'}}}}
+  });
+
+  // ── Cashflow table
+  let runAmt=0;
+  document.getElementById('cfCount').textContent=`${txns.length} entries`;
+  document.getElementById('cfBody').innerHTML=txns.map((t,i)=>{
+    runAmt-=(+t.amount);
+    const isOut=+t.amount<0,isRev=t.transaction_type==='Revertal',isMat=t.transaction_type==='Maturity';
+    const pc=isMat?'p-mat':isRev?'p-rev':isOut?'p-out':'p-in';
+    const ac=isOut?'amt-out':'amt-in';
+    return `<tr>
+      <td style="color:var(--muted);font-size:11px;font-family:'DM Mono',monospace">${i+1}</td>
+      <td class="dt">${fmtD(t.transaction_date)}</td>
+      <td style="font-size:12px;font-weight:600;color:var(--ink)">${t.description.replace(' - Reg - Growth','').replace(' Fund','')}</td>
+      <td style="font-size:10px;color:var(--muted)">${t.asset_type}</td>
+      <td><span class="pill ${pc}">${t.transaction_type}</span></td>
+      <td class="r ${ac}">${fmt(+t.amount)}</td>
+      <td class="r" style="color:var(--ink3)">${fmt(runAmt)}</td>
+    </tr>`;
+  }).join('');
+
+  // ── XIRR history chart
+  renderXirrHistory(xirrH);
+}
+
+function toggleLots(panelId, iconId) {
+  const p = document.getElementById(panelId);
+  const ic = document.getElementById(iconId);
+  if(!p) return;
+  const isOpen = p.classList.toggle('open');
+  ic.classList.toggle('open', isOpen);
+}
+
+// ── XIRR HISTORY ─────────────────────────────────────────────────
+function renderXirrHistory(rows) {
+  if(!rows||rows.length===0) return;
+  document.getElementById('xirrEmpty').style.display='none';
+  document.getElementById('xirrChartWrap').style.display='block';
+  document.getElementById('xirrHistCount').textContent=`${rows.length} snapshot${rows.length>1?'s':''}`;
+  const dates   = rows.map(r=>fmtD(r.logged_at));
+  const overall = rows.map(r=>+r.overall_xirr);
+  const mf      = rows.map(r=>+r.mf_xirr);
+  const fd      = rows.map(r=>+r.fd_xirr);
+  if(window._xc) window._xc.destroy();
+  window._xc = new Chart(document.getElementById('xirrChart'),{
+    type:'line',
+    data:{labels:dates,datasets:[
+      {label:'Overall',data:overall,borderColor:'#C9962B',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#C9962B',tension:.3,fill:false},
+      {label:'MF',     data:mf,     borderColor:'#1447A6',borderWidth:2,  pointRadius:3,tension:.3,fill:false},
+      {label:'FD',     data:fd,     borderColor:'#14803C',borderWidth:2,  pointRadius:3,tension:.3,fill:false},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw?.toFixed(2)}%`}}},
+      scales:{x:{ticks:{font:{family:'DM Mono',size:9}},grid:{display:false}},y:{ticks:{font:{family:'DM Mono',size:10},callback:v=>`${v}%`},grid:{color:'#F1F5F9'}}}}
+  });
+}
+
+// ── CASH POSITION CHART ──────────────────────────────────────────
+function setCashTab(tab) {
+  window._cashPosTab = tab;
+  ['overall','treasury','bank'].forEach(t => {
+    const btn = document.getElementById(`tab-${t}`);
+    if(btn) {
+      const active = t === tab;
+      btn.style.background     = active ? 'var(--ink)'   : 'var(--white)';
+      btn.style.color          = active ? 'var(--white)' : 'var(--muted)';
+      btn.style.borderColor    = active ? 'var(--ink)'   : 'var(--line)';
+    }
+  });
+  renderCashPosChart();
+}
+
+function renderCashPosChart() {
+  const data  = window._cashPosData || [];
+  const tab   = window._cashPosTab  || 'overall';
+  const labels = data.map(d => d.label);
+  const vals   = data.map(d => {
+    const v = tab === 'overall'  ? +d.overall_total  :
+              tab === 'treasury' ? +d.treasury_total  :
+                                   +d.bank_total;
+    return +(v/1e7).toFixed(2);
+  });
+
+  // Mark the live data point differently
+  const pointColors = data.map(d => d.data_type === 'live' ? '#C9962B' : '#1447A6');
+  const pointRadii  = data.map(d => d.data_type === 'live' ? 6 : 4);
+
+  const colors = { overall:'#1447A6', treasury:'#14803C', bank:'#C9962B' };
+  const color  = colors[tab];
+
+  if(window._cpChart) window._cpChart.destroy();
+  window._cpChart = new Chart(document.getElementById('cashPosChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data:                vals,
+        borderColor:         color,
+        backgroundColor:     color + '12',
+        fill:                true,
+        tension:             .3,
+        pointRadius:         pointRadii,
+        pointBackgroundColor: pointColors,
+        pointBorderColor:    '#fff',
+        pointBorderWidth:    2,
+        borderWidth:         2.5,
+        datalabels: {
+          display: true,
+        }
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 22 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => ` ₹${c.raw.toFixed(2)} Cr`,
+            afterLabel: (c) => {
+              const d = data[c.dataIndex];
+              return d.data_type === 'live' ? '● Live' : '◆ Month-end';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { font: { family: 'DM Mono', size: 9 }, maxRotation: 45 }, grid: { display: false } },
+        y: {
+          ticks: { font: { family: 'DM Mono', size: 10 }, callback: v => `₹${v}Cr` },
+          grid: { color: '#F1F5F9' }
+        }
+      },
+      animation: {
+        onComplete: function() {
+          // Draw labels manually above each point
+          const chart = this;
+          const ctx   = chart.ctx;
+          const ds    = chart.data.datasets[0];
+          const meta  = chart.getDatasetMeta(0);
+          ctx.save();
+          ctx.font = '600 10px DM Mono, monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          meta.data.forEach((pt, i) => {
+            const val = ds.data[i];
+            const isLive = data[i]?.data_type === 'live';
+            ctx.fillStyle = isLive ? '#C9962B' : color;
+            ctx.fillText(`₹${val}Cr`, pt.x, pt.y - 6);
+          });
+          ctx.restore();
+        }
+      }
+    }
+  });
+}
+
+// ── REALISED P&L MODAL ───────────────────────────────────────
+let _realisedData = [];
+
+async function showRealisedModal() {
+  document.getElementById('realisedModal').style.display = 'block';
+  if (_realisedData.length === 0) {
+    document.getElementById('realisedBody').innerHTML = 
+      '<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--muted)">Loading...</td></tr>';
+    try {
+      _realisedData = await sb('realised_pl', 'select=booked_date,asset_type,instrument,amount,notes&order=booked_date.desc');
+    } catch(e) {
+      document.getElementById('realisedBody').innerHTML = 
+        '<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--red)">Error loading data</td></tr>';
+      return;
+    }
+  }
+  filterRealised('all');
+}
+
+function filterRealised(type) {
+  // Update filter buttons
+  ['all','mf','fd'].forEach(t => {
+    const btn = document.getElementById('rf-' + t);
+    const active = t === type;
+    btn.style.background   = active ? 'var(--ink)' : 'var(--white)';
+    btn.style.color        = active ? 'var(--white)' : 'var(--muted)';
+    btn.style.borderColor  = active ? 'var(--ink)' : 'var(--line)';
+  });
+
+  const filtered = _realisedData.filter(r => {
+    if (type === 'mf') return r.asset_type === 'Mutual Fund';
+    if (type === 'fd') return r.asset_type === 'Fixed Deposit';
+    return true;
+  });
+
+  const total = filtered.reduce((s, r) => s + +r.amount, 0);
+  document.getElementById('modalTotal').textContent = `+${cr(total)}`;
+
+  // Group by instrument for subtotals
+  const byInstrument = {};
+  filtered.forEach(r => {
+    const key = r.instrument;
+    if (!byInstrument[key]) byInstrument[key] = { type: r.asset_type, rows: [] };
+    byInstrument[key].rows.push(r);
+  });
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtDate = d => { const [y,m,day]=d.split('-'); return `${day}-${MONTHS[+m-1]}-${y}`; };
+  const shortName = n => n.replace(' - Reg - Growth','').replace(' Fund','');
+
+  let html = '';
+  for (const [instrument, group] of Object.entries(byInstrument)) {
+    const subtotal = group.rows.reduce((s,r) => s + +r.amount, 0);
+    const isMF = group.type === 'Mutual Fund';
+    const tagBg = isMF ? 'var(--blue-lt)' : '#EDE9FE';
+    const tagColor = isMF ? 'var(--blue)' : '#4C1D95';
+    const tagLabel = isMF ? 'MF' : 'FD';
+
+    // Instrument header row
+    html += `<tr style="background:var(--bg);border-top:2px solid var(--line)">
+      <td colspan="3" style="padding:8px 16px;font-size:12px;font-weight:700;color:var(--ink)">
+        <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:2px;background:${tagBg};color:${tagColor};margin-right:8px">${tagLabel}</span>
+        ${shortName(instrument)}
+      </td>
+      <td style="padding:8px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--green)">+${cr(subtotal)}</td>
+    </tr>`;
+
+    // Individual rows
+    group.rows.forEach(r => {
+      html += `<tr style="border-top:1px solid var(--line)">
+        <td style="padding:7px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap">${fmtDate(r.booked_date)}</td>
+        <td style="padding:7px 16px;font-size:10px;color:var(--muted)">${r.asset_type}</td>
+        <td style="padding:7px 16px;font-size:11px;color:var(--ink3)">${r.notes || '—'}</td>
+        <td style="padding:7px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">+${fmt(+r.amount)}</td>
+      </tr>`;
+    });
+  }
+
+  if (!html) html = '<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--muted)">No records found</td></tr>';
+  document.getElementById('realisedBody').innerHTML = html;
+}
+
+function closeRealisedModal() {
+  document.getElementById('realisedModal').style.display = 'none';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') {
+    closeRealisedModal();
+    closeUnrealisedModal();
+    closeXirrModal();
+  }
+});
+
+// ── UNREALISED P&L MODAL ─────────────────────────────────────
+let _mfHoldings = [];
+let _fdHoldings = [];
+
+function showUnrealisedModal() {
+  document.getElementById('unrealisedModal').style.display = 'block';
+  renderUnrealisedModal();
+}
+
+function renderUnrealisedModal() {
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtDate = d => { const [y,m,day]=d.split('-'); return `${day}-${MONTHS[+m-1]}-${y}`; };
+  const shortName = n => n.replace(' - Reg - Growth','').replace(' Fund','');
+
+  const allItems = [
+    ..._mfHoldings.map(f => ({
+      type: 'Mutual Fund',
+      instrument: shortName(f.fund_name),
+      category: f.category,
+      invested: +f.current_value - +f.notional_pl,
+      current: +f.current_value,
+      unrealised: +f.notional_pl,
+      xirr: +f.xirr_pct,
+      since: f.first_buy_date,
+    })),
+    ..._fdHoldings.map(f => ({
+      type: 'Fixed Deposit',
+      instrument: `${f.bank} ${f.fd_number}`,
+      category: `${f.interest_rate}% p.a. · ${f.channel}`,
+      invested: +f.principal,
+      current: +f.current_value,
+      unrealised: +f.interest_earned,
+      xirr: +f.interest_rate,
+      since: f.start_date,
+    })),
+  ].filter(x => x.unrealised > 0).sort((a,b) => b.unrealised - a.unrealised);
+
+  const total = allItems.reduce((s,x) => s + x.unrealised, 0);
+  document.getElementById('unrealisedTotal').textContent = `+${cr(total)}`;
+
+  let html = '';
+  allItems.forEach(x => {
+    const isMF = x.type === 'Mutual Fund';
+    const tagBg = isMF ? 'var(--blue-lt)' : '#DCFCE7';
+    const tagColor = isMF ? 'var(--blue)' : 'var(--green)';
+    const retPct = x.invested > 0 ? ((x.unrealised/x.invested)*100).toFixed(2) : '0';
+    html += `<tr style="border-top:1px solid var(--line)">
+      <td style="padding:10px 16px">
+        <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px">${x.instrument}</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:2px;background:${tagBg};color:${tagColor}">${x.type === 'Mutual Fund' ? 'MF' : 'FD'}</span>
+          <span style="font-size:10px;color:var(--muted)">${x.category}</span>
+        </div>
+      </td>
+      <td style="padding:10px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap">${x.since ? fmtDate(x.since) : '—'}</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${cr(x.invested)}</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${cr(x.current)}</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--green)">+${cr(x.unrealised)}</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--gold)">${x.xirr.toFixed(2)}%</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${retPct}%</td>
+    </tr>`;
+  });
+
+  document.getElementById('unrealisedBody').innerHTML = html || '<tr><td colspan="7" style="padding:24px;text-align:center;color:var(--muted)">No unrealised gains</td></tr>';
+}
+
+function closeUnrealisedModal() {
+  document.getElementById('unrealisedModal').style.display = 'none';
+}
+
+// ── XIRR WORKINGS MODAL ──────────────────────────────────────
+function showXirrModal(type) {
+  document.getElementById('xirrModal').style.display = 'block';
+  renderXirrModal(type);
+}
+
+function renderXirrModal(type) {
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtDate = d => { const [y,m,day]=d.split('-'); return `${day}-${MONTHS[+m-1]}-${y}`; };
+  const shortName = n => n.replace(' - Reg - Growth','').replace(' Fund','');
+
+  // Update tab buttons
+  ['overall','mf','fd'].forEach(t => {
+    const btn = document.getElementById('xf-' + t);
+    if (!btn) return;
+    const active = t === type;
+    btn.style.background  = active ? 'var(--ink)' : 'var(--white)';
+    btn.style.color       = active ? 'var(--white)' : 'var(--muted)';
+    btn.style.borderColor = active ? 'var(--ink)' : 'var(--line)';
+  });
+
+  const xirr = document.getElementById('xhVal').textContent;
+  const mfXirr = document.getElementById('xhMF').textContent;
+  const fdXirr = document.getElementById('xhFD').textContent;
+
+  let title, subtitle, html = '';
+
+  if (type === 'overall') {
+    title = `Overall XIRR: ${xirr}`;
+    subtitle = 'Transaction-based bisection from inception · All cashflows + today\'s terminal value';
+    html += `<tr style="background:var(--bg)"><td colspan="4" style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--ink3)">📥 Cashflows (outflows)</td></tr>`;
+    window._txns?.filter(t => +t.amount < 0).forEach(t => {
+      html += `<tr style="border-top:1px solid var(--line)">
+        <td style="padding:7px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${fmtDate(t.transaction_date)}</td>
+        <td style="padding:7px 16px;font-size:11px;color:var(--ink)">${shortName(t.description)}</td>
+        <td style="padding:7px 16px;font-size:10px;color:var(--muted)">${t.asset_type}</td>
+        <td style="padding:7px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--red)">${fmt(+t.amount)}</td>
+      </tr>`;
+    });
+    html += `<tr style="background:var(--bg)"><td colspan="4" style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--ink3)">📤 Cashflows (inflows / redemptions)</td></tr>`;
+    window._txns?.filter(t => +t.amount > 0).forEach(t => {
+      html += `<tr style="border-top:1px solid var(--line)">
+        <td style="padding:7px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${fmtDate(t.transaction_date)}</td>
+        <td style="padding:7px 16px;font-size:11px;color:var(--ink)">${shortName(t.description)}</td>
+        <td style="padding:7px 16px;font-size:10px;color:var(--muted)">${t.asset_type}</td>
+        <td style="padding:7px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--green)">+${fmt(+t.amount)}</td>
+      </tr>`;
+    });
+    const mfTot = _mfHoldings.reduce((s,f)=>s+(+f.current_value),0);
+    const fdTot = _fdHoldings.reduce((s,f)=>s+(+f.current_value),0);
+    html += `<tr style="background:#F0FDF4;border-top:2px solid var(--green)">
+      <td style="padding:10px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">Today</td>
+      <td style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--ink)" colspan="2">Terminal Value (MF ${cr(mfTot)} + FD ${cr(fdTot)})</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--green)">+${cr(mfTot+fdTot)}</td>
+    </tr>`;
+
+  } else if (type === 'mf') {
+    title = `MF XIRR: ${mfXirr}`;
+    subtitle = 'Per-fund transaction-based XIRR · Weighted average by current value';
+    html += `<tr style="background:var(--bg)"><td colspan="5" style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--ink3)">Per-fund XIRR weighted by current value</td></tr>`;
+    _mfHoldings.forEach(f => {
+      const weight = (_mfHoldings.reduce((s,x)=>s+(+x.current_value),0) > 0)
+        ? ((+f.current_value / _mfHoldings.reduce((s,x)=>s+(+x.current_value),0))*100).toFixed(1)
+        : '0';
+      html += `<tr style="border-top:1px solid var(--line)">
+        <td style="padding:10px 16px;font-size:12px;font-weight:600;color:var(--ink)">${shortName(f.fund_name)}</td>
+        <td style="padding:10px 16px;font-size:10px;color:var(--muted)">${f.category}</td>
+        <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${cr(+f.current_value)}</td>
+        <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${weight}% weight</td>
+        <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--gold)">${(+f.xirr_pct).toFixed(2)}%</td>
+      </tr>`;
+    });
+    const mfTot = _mfHoldings.reduce((s,f)=>s+(+f.current_value),0);
+    const wXirr = mfTot > 0
+      ? (_mfHoldings.reduce((s,f)=>s+((+f.xirr_pct)*(+f.current_value)),0)/mfTot).toFixed(2)
+      : '0';
+    html += `<tr style="background:#F0FDF4;border-top:2px solid var(--green)">
+      <td colspan="4" style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--ink)">Weighted Average → ${mfXirr}</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--gold)">${wXirr}%</td>
+    </tr>`;
+
+  } else {
+    title = `FD XIRR: ${fdXirr}`;
+    subtitle = 'Weighted average of interest rates across all active FDs by current value';
+    html += `<tr style="background:var(--bg)"><td colspan="5" style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--ink3)">Per-FD rate weighted by current value</td></tr>`;
+    _fdHoldings.forEach(f => {
+      const fdTot = _fdHoldings.reduce((s,x)=>s+(+x.current_value),0);
+      const weight = fdTot > 0 ? ((+f.current_value/fdTot)*100).toFixed(1) : '0';
+      const isMat = f.days_to_maturity < 0;
+      html += `<tr style="border-top:1px solid var(--line)">
+        <td style="padding:10px 16px;font-size:12px;font-weight:600;color:var(--ink)">${f.bank} ${f.fd_number}</td>
+        <td style="padding:10px 16px;font-size:10px;color:var(--muted)">${f.channel} · ${isMat ? '⚠ Matured' : fmtDate(f.maturity_date)}</td>
+        <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)">${cr(+f.current_value)}</td>
+        <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${weight}% weight</td>
+        <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--gold)">${(+f.interest_rate).toFixed(2)}%</td>
+      </tr>`;
+    });
+    const fdTot = _fdHoldings.reduce((s,f)=>s+(+f.current_value),0);
+    const wRate = fdTot > 0
+      ? (_fdHoldings.reduce((s,f)=>s+((+f.interest_rate)*(+f.current_value)),0)/fdTot).toFixed(2)
+      : '0';
+    html += `<tr style="background:#F0FDF4;border-top:2px solid var(--green)">
+      <td colspan="4" style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--ink)">Weighted Average Rate → ${fdXirr}</td>
+      <td style="padding:10px 16px;text-align:right;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--gold)">${wRate}%</td>
+    </tr>`;
+  }
+
+  document.getElementById('xirrModalTitle').textContent = title;
+  document.getElementById('xirrModalSubtitle').textContent = subtitle;
+  document.getElementById('xirrBody').innerHTML = html;
+  window._xirrType = type;
+}
+
+function closeXirrModal() {
+  document.getElementById('xirrModal').style.display = 'none';
+}
+
+// ── BOOT ─────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', loadAll);
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bizom Funds</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0D1117;--ink2:#1C2333;--ink3:#2D3748;--muted:#64748B;
+  --line:#E2E8F0;--bg:#F7F8FA;--white:#FFFFFF;
+  --gold:#C9962B;--gold-lt:#FDF3DC;
+  --green:#14803C;--green-lt:#DCFCE7;
+  --red:#B91C1C;--red-lt:#FEE2E2;
+  --blue:#1447A6;--blue-lt:#DBEAFE;
+  --amber:#D97706;--amber-lt:#FEF3C7;
+  --orange:#EA580C;--orange-lt:#FFEDD5;
+}
+html{font-size:16px}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s}
+#loader h2{font-family:'DM Serif Display',serif;color:var(--gold);font-size:26px;margin-bottom:8px}
+#loader p{color:#475569;font-size:12px;font-family:'DM Mono',monospace}
+.lbar{width:180px;height:2px;background:#1C2333;border-radius:2px;margin-top:20px;overflow:hidden}
+.lfill{height:100%;background:var(--gold);animation:lb 1.4s ease-in-out infinite}
+@keyframes lb{0%{width:0}60%{width:80%}100%{width:100%}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* HEADER */
+.hdr{background:var(--ink);padding:20px 48px 18px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--gold)}
+.hdr h1{font-family:'DM Serif Display',serif;font-size:26px;color:var(--white);letter-spacing:-.5px}
+.hdr p{font-size:11px;color:#94A3B8;margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
+.hdr-right{text-align:right}
+.hdr-date-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.hdr-date{font-family:'DM Mono',monospace;font-size:13px;color:var(--gold)}
+.data-banner{background:#0F172A;border-bottom:1px solid #1E293B;padding:7px 48px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-family:'DM Mono',monospace;color:#475569}
+.live{color:#22C55E;font-weight:600}
+.stale{color:var(--amber);font-weight:600}
+
+/* LAYOUT */
+.main{padding:26px 48px 48px;max-width:1440px;margin:0 auto}
+
+/* KPI */
+.kpi-strip{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+.kpi{background:var(--white);border:1px solid var(--line);border-radius:4px;padding:16px 20px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}
+.kpi.primary::before{background:var(--ink);height:4px}
+.kpi-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.kpi-value{font-family:'DM Serif Display',serif;font-size:28px;color:var(--ink);line-height:1;letter-spacing:-1px}
+.kpi.primary .kpi-value{font-size:34px}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
+.mom-up{color:var(--green);font-weight:700}
+.mom-dn{color:var(--red);font-weight:700}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:2px;margin-top:7px;font-family:'DM Mono',monospace}
+.bg{background:var(--green-lt);color:var(--green)}
+.bb{background:var(--blue-lt);color:var(--blue)}
+.ba{background:var(--gold-lt);color:var(--gold)}
+
+/* XIRR HERO */
+.xirr-hero{background:var(--ink);border-radius:4px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.xh-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#64748B;margin-bottom:4px}
+.xh-val{font-family:'DM Serif Display',serif;font-size:46px;color:var(--gold);letter-spacing:-2px;line-height:1}
+.xh-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:220px}
+.xh-sub{text-align:center;padding:10px 16px;background:rgba(255,255,255,.05);border-radius:4px;border:1px solid rgba(255,255,255,.07)}
+.xh-sub-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.xh-sub-val{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:#E2E8F0}
+.xh-sub-tag{font-size:10px;color:#94A3B8;margin-top:1px}
+
+/* PANELS */
+.row{display:grid;gap:16px;margin-bottom:16px}
+.row-3{grid-template-columns:1.4fr 1fr 1fr}
+.row-2{grid-template-columns:2fr 1fr}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.ph{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.ph-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.ph-tag{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;background:var(--bg);padding:2px 8px;border-radius:2px}
+.pb{padding:16px 18px}
+
+/* MF ALLOC */
+.alloc-item{margin-bottom:12px}
+.alloc-item:last-child{margin-bottom:0}
+.alloc-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.alloc-name{font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:6px}
+.alloc-name:hover{color:var(--blue)}
+.alloc-val{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--ink)}
+.alloc-bar-bg{height:5px;background:var(--line);border-radius:1px;overflow:hidden}
+.alloc-bar-fill{height:100%;border-radius:1px;transition:width .8s ease}
+.alloc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+.alloc-cat{font-size:10px;color:var(--muted)}
+.warn{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;text-transform:uppercase}
+.warn-r{background:var(--red-lt);color:var(--red)}
+.warn-a{background:var(--amber-lt);color:var(--amber)}
+.warn-o{background:var(--orange-lt);color:var(--orange)}
+
+/* MF LOTS DRILLDOWN */
+.lots-panel{margin-top:6px;border:1px solid var(--line);border-radius:3px;overflow:hidden;display:none}
+.lots-panel.open{display:block}
+.lots-hdr{display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 10px;background:var(--bg);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lot-row{display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 10px;border-top:1px solid var(--line);font-size:11px}
+.lot-date{font-family:'DM Mono',monospace;color:var(--muted)}
+.lot-units{font-family:'DM Mono',monospace;color:var(--ink)}
+.lot-nav{font-family:'DM Mono',monospace;color:var(--ink)}
+.lot-cost{font-family:'DM Mono',monospace;color:var(--ink);text-align:right}
+.expand-icon{font-size:10px;transition:transform .2s;display:inline-block}
+.expand-icon.open{transform:rotate(90deg)}
+
+/* FD CARDS */
+.fd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fd-card{border:1px solid #BBF7D0;background:#F0FDF4;border-radius:4px;padding:14px}
+.fd-card-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:5px}
+.fd-bank{font-size:13px;font-weight:700;color:var(--ink)}
+.fd-no{font-size:10px;color:var(--muted);font-weight:600;margin-bottom:3px}
+.fd-val{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);letter-spacing:-.5px;margin:4px 0}
+.fd-meta{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:2px}
+.fd-xirr{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green);margin-top:6px}
+.fd-days{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;margin-top:4px;background:var(--amber-lt);color:var(--amber)}
+
+/* BANK */
+.bank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.bank-card{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:12px}
+.bank-name{font-size:10px;font-weight:700;color:var(--ink3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.bank-acct{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:4px}
+.bank-val{font-family:'DM Serif Display',serif;font-size:18px;color:var(--ink);letter-spacing:-.5px}
+
+/* TOTAL CASH STRIP */
+.cash-strip{background:var(--ink2);border:1px solid #2D3748;border-radius:4px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cs-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#64748B;margin-bottom:3px}
+.cs-val{font-family:'DM Serif Display',serif;font-size:28px;color:var(--white);letter-spacing:-1px}
+.cs-breakdown{display:flex;gap:16px}
+.cs-item-label{font-size:10px;color:#64748B;margin-bottom:2px}
+.cs-item-val{font-family:'DM Mono',monospace;font-size:13px;color:#94A3B8}
+
+/* XIRR HISTORY */
+.xirr-log-btn{background:var(--ink);color:var(--white);border:none;padding:5px 12px;border-radius:3px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:.04em}
+.xirr-log-btn:hover{background:var(--ink2)}
+#xirrToast{padding:8px 18px;font-size:11px;border-top:1px solid var(--line);display:none}
+
+/* TABLES */
+.cf-wrap{overflow-y:auto;max-height:360px}
+.cf-table{width:100%;border-collapse:collapse;font-size:12px}
+.cf-table thead th{position:sticky;top:0;background:var(--ink);color:var(--white);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px 11px;text-align:left;white-space:nowrap;z-index:2}
+.cf-table thead th.r{text-align:right}
+.cf-table tbody tr{border-bottom:1px solid var(--line)}
+.cf-table tbody tr:hover{background:#F8FAFC}
+.cf-table td{padding:7px 11px;vertical-align:middle;white-space:nowrap}
+.cf-table td.r{text-align:right;font-family:'DM Mono',monospace;font-size:11px}
+.pill{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:2px;text-transform:uppercase;letter-spacing:.04em}
+.p-out{background:#FEE2E2;color:#991B1B}
+.p-in{background:#DCFCE7;color:#14803C}
+.p-rev{background:#FEF9C3;color:#92400E}
+.p-mat{background:#EDE9FE;color:#4C1D95}
+.amt-out{color:var(--red);font-weight:600}
+.amt-in{color:var(--green);font-weight:600}
+.dt{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* CHARTS */
+.chart-wrap{position:relative}
+.footer{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+
+/* HOLDING RULES */
+/* from Debt_Fund_Types_India.xlsx */
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <h2>Treasury</h2>
+  <p>Connecting to Supabase...</p>
+  <div class="lbar"><div class="lfill"></div></div>
+</div>
+
+<div class="hdr">
+  <div>
+    <h1>Bizom Funds</h1>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-date-label">As of</div>
+    <div class="hdr-date" id="hdrDate">—</div>
+  </div>
+</div>
+<div class="data-banner">
+  <span id="dataLabel">Connecting...</span>
+  <span id="dataTs"></span>
+</div>
+
+<div class="main">
+
+  <!-- KPIs — 3 wide cards -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px">
+
+    <!-- Card 1: Total Cash Position -->
+    <div class="kpi primary" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        <div class="kpi-label">Total Cash Position</div>
+        <div class="kpi-value" id="kCash">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <span class="badge bb" id="kTreasury" style="text-align:right">Treasury —</span>
+        <span class="badge bb" id="kBank" style="text-align:right">Bank —</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Cash in Bank -->
+    <div class="kpi" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        <div class="kpi-label">Cash in Bank</div>
+        <div class="kpi-value" id="kBankTotal">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <span class="badge bb" id="kBankIndia" style="text-align:right">India —</span>
+        <span class="badge bb" id="kBankUK" style="text-align:right">UK —</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Cash in Treasury -->
+    <div class="kpi" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        <div class="kpi-label">Cash in Treasury</div>
+        <div class="kpi-value" id="kTotal">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <span class="badge bb" id="kMF" style="text-align:right">MF —</span>
+        <span class="badge bb" id="kFD" style="text-align:right">FD —</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Row: bank + XIRR side by side -->
+  <div class="row row-2" style="margin-bottom:16px">
+    <div class="panel">
+      <div class="ph">
+        <span class="ph-title">Bank Balances</span>
+        <span class="ph-tag" id="bankSyncTag">—</span>
+      </div>
+      <div class="pb" id="bankBalBody" style="padding:12px"></div>
+    </div>
+
+    <!-- XIRR hero with P&L rows added -->
+    <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
         <div>
           <div class="xh-label">Portfolio XIRR Since Inception</div>
           <div class="xh-val" id="xhVal">—</div>
