@@ -384,26 +384,26 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <!-- XIRR container — structurally identical to left KPI container -->
   <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
 
-    <!-- Header: Performance % + MF/FD on right — fix 5: use min-width to prevent squeezing -->
+    <!-- Header: Performance % + MF/FD on right -->
     <div style="padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
-      <div style="display:flex;align-items:flex-end;gap:12px;flex-shrink:0">
+      <div style="display:flex;align-items:flex-end;gap:12px;flex-shrink:1;min-width:0">
         <div style="width:4px;height:40px;background:var(--gold);flex-shrink:0"></div>
-        <div>
+        <div style="min-width:0">
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:3px">Performance</div>
           <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             <div style="font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-2px;line-height:1;font-family:'DM Mono',monospace;white-space:nowrap" id="xhVal">—</div>
           </div>
         </div>
       </div>
-      <div style="display:flex;gap:16px;align-items:flex-end;padding-bottom:2px">
-        <div style="text-align:right;cursor:pointer;min-width:60px" onclick="showXirrModal('mf')">
-          <div style="font-size:10px;font-weight:500;color:var(--muted);margin-bottom:2px">Mutual Funds</div>
-          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="xhMF">—</div>
+      <div style="display:flex;gap:16px;align-items:flex-end;padding-bottom:2px;flex-shrink:0">
+        <div style="text-align:right;cursor:pointer" onclick="showXirrModal('mf')">
+          <div style="font-size:10px;font-weight:500;color:var(--muted);margin-bottom:2px;white-space:nowrap">Mutual Funds</div>
+          <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="xhMF">—</div>
         </div>
-        <div style="width:1px;background:var(--line);height:28px"></div>
-        <div style="text-align:right;cursor:pointer;min-width:60px" onclick="showXirrModal('fd')">
-          <div style="font-size:10px;font-weight:500;color:var(--muted);margin-bottom:2px">Fixed Deposits</div>
-          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="xhFD">—</div>
+        <div style="width:1px;background:var(--line);height:28px;flex-shrink:0"></div>
+        <div style="text-align:right;cursor:pointer" onclick="showXirrModal('fd')">
+          <div style="font-size:10px;font-weight:500;color:var(--muted);margin-bottom:2px;white-space:nowrap">Fixed Deposits</div>
+          <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="xhFD">—</div>
         </div>
       </div>
     </div>
@@ -455,7 +455,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
         <span class="ph-title">Bank Balances</span>
         <div style="display:flex;align-items:center;gap:12px">
           <span class="ph-tag" id="bankSyncTag">—</span>
-          <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--white);background:var(--ink);padding:3px 10px;border-radius:3px" id="bankTotalHdr">—</div>
+          <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--gold)" id="bankTotalHdr">—</div>
         </div>
       </div>
       <div class="pb" id="bankBalBody" style="padding:12px"></div>
@@ -923,37 +923,72 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     'Mobisy Singapore': { line: '#059669', text: '#065F46' },
   };
 
-  const bankRow = (b, i) => `
+  // Single-row for India (full columns: name | account | balance | date)
+  const bankRowFull = (b, i) => `
     ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;gap:8px">
-      <div style="min-width:0">
-        <div style="font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.bank_name}</div>
-        ${b.last_txn_date ? `<div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px">${fmtD(b.last_txn_date)}</div>` : ''}
-      </div>
-      <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;flex-shrink:0">${cr(+b.balance)}</div>
+    <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;padding:7px 0">
+      <div style="font-size:13px;font-weight:500;color:var(--ink)">${b.bank_name}</div>
+      <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right">${b.account_number ? '···' + b.account_number.slice(-4) : ''}</div>
+      <div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);text-align:right;white-space:nowrap">${cr(+b.balance)}</div>
+      <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap;min-width:70px">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
     </div>`;
 
-  const bankGroup = (label, names, placeholder) => {
-    const ec = ENTITY_COLORS[label] || { line: '#94A3B8', text: '#475569' };
-    const rows = [...groupBanks(names)].sort((a,b) => (+b.balance) - (+a.balance));
-    const total = groupTotal(names);
-    const content = rows.length
-      ? rows.map((b,i) => bankRow(b, i)).join('')
-      : `<div style="padding:10px 0;font-size:12px;font-weight:500;color:var(--muted)">${placeholder||'—'}<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>`;
-    return `
-      <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:7px;border-bottom:2px solid ${ec.line}">
-        <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:${ec.text}">${label}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--ink)">${cr(total)}</span>
+  // Compact row for stacked small entities (name | account | balance | date)
+  const bankRowCompact = (b, i) => `
+    ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
+    <div style="display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0">
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--ink)">${b.bank_name}</div>
+        <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px">${b.account_number ? '···' + b.account_number.slice(-4) : ''}</div>
       </div>
-      ${content}`;
+      <div style="font-size:12px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);text-align:right;white-space:nowrap">${cr(+b.balance)}</div>
+      <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap;min-width:64px">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
+    </div>`;
+
+  const bankGroupHeader = (label, names) => {
+    const ec = ENTITY_COLORS[label] || { line: '#94A3B8', text: '#475569' };
+    const total = groupTotal(names);
+    return `<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;border-bottom:2px solid ${ec.line};margin-bottom:2px">
+      <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:${ec.text}">${label}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--ink)">${cr(total)}</span>
+    </div>`;
   };
 
+  // India — full width with all columns
+  const indiaRows = [...groupBanks(MOBISY_INDIA)].sort((a,b)=>(+b.balance)-(+a.balance));
+  const indiaHtml = `
+    ${bankGroupHeader('Mobisy India', MOBISY_INDIA)}
+    <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:12px;padding:4px 0 2px;border-bottom:1px solid var(--line)">
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Account</div>
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Acct No.</div>
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Balance</div>
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Last Txn</div>
+    </div>
+    ${indiaRows.map((b,i) => bankRowFull(b, i)).join('')}`;
+
+  // UK, ERTM, SG — stacked vertically in right column
+  const makeSmallGroup = (label, names, placeholder) => {
+    const rows = [...groupBanks(names)].sort((a,b)=>(+b.balance)-(+a.balance));
+    const content = rows.length
+      ? rows.map((b,i) => bankRowCompact(b, i)).join('')
+      : `<div style="padding:8px 0;font-size:12px;font-weight:500;color:var(--muted)">${placeholder||'—'}<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>`;
+    return `<div style="padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)">
+      ${bankGroupHeader(label, names)}
+      ${content}
+    </div>`;
+  };
+
+  const rightCol = `
+    ${makeSmallGroup('Mobisy UK', MOBISY_UK)}
+    ${makeSmallGroup('Bizom ERTM', BIZOM_ERTM)}
+    <div>${bankGroupHeader('Mobisy Singapore', MOBISY_SG)}
+      <div style="padding:8px 0;font-size:12px;font-weight:500;color:var(--muted)">OCBC<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>
+    </div>`;
+
   document.getElementById('bankBalBody').innerHTML = banks.length ? `
-    <div class="bank-groups" style="display:flex;gap:0;align-items:flex-start">
-      <div style="flex:3;min-width:0;padding-right:20px;border-right:1px solid var(--line)">${bankGroup('Mobisy India', MOBISY_INDIA)}</div>
-      <div style="flex:1;min-width:0;padding:0 20px;border-right:1px solid var(--line)">${bankGroup('Mobisy UK', MOBISY_UK)}</div>
-      <div style="flex:1;min-width:0;padding:0 20px;border-right:1px solid var(--line)">${bankGroup('Bizom ERTM', BIZOM_ERTM)}</div>
-      <div style="flex:1;min-width:0;padding-left:20px">${bankGroup('Mobisy Singapore', MOBISY_SG, 'OCBC')}</div>
+    <div class="bank-groups" style="display:grid;grid-template-columns:3fr 1fr;gap:0;align-items:flex-start">
+      <div style="padding-right:20px;border-right:1px solid var(--line)">${indiaHtml}</div>
+      <div style="padding-left:20px">${rightCol}</div>
     </div>
   ` : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
