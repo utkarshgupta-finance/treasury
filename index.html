@@ -73,7 +73,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 /* PANELS */
 .row{display:grid;gap:16px;margin-bottom:16px}
 .row-3{grid-template-columns:1.4fr 1fr 1fr}
-.row-2{grid-template-columns:2fr 1fr}
+.row-2{grid-template-columns:1fr 1fr}
 .panel{background:var(--white);border:1px solid var(--line);border-radius:4px;overflow:hidden}
 .ph{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 .ph-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
@@ -1007,7 +1007,18 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('mfTag').textContent         = cr(mfTotal);
   document.getElementById('mfTagInvested').textContent = cr(mfInvested);
   document.getElementById('mfTagPL').textContent       = `+${cr(mfPL)}`;
-  document.getElementById('mfBody').innerHTML = mfH.map((f,i)=>{
+  document.getElementById('mfBody').innerHTML = `<table style="width:100%;border-collapse:collapse">
+    <thead>
+      <tr style="border-bottom:2px solid var(--line)">
+        <th style="padding:6px 16px 6px 17px;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Invested</th>
+        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Current</th>
+        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Profit</th>
+        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">XIRR</th>
+        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Held</th>
+        <th style="padding:6px 0 6px;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Ideal Hold</th>
+      </tr>
+    </thead>
+    <tbody>` + mfH.map((f,i)=>{
     const catL    = (f.category||'').toLowerCase();
     const rk      = Object.keys(HOLDING_RULES).find(k=>catL.includes(k));
     const rule    = rk ? HOLDING_RULES[rk] : null;
@@ -1103,40 +1114,29 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         </div>` : ''}
       </div>`;
 
-    return `<div style="border-bottom:1px solid var(--line);padding:12px 0 10px">
-      <div style="cursor:pointer" onclick="toggleLots('${fundId}','icon-${i}')">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <span class="expand-icon" id="icon-${i}" style="font-size:9px;color:var(--muted)">▶</span>
-          <span style="font-size:13px;font-weight:600;color:var(--ink)">${f.fund_name.replace(' - Reg - Growth','').replace(' Fund','')}</span>
-          <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:2px;background:var(--bg);color:var(--muted);border:1px solid var(--line)">${f.category}</span>
-          ${warn}
-        </div>
-        <table style="width:100%;border-collapse:collapse;margin-left:17px;width:calc(100% - 17px)">
-          <thead>
-            <tr style="border-bottom:1px solid var(--line)">
-              <th style="padding:0 16px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Invested</th>
-              <th style="padding:0 16px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Current</th>
-              <th style="padding:0 16px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Profit</th>
-              <th style="padding:0 16px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">XIRR</th>
-              <th style="padding:0 16px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Held</th>
-              <th style="padding:0 0 4px;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Ideal Hold</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="padding:6px 16px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(invested)}</td>
-              <td style="padding:6px 16px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(+f.current_value)}</td>
-              <td style="padding:6px 16px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">+${cr(profit)}</td>
-              <td style="padding:6px 16px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">${displayXirr}%</td>
-              <td style="padding:6px 16px 0 0;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:${held > (rule?.max||9999) ? 'var(--amber)' : 'var(--ink)'};white-space:nowrap">${fmtHeld(f.first_buy_date)}</td>
-              <td style="padding:6px 0 0;font-family:'DM Mono',monospace;font-size:12px;font-weight:400;color:var(--muted);white-space:nowrap">${rule ? rule.str : '—'}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      ${expandHtml}
-    </div>`;
-  }).join('');
+    return `
+      <tr class="mf-name-row" style="border-top:1px solid var(--line);cursor:pointer" onclick="toggleLots('${fundId}','icon-${i}')">
+        <td colspan="6" style="padding:10px 0 4px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="expand-icon" id="icon-${i}" style="font-size:9px;color:var(--muted)">▶</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink)">${f.fund_name.replace(' - Reg - Growth','').replace(' Fund','')}</span>
+            <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:2px;background:var(--bg);color:var(--muted);border:1px solid var(--line)">${f.category}</span>
+            ${warn}
+          </div>
+        </td>
+      </tr>
+      <tr style="cursor:pointer" onclick="toggleLots('${fundId}','icon-${i}')">
+        <td style="padding:2px 16px 10px 17px;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(invested)}</td>
+        <td style="padding:2px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(+f.current_value)}</td>
+        <td style="padding:2px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">+${cr(profit)}</td>
+        <td style="padding:2px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">${displayXirr}%</td>
+        <td style="padding:2px 16px 10px 0;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:${held > (rule?.max||9999) ? 'var(--amber)' : 'var(--ink)'};white-space:nowrap">${fmtHeld(f.first_buy_date)}</td>
+        <td style="padding:2px 0 10px;font-family:'DM Mono',monospace;font-size:12px;font-weight:400;color:var(--muted);white-space:nowrap">${rule ? rule.str : '—'}</td>
+      </tr>
+      <tr id="${fundId}-expand" style="display:none">
+        <td colspan="6" style="padding:0 0 8px">${expandHtml}</td>
+      </tr>`;
+  }).join('') + `</tbody></table>`;
 
   // ── FD — one row per bank (grouped), expanded shows individual FDs
   const fdInterest = fds.reduce((s,f)=>s+(+f.interest_earned),0);
@@ -1152,7 +1152,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     fdByBank[key].push(fd);
   });
 
-  document.getElementById('fdBody').innerHTML = Object.entries(fdByBank).map(([key, bankFds], bi)=>{
+  const fdRows = Object.entries(fdByBank).map(([key, bankFds], bi)=>{
     const bank      = bankFds[0].bank;
     const bankInvested = bankFds.reduce((s,f)=>s+(+f.principal),0);
     const bankCurrent  = bankFds.reduce((s,f)=>s+(+f.current_value),0);
@@ -1193,42 +1193,43 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
       </div>`;
     }).join('');
 
-    return `<div style="border-bottom:1px solid var(--line);padding:12px 0 10px">
-      <div style="cursor:pointer" onclick="toggleLots('${fdId}','fdicon-${bi}')">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <span class="expand-icon" id="fdicon-${bi}" style="font-size:9px;color:var(--muted)">▶</span>
-          <span style="font-size:13px;font-weight:600;color:var(--ink)">${bank}</span>
-          <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:2px;background:var(--bg);color:var(--muted);border:1px solid var(--line)">${bankFds.length} FD${bankFds.length>1?'s':''}</span>
-          ${bankFds[0]?.channel === 'Direct' ? `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:#EDE9FE;color:#4C1D95">Direct</span>` : `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:var(--blue-lt);color:var(--blue)">B&K</span>`}
-          ${isMatured
-            ? `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:var(--red-lt);color:var(--red)">⚠ Matured</span>`
-            : dtmStr!==null ? `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtmStr} to maturity</span>` : ''
-          }
-        </div>
-        <table style="border-collapse:collapse;margin-left:17px">
-          <thead>
-            <tr style="border-bottom:1px solid var(--line)">
-              <th style="padding:0 20px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Invested</th>
-              <th style="padding:0 20px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Current</th>
-              <th style="padding:0 20px 4px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Interest Earned</th>
-              <th style="padding:0 0 4px;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">XIRR</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="padding:6px 20px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(bankInvested)}</td>
-              <td style="padding:6px 20px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(bankCurrent)}</td>
-              <td style="padding:6px 20px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">+${cr(bankGain)}</td>
-              <td style="padding:6px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">${(bankFds[0]?.interest_rate||7.4).toFixed(2)}%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="lots-panel" id="${fdId}">
-        ${individualFds}
-      </div>
-    </div>`;
+    return `
+      <tr style="border-top:1px solid var(--line);cursor:pointer" onclick="toggleLots('${fdId}','fdicon-${bi}')">
+        <td colspan="4" style="padding:10px 0 4px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="expand-icon" id="fdicon-${bi}" style="font-size:9px;color:var(--muted)">▶</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink)">${bank}</span>
+            <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:2px;background:var(--bg);color:var(--muted);border:1px solid var(--line)">${bankFds.length} FD${bankFds.length>1?'s':''}</span>
+            ${bankFds[0]?.channel === 'Direct' ? `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:#EDE9FE;color:#4C1D95">Direct</span>` : `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:var(--blue-lt);color:var(--blue)">B&K</span>`}
+            ${isMatured
+              ? `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:var(--red-lt);color:var(--red)">⚠ Matured</span>`
+              : dtmStr!==null ? `<span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:2px;background:var(--amber-lt);color:var(--amber)">${dtmStr} to maturity</span>` : ''
+            }
+          </div>
+        </td>
+      </tr>
+      <tr style="cursor:pointer" onclick="toggleLots('${fdId}','fdicon-${bi}')">
+        <td style="padding:2px 20px 10px 17px;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(bankInvested)}</td>
+        <td style="padding:2px 20px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(bankCurrent)}</td>
+        <td style="padding:2px 20px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">+${cr(bankGain)}</td>
+        <td style="padding:2px 0 10px;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">${(bankFds[0]?.interest_rate||7.4).toFixed(2)}%</td>
+      </tr>
+      <tr id="${fdId}-expand" style="display:none">
+        <td colspan="4" style="padding:0 0 4px">${individualFds}</td>
+      </tr>`;
   }).join('');
+
+  document.getElementById('fdBody').innerHTML = `<table style="width:100%;border-collapse:collapse">
+    <thead>
+      <tr style="border-bottom:2px solid var(--line)">
+        <th style="padding:6px 20px 6px 17px;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Invested</th>
+        <th style="padding:6px 20px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Current</th>
+        <th style="padding:6px 20px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Interest Earned</th>
+        <th style="padding:6px 0 6px;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">XIRR</th>
+      </tr>
+    </thead>
+    <tbody>${fdRows}</tbody>
+  </table>`;
 
   // ── Old bank panel (hide if exists)
   const oldBankPanel = document.getElementById('bankPanel');
@@ -1276,11 +1277,20 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
 }
 
 function toggleLots(panelId, iconId) {
-  const p = document.getElementById(panelId);
+  // Try direct id first (FD div panels), then -expand tr variant (MF table rows)
+  let p = document.getElementById(panelId) || document.getElementById(panelId + '-expand');
   const ic = document.getElementById(iconId);
   if(!p) return;
-  const isOpen = p.classList.toggle('open');
-  ic.classList.toggle('open', isOpen);
+  const isTr = p.tagName === 'TR';
+  let isOpen;
+  if(isTr) {
+    isOpen = p.style.display === 'table-row';
+    p.style.display = isOpen ? 'none' : 'table-row';
+    isOpen = !isOpen;
+  } else {
+    isOpen = p.classList.toggle('open');
+  }
+  if(ic) ic.classList.toggle('open', isOpen);
 }
 
 // ── XIRR HISTORY ─────────────────────────────────────────────────
