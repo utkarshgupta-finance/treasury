@@ -923,56 +923,61 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     'Mobisy Singapore': { line: '#059669', text: '#065F46' },
   };
 
-  // Single-row for India (full columns: name | account | balance | date)
+  // Fixed column widths — same for header and every data row so they align perfectly
+  const COL = '1fr 90px 100px 80px'; // name | acct | balance | date
+
+  // India rows — uses fixed COL grid
   const bankRowFull = (b, i) => `
     ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
-    <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;padding:7px 0">
-      <div style="font-size:13px;font-weight:500;color:var(--ink)">${b.bank_name}</div>
-      <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right">${b.account_number ? '···' + b.account_number.slice(-4) : ''}</div>
+    <div style="display:grid;grid-template-columns:${COL};align-items:center;padding:7px 0">
+      <div style="font-size:13px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.bank_name}</div>
+      <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right">${b.account_number ? '···' + b.account_number.slice(-4) : '—'}</div>
       <div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);text-align:right;white-space:nowrap">${cr(+b.balance)}</div>
-      <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap;min-width:70px">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
+      <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
     </div>`;
 
-  // Compact row for stacked small entities (name | account | balance | date)
+  // Right-col rows — same fixed widths
   const bankRowCompact = (b, i) => `
     ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
-    <div style="display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0">
-      <div>
-        <div style="font-size:12px;font-weight:500;color:var(--ink)">${b.bank_name}</div>
-        <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px">${b.account_number ? '···' + b.account_number.slice(-4) : ''}</div>
-      </div>
+    <div style="display:grid;grid-template-columns:${COL};align-items:center;padding:7px 0">
+      <div style="font-size:12px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.bank_name}</div>
+      <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right">${b.account_number ? '···' + b.account_number.slice(-4) : '—'}</div>
       <div style="font-size:12px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);text-align:right;white-space:nowrap">${cr(+b.balance)}</div>
-      <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap;min-width:64px">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
+      <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
+    </div>`;
+
+  // Shared column header row — same COL grid
+  const colHeaders = `
+    <div style="display:grid;grid-template-columns:${COL};padding:4px 0 3px;border-bottom:1px solid var(--line);margin-bottom:0">
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Account</div>
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Acct No.</div>
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Balance</div>
+      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Last Txn</div>
     </div>`;
 
   const bankGroupHeader = (label, names) => {
     const ec = ENTITY_COLORS[label] || { line: '#94A3B8', text: '#475569' };
     const total = groupTotal(names);
-    return `<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;border-bottom:2px solid ${ec.line};margin-bottom:2px">
+    return `<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;border-bottom:2px solid ${ec.line};margin-bottom:0">
       <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:${ec.text}">${label}</span>
       <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--ink)">${cr(total)}</span>
     </div>`;
   };
 
-  // India — full width with all columns
+  // India — left half
   const indiaRows = [...groupBanks(MOBISY_INDIA)].sort((a,b)=>(+b.balance)-(+a.balance));
   const indiaHtml = `
     ${bankGroupHeader('Mobisy India', MOBISY_INDIA)}
-    <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:12px;padding:4px 0 2px;border-bottom:1px solid var(--line)">
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Account</div>
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Acct No.</div>
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Balance</div>
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Last Txn</div>
-    </div>
+    ${colHeaders}
     ${indiaRows.map((b,i) => bankRowFull(b, i)).join('')}`;
 
-  // UK, ERTM, SG — stacked vertically in right column
+  // UK, ERTM, SG — right half stacked, each with their own col headers
   const makeSmallGroup = (label, names, placeholder) => {
     const rows = [...groupBanks(names)].sort((a,b)=>(+b.balance)-(+a.balance));
     const content = rows.length
-      ? rows.map((b,i) => bankRowCompact(b, i)).join('')
+      ? colHeaders + rows.map((b,i) => bankRowCompact(b, i)).join('')
       : `<div style="padding:8px 0;font-size:12px;font-weight:500;color:var(--muted)">${placeholder||'—'}<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>`;
-    return `<div style="padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)">
+    return `<div style="padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line)">
       ${bankGroupHeader(label, names)}
       ${content}
     </div>`;
@@ -981,14 +986,15 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   const rightCol = `
     ${makeSmallGroup('Mobisy UK', MOBISY_UK)}
     ${makeSmallGroup('Bizom ERTM', BIZOM_ERTM)}
-    <div>${bankGroupHeader('Mobisy Singapore', MOBISY_SG)}
+    <div>
+      ${bankGroupHeader('Mobisy Singapore', MOBISY_SG)}
       <div style="padding:8px 0;font-size:12px;font-weight:500;color:var(--muted)">OCBC<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>
     </div>`;
 
   document.getElementById('bankBalBody').innerHTML = banks.length ? `
-    <div class="bank-groups" style="display:grid;grid-template-columns:3fr 1fr;gap:0;align-items:flex-start">
-      <div style="padding-right:20px;border-right:1px solid var(--line)">${indiaHtml}</div>
-      <div style="padding-left:20px">${rightCol}</div>
+    <div class="bank-groups" style="display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:flex-start">
+      <div style="padding-right:24px;border-right:1px solid var(--line)">${indiaHtml}</div>
+      <div style="padding-left:24px">${rightCol}</div>
     </div>
   ` : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
