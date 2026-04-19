@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -22,148 +23,241 @@ html{font-size:16px}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
 
 /* LOADER */
-#loader{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s}
-#loader h2{font-family:'Inter',sans-serif;font-weight:700;color:var(--gold);font-size:26px;margin-bottom:8px}
-#loader p{color:#475569;font-size:12px;font-family:'DM Mono',monospace}
+#loader{position:fixed;inset:0;background:var(–ink);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s}
+#loader h2{font-family:‘Inter’,sans-serif;font-weight:700;color:var(–gold);font-size:26px;margin-bottom:8px}
+#loader p{color:#475569;font-size:12px;font-family:‘DM Mono’,monospace}
 .lbar{width:180px;height:2px;background:#1C2333;border-radius:2px;margin-top:20px;overflow:hidden}
-.lfill{height:100%;background:var(--gold);animation:lb 1.4s ease-in-out infinite}
+.lfill{height:100%;background:var(–gold);animation:lb 1.4s ease-in-out infinite}
 @keyframes lb{0%{width:0}60%{width:80%}100%{width:100%}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
 /* HEADER */
-.hdr{background:var(--ink);padding:20px 48px 18px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--gold)}
-.hdr h1{font-family:'Inter',sans-serif;font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.5px}
+.hdr{background:var(–ink);padding:20px 48px 18px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(–gold)}
+.hdr h1{font-family:‘Inter’,sans-serif;font-size:26px;font-weight:800;color:var(–white);letter-spacing:-.5px}
 .hdr p{font-size:11px;color:#94A3B8;margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
 .hdr-right{text-align:right}
 .hdr-date-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
-.hdr-date{font-family:'DM Mono',monospace;font-size:13px;color:var(--gold)}
-.data-banner{background:#0F172A;border-bottom:1px solid #1E293B;padding:7px 48px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-family:'DM Mono',monospace;color:#475569}
+.hdr-date{font-family:‘DM Mono’,monospace;font-size:13px;color:var(–gold)}
+.data-banner{background:#0F172A;border-bottom:1px solid #1E293B;padding:7px 48px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-family:‘DM Mono’,monospace;color:#475569}
 .live{color:#22C55E;font-weight:600}
-.stale{color:var(--amber);font-weight:600}
+.stale{color:var(–amber);font-weight:600}
 
 /* LAYOUT */
 .main{padding:26px 48px 48px;max-width:1440px;margin:0 auto}
 
 /* KPI */
 .kpi-strip{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:14px;margin-bottom:20px}
-.kpi{background:var(--white);border:1px solid var(--line);border-radius:4px;padding:16px 20px;position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}
-.kpi.primary::before{background:var(--ink);height:4px}
-.kpi-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-.kpi-value{font-family:'Inter',sans-serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-1px}
+.kpi{background:var(–white);border:1px solid var(–line);border-radius:4px;padding:16px 20px;position:relative;overflow:hidden}
+.kpi::before{content:’’;position:absolute;top:0;left:0;right:0;height:3px;background:var(–gold)}
+.kpi.primary::before{background:var(–ink);height:4px}
+.kpi-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(–muted);margin-bottom:7px}
+.kpi-value{font-family:‘Inter’,sans-serif;font-size:28px;font-weight:700;color:var(–ink);line-height:1;letter-spacing:-1px}
 .kpi.primary .kpi-value{font-size:34px}
-.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
-.mom-up{color:var(--green);font-weight:700}
-.mom-dn{color:var(--red);font-weight:700}
-.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:2px;margin-top:7px;font-family:'DM Mono',monospace}
-.bg{background:var(--green-lt);color:var(--green)}
-.bb{background:var(--blue-lt);color:var(--blue)}
-.ba{background:var(--gold-lt);color:var(--gold)}
+.kpi-sub{font-size:11px;color:var(–muted);margin-top:4px;font-family:‘DM Mono’,monospace}
+.mom-up{color:var(–green);font-weight:700}
+.mom-dn{color:var(–red);font-weight:700}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:2px;margin-top:7px;font-family:‘DM Mono’,monospace}
+.bg{background:var(–green-lt);color:var(–green)}
+.bb{background:var(–blue-lt);color:var(–blue)}
+.ba{background:var(–gold-lt);color:var(–gold)}
 
 /* XIRR HERO */
-.xirr-hero{background:var(--ink);border-radius:4px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.xirr-hero{background:var(–ink);border-radius:4px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .xh-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#64748B;margin-bottom:4px}
-.xh-val{font-family:'Inter',sans-serif;font-size:46px;font-weight:800;color:var(--gold);letter-spacing:-2px;line-height:1}
+.xh-val{font-family:‘Inter’,sans-serif;font-size:46px;font-weight:800;color:var(–gold);letter-spacing:-2px;line-height:1}
 .xh-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:220px}
 .xh-sub{text-align:center;padding:10px 16px;background:rgba(255,255,255,.05);border-radius:4px;border:1px solid rgba(255,255,255,.07)}
 .xh-sub-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
-.xh-sub-val{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:#E2E8F0}
+.xh-sub-val{font-family:‘DM Mono’,monospace;font-size:17px;font-weight:500;color:#E2E8F0}
 .xh-sub-tag{font-size:10px;color:#94A3B8;margin-top:1px}
 
 /* PANELS */
 .row{display:grid;gap:16px;margin-bottom:16px}
 .row-3{grid-template-columns:1.4fr 1fr 1fr}
 .row-2{grid-template-columns:2fr 1fr}
-.panel{background:var(--white);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-.ph{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
-.ph-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
-.ph-tag{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;background:var(--bg);padding:2px 8px;border-radius:2px}
+.panel{background:var(–white);border:1px solid var(–line);border-radius:4px;overflow:hidden}
+.ph{padding:12px 18px;border-bottom:1px solid var(–line);display:flex;align-items:center;justify-content:space-between}
+.ph-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(–ink3)}
+.ph-tag{font-size:10px;color:var(–muted);font-family:‘DM Mono’,monospace;background:var(–bg);padding:2px 8px;border-radius:2px}
 .pb{padding:16px 18px}
 
 /* MF ALLOC */
 .alloc-item{margin-bottom:12px}
 .alloc-item:last-child{margin-bottom:0}
 .alloc-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.alloc-name{font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:6px}
-.alloc-name:hover{color:var(--blue)}
-.alloc-val{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--ink)}
-.alloc-bar-bg{height:5px;background:var(--line);border-radius:1px;overflow:hidden}
+.alloc-name{font-size:12px;font-weight:600;color:var(–ink);cursor:pointer;display:flex;align-items:center;gap:6px}
+.alloc-name:hover{color:var(–blue)}
+.alloc-val{font-family:‘DM Mono’,monospace;font-size:12px;font-weight:500;color:var(–ink)}
+.alloc-bar-bg{height:5px;background:var(–line);border-radius:1px;overflow:hidden}
 .alloc-bar-fill{height:100%;border-radius:1px;transition:width .8s ease}
 .alloc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
-.alloc-cat{font-size:10px;color:var(--muted)}
+.alloc-cat{font-size:10px;color:var(–muted)}
 .warn{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;text-transform:uppercase}
-.warn-r{background:var(--red-lt);color:var(--red)}
-.warn-a{background:var(--amber-lt);color:var(--amber)}
-.warn-o{background:var(--orange-lt);color:var(--orange)}
+.warn-r{background:var(–red-lt);color:var(–red)}
+.warn-a{background:var(–amber-lt);color:var(–amber)}
+.warn-o{background:var(–orange-lt);color:var(–orange)}
 
 /* MF LOTS DRILLDOWN */
-.lots-panel{margin-top:6px;border:1px solid var(--line);border-radius:3px;overflow:hidden;display:none}
+.lots-panel{margin-top:6px;border:1px solid var(–line);border-radius:3px;overflow:hidden;display:none}
 .lots-panel.open{display:block}
-.lots-hdr{display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 10px;background:var(--bg);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.lot-row{display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 10px;border-top:1px solid var(--line);font-size:11px}
-.lot-date{font-family:'DM Mono',monospace;color:var(--muted)}
-.lot-units{font-family:'DM Mono',monospace;color:var(--ink)}
-.lot-nav{font-family:'DM Mono',monospace;color:var(--ink)}
-.lot-cost{font-family:'DM Mono',monospace;color:var(--ink);text-align:right}
+.lots-hdr{display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 10px;background:var(–bg);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(–muted)}
+.lot-row{display:grid;grid-template-columns:100px 80px 1fr 1fr;gap:8px;padding:6px 10px;border-top:1px solid var(–line);font-size:11px}
+.lot-date{font-family:‘DM Mono’,monospace;color:var(–muted)}
+.lot-units{font-family:‘DM Mono’,monospace;color:var(–ink)}
+.lot-nav{font-family:‘DM Mono’,monospace;color:var(–ink)}
+.lot-cost{font-family:‘DM Mono’,monospace;color:var(–ink);text-align:right}
 .expand-icon{font-size:10px;transition:transform .2s;display:inline-block}
 .expand-icon.open{transform:rotate(90deg)}
 
 /* FD CARDS */
 .fd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .fd-card{border:1px solid #BBF7D0;background:#F0FDF4;border-radius:4px;padding:14px}
-.fd-card-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:5px}
-.fd-bank{font-size:13px;font-weight:700;color:var(--ink)}
-.fd-no{font-size:10px;color:var(--muted);font-weight:600;margin-bottom:3px}
-.fd-val{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.5px;margin:4px 0}
-.fd-meta{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:2px}
-.fd-xirr{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green);margin-top:6px}
-.fd-days{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;margin-top:4px;background:var(--amber-lt);color:var(--amber)}
+.fd-card-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(–green);margin-bottom:5px}
+.fd-bank{font-size:13px;font-weight:700;color:var(–ink)}
+.fd-no{font-size:10px;color:var(–muted);font-weight:600;margin-bottom:3px}
+.fd-val{font-family:‘Inter’,sans-serif;font-size:20px;font-weight:700;color:var(–ink);letter-spacing:-.5px;margin:4px 0}
+.fd-meta{font-size:10px;color:var(–muted);font-family:‘DM Mono’,monospace;margin-bottom:2px}
+.fd-xirr{font-family:‘DM Mono’,monospace;font-size:12px;font-weight:600;color:var(–green);margin-top:6px}
+.fd-days{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;margin-top:4px;background:var(–amber-lt);color:var(–amber)}
 
 /* BANK */
 .bank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.bank-card{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:12px}
-.bank-name{font-size:10px;font-weight:700;color:var(--ink3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
-.bank-acct{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:4px}
-.bank-val{font-family:'Inter',sans-serif;font-size:18px;color:var(--ink);letter-spacing:-.5px}
+.bank-card{background:var(–bg);border:1px solid var(–line);border-radius:4px;padding:12px}
+.bank-name{font-size:10px;font-weight:700;color:var(–ink3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.bank-acct{font-size:9px;color:var(–muted);font-family:‘DM Mono’,monospace;margin-bottom:4px}
+.bank-val{font-family:‘Inter’,sans-serif;font-size:18px;color:var(–ink);letter-spacing:-.5px}
 
 /* TOTAL CASH STRIP */
-.cash-strip{background:var(--ink2);border:1px solid #2D3748;border-radius:4px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cash-strip{background:var(–ink2);border:1px solid #2D3748;border-radius:4px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .cs-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#64748B;margin-bottom:3px}
-.cs-val{font-family:'Inter',sans-serif;font-size:28px;color:var(--white);letter-spacing:-1px}
+.cs-val{font-family:‘Inter’,sans-serif;font-size:28px;color:var(–white);letter-spacing:-1px}
 .cs-breakdown{display:flex;gap:16px}
 .cs-item-label{font-size:10px;color:#64748B;margin-bottom:2px}
-.cs-item-val{font-family:'DM Mono',monospace;font-size:13px;color:#94A3B8}
+.cs-item-val{font-family:‘DM Mono’,monospace;font-size:13px;color:#94A3B8}
 
 /* XIRR HISTORY */
-.xirr-log-btn{background:var(--ink);color:var(--white);border:none;padding:5px 12px;border-radius:3px;font-family:'Inter',sans-serif;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:.04em}
-.xirr-log-btn:hover{background:var(--ink2)}
-#xirrToast{padding:8px 18px;font-size:11px;border-top:1px solid var(--line);display:none}
+.xirr-log-btn{background:var(–ink);color:var(–white);border:none;padding:5px 12px;border-radius:3px;font-family:‘Inter’,sans-serif;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:.04em}
+.xirr-log-btn:hover{background:var(–ink2)}
+#xirrToast{padding:8px 18px;font-size:11px;border-top:1px solid var(–line);display:none}
 
 /* TABLES */
 .cf-wrap{overflow-y:auto;max-height:360px}
 .cf-table{width:100%;border-collapse:collapse;font-size:12px}
-.cf-table thead th{position:sticky;top:0;background:var(--ink);color:var(--white);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px 11px;text-align:left;white-space:nowrap;z-index:2}
+.cf-table thead th{position:sticky;top:0;background:var(–ink);color:var(–white);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px 11px;text-align:left;white-space:nowrap;z-index:2}
 .cf-table thead th.r{text-align:right}
-.cf-table tbody tr{border-bottom:1px solid var(--line)}
+.cf-table tbody tr{border-bottom:1px solid var(–line)}
 .cf-table tbody tr:hover{background:#F8FAFC}
 .cf-table td{padding:7px 11px;vertical-align:middle;white-space:nowrap}
-.cf-table td.r{text-align:right;font-family:'DM Mono',monospace;font-size:11px}
+.cf-table td.r{text-align:right;font-family:‘DM Mono’,monospace;font-size:11px}
 .pill{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:2px;text-transform:uppercase;letter-spacing:.04em}
 .p-out{background:#FEE2E2;color:#991B1B}
 .p-in{background:#DCFCE7;color:#14803C}
 .p-rev{background:#FEF9C3;color:#92400E}
 .p-mat{background:#EDE9FE;color:#4C1D95}
-.amt-out{color:var(--red);font-weight:600}
-.amt-in{color:var(--green);font-weight:600}
-.dt{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.amt-out{color:var(–red);font-weight:600}
+.amt-in{color:var(–green);font-weight:600}
+.dt{font-family:‘DM Mono’,monospace;font-size:11px;color:var(–muted)}
 
 /* CHARTS */
 .chart-wrap{position:relative}
-.footer{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.footer{margin-top:28px;padding-top:12px;border-top:1px solid var(–line);font-size:11px;color:var(–muted);display:flex;justify-content:space-between}
 
 /* HOLDING RULES */
 /* from Debt_Fund_Types_India.xlsx */
+
+/* ── MOBILE ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+/* Layout */
+.hdr        { padding: 14px 16px 12px; }
+.hdr h1     { font-size: 20px; }
+.data-banner{ padding: 6px 16px; flex-wrap: wrap; gap: 4px; }
+.main       { padding: 14px 12px 40px; }
+
+/* KPI container — stack bank/treasury vertically */
+.kpi-top-body { grid-template-columns: 1fr !important; }
+.kpi-top-sep  { display: none !important; }
+
+/* Row layouts — all go single column */
+.row-2, .row-3 { grid-template-columns: 1fr !important; }
+
+/* XIRR hero — stack left/right columns */
+.xirr-cols    { grid-template-columns: 1fr !important; }
+.xirr-divider { display: none !important; }
+
+/* MF lots grid — simplify */
+.lots-hdr, .lot-row {
+grid-template-columns: 1fr 1fr 1fr !important;
+}
+.lots-hdr span:nth-child(2),
+.lot-row  span:nth-child(2) { display: none; }
+
+/* FD grid — 1 col */
+.fd-grid { grid-template-columns: 1fr !important; }
+
+/* Bank grid — 2 col */
+.bank-grid { grid-template-columns: 1fr 1fr !important; }
+
+/* Charts — reduce height */
+.chart-wrap canvas { max-height: 200px; }
+
+/* Tables — horizontal scroll */
+.cf-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.cf-table       { min-width: 480px; }
+
+/* Modals — full screen on mobile */
+#realisedModal   > div,
+#unrealisedModal > div,
+#xirrModal       > div,
+#dailyModal      > div {
+width: 100vw !important;
+max-width: 100vw !important;
+max-height: 100vh !important;
+top: 0 !important; left: 0 !important;
+transform: none !important;
+border-radius: 0 !important;
+}
+
+/* MF header stats — wrap */
+#mfHeaderStats { flex-wrap: wrap; gap: 6px !important; }
+
+/* Footer — stack */
+.footer { flex-direction: column; gap: 4px; }
+
+/* Hide XIRR trend sidebar on mobile */
+.xirr-hist-mobile-hide { display: none; }
+
+/* KPI top — dark header stacks */
+.kpi-top-header { flex-direction: column !important; gap: 4px !important; }
+.kpi-top-header .kpi-big { font-size: 24px !important; }
+
+/* Bank balance — groups stack */
+.bank-groups { flex-direction: column !important; gap: 0 !important; }
+.bank-groups > * { padding: 10px 14px !important; border-right: none !important; border-top: 1px solid var(–line) !important; }
+.bank-vsep { display: none !important; }
+
+/* MF/FD panel headers — wrap stats */
+.panel .ph { flex-wrap: wrap; gap: 6px; }
+.panel .ph > div { margin-left: 0 !important; }
+
+/* FD cards — 1 col */
+.fd-grid { grid-template-columns: 1fr !important; }
+
+/* Cash position tabs */
+.chart-tabs { flex-wrap: wrap; gap: 4px; }
+
+/* Unrealised modal table — scroll */
+#unrealisedModal .modal-table-wrap { overflow-x: auto; }
+#unrealisedModal table { min-width: 480px; }
+
+/* XIRR modal — hide less important columns */
+.xirr-modal-hide-mobile { display: none !important; }
+
+/* Daily modal grid — stack */
+#dailyModal .daily-grid { grid-template-columns: 1fr !important; }
+}
 </style>
+
 </head>
 <body>
 
@@ -190,70 +284,76 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 <div class="main">
 
   <!-- KPIs — 3 wide cards -->
+
   <!-- Single KPI container — dark header + Bank/Treasury below -->
+
   <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;margin-bottom:20px">
     <!-- Dark header: Total Cash Position -->
-    <div style="background:var(--ink);padding:14px 24px;display:flex;align-items:baseline;gap:14px">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#64748B;white-space:nowrap">Total Cash Position</div>
+    <div class="kpi-top-header" style="background:var(--ink);padding:14px 24px;display:flex;align-items:baseline;gap:14px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#94A3B8;white-space:nowrap">Total Cash Position</div>
       <div style="font-size:32px;font-weight:800;color:var(--white);letter-spacing:-1.5px;font-family:'DM Mono',monospace" id="kCash">—</div>
     </div>
     <!-- White body: Bank + Treasury side by side -->
-    <div style="display:grid;grid-template-columns:1fr 1px 1fr;background:var(--white)">
+    <div class="kpi-top-body" style="display:grid;grid-template-columns:1fr 1px 1fr;background:var(--white)">
 
-      <!-- Bank -->
-      <div style="padding:14px 20px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px">Cash in Bank</div>
-        <div style="font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--ink);font-family:'DM Mono',monospace;margin-bottom:10px" id="kBankTotal">—</div>
-        <div style="border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:5px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:10px;font-weight:600;color:var(--muted)">Mobisy India</span>
-            <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankIndia">—</span>
-          </div>
-          <div style="height:1px;background:var(--line)"></div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:10px;font-weight:600;color:var(--muted)">Mobisy UK</span>
-            <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankUK">—</span>
-          </div>
-          <div style="height:1px;background:var(--line)"></div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:10px;font-weight:600;color:var(--muted)">Bizom ERTM</span>
-            <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankERTM">—</span>
-          </div>
-        </div>
+```
+  <!-- Bank -->
+  <div style="padding:14px 20px">
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px">Cash in Bank</div>
+    <div style="font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--ink);font-family:'DM Mono',monospace;margin-bottom:10px" id="kBankTotal">—</div>
+    <div style="border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:5px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:10px;font-weight:600;color:var(--muted)">Mobisy India</span>
+        <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankIndia">—</span>
       </div>
-
-      <!-- Separator -->
-      <div style="background:var(--line)"></div>
-
-      <!-- Treasury -->
-      <div style="padding:14px 20px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px">Cash in Treasury</div>
-        <div style="font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--ink);font-family:'DM Mono',monospace;margin-bottom:10px" id="kTotal">—</div>
-        <div style="border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:5px">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap">Mutual Funds</span>
-            <div style="display:flex;gap:12px">
-              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFInvested">—</div></div>
-              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFCurrent">—</div></div>
-              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kMFReturns">—</div></div>
-            </div>
-          </div>
-          <div style="height:1px;background:var(--line)"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap">Fixed Deposit</span>
-            <div style="display:flex;gap:12px">
-              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDInvested">—</div></div>
-              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDCurrent">—</div></div>
-              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kFDReturns">—</div></div>
-            </div>
-          </div>
-        </div>
+      <div style="height:1px;background:var(--line)"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:10px;font-weight:600;color:var(--muted)">Mobisy UK</span>
+        <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankUK">—</span>
       </div>
-
+      <div style="height:1px;background:var(--line)"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:10px;font-weight:600;color:var(--muted)">Bizom ERTM</span>
+        <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankERTM">—</span>
+      </div>
     </div>
   </div>
 
+  <!-- Separator -->
+  <div class="kpi-top-sep" style="background:var(--line)"></div>
+
+  <!-- Treasury -->
+  <div style="padding:14px 20px">
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px">Cash in Treasury</div>
+    <div style="font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--ink);font-family:'DM Mono',monospace;margin-bottom:10px" id="kTotal">—</div>
+    <div style="border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:5px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap">Mutual Funds</span>
+        <div style="display:flex;gap:12px">
+          <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFInvested">—</div></div>
+          <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFCurrent">—</div></div>
+          <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kMFReturns">—</div></div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--line)"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap">Fixed Deposit</span>
+        <div style="display:flex;gap:12px">
+          <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDInvested">—</div></div>
+          <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDCurrent">—</div></div>
+          <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kFDReturns">—</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+
   <!-- Row: bank + XIRR side by side -->
+
   <div class="row row-2" style="margin-bottom:16px">
     <div class="panel">
       <div class="ph">
@@ -263,75 +363,79 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="pb" id="bankBalBody" style="padding:12px"></div>
     </div>
 
-    <!-- XIRR hero — Option D: two-column split -->
-    <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;padding:0">
-      <div style="display:grid;grid-template-columns:1fr 1px 1fr;height:100%">
+```
+<!-- XIRR hero — Option D: two-column split -->
+<div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;padding:0">
+  <div class="xirr-cols" style="display:grid;grid-template-columns:1fr 1px 1fr;height:100%">
 
-        <!-- LEFT: Performance -->
-        <div style="padding:20px 22px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:10px">Performance</div>
-          <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s;display:inline-block;margin-bottom:12px" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-val" id="xhVal" style="margin-bottom:2px">—</div>
-            <div style="font-size:9px;color:#475569;font-family:'DM Mono',monospace" id="xirrHistCount">Since inception</div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div class="xh-sub" onclick="showXirrModal('mf')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-              <div class="xh-sub-label">Mutual Funds <svg style="display:inline;vertical-align:middle;margin-left:3px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-              <div class="xh-sub-val" id="xhMF">—</div>
-              <div class="xh-sub-tag">Transaction-calculated</div>
-            </div>
-            <div class="xh-sub" onclick="showXirrModal('fd')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-              <div class="xh-sub-label">Fixed Deposits <svg style="display:inline;vertical-align:middle;margin-left:3px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-              <div class="xh-sub-val" id="xhFD">—</div>
-              <div class="xh-sub-tag">Weighted avg rate</div>
-            </div>
-          </div>
+    <!-- LEFT: Performance -->
+    <div style="padding:20px 22px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:10px">Performance</div>
+      <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s;display:inline-block;margin-bottom:12px" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+        <div class="xh-val" id="xhVal" style="margin-bottom:2px">—</div>
+        <div style="font-size:9px;color:#475569;font-family:'DM Mono',monospace" id="xirrHistCount">Since inception</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div class="xh-sub" onclick="showXirrModal('mf')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+          <div class="xh-sub-label">Mutual Funds <svg style="display:inline;vertical-align:middle;margin-left:3px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="xh-sub-val" id="xhMF">—</div>
+          <div class="xh-sub-tag">Transaction-calculated</div>
         </div>
-
-        <!-- Divider -->
-        <div style="background:rgba(255,255,255,.07)"></div>
-
-        <!-- RIGHT: Returns + Daily Earnings -->
-        <div style="padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between">
-          <div>
-            <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:14px">Returns</div>
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:11px;color:#94A3B8">Unrealised</span>
-                <div onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-                  <span style="font-size:16px;font-weight:700;color:#86EFAC;font-family:'DM Mono',monospace" id="kUnreal">—</span>
-                  <svg style="display:inline;vertical-align:middle;margin-left:4px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#86EFAC" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </div>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:11px;color:#94A3B8">Realised</span>
-                <div onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-                  <span style="font-size:16px;font-weight:700;color:#93C5FD;font-family:'DM Mono',monospace" id="kBooked">—</span>
-                  <svg style="display:inline;vertical-align:middle;margin-left:4px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </div>
-              </div>
-              <div style="height:1px;background:rgba(255,255,255,.07)"></div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:11px;font-weight:600;color:#E2E8F0">Total Returns</span>
-                <span style="font-size:16px;font-weight:800;color:#4ADE80;font-family:'DM Mono',monospace" id="kTotalPL">—</span>
-              </div>
-            </div>
-          </div>
-          <!-- Teal daily earnings card — flush to bottom, matches MF/FD box height -->
-          <div onclick="showDailyModal()" style="background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);border-radius:6px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:opacity .15s;margin-top:14px" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div>
-              <div style="font-size:9px;color:#0F6E56;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;font-weight:700">Earning per day</div>
-              <div style="font-size:22px;font-weight:800;color:#5DCAA5;font-family:'DM Mono',monospace" id="dailyTotal">—</div>
-            </div>
-            <svg style="flex-shrink:0" width="12" height="12" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#5DCAA5" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
+        <div class="xh-sub" onclick="showXirrModal('fd')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+          <div class="xh-sub-label">Fixed Deposits <svg style="display:inline;vertical-align:middle;margin-left:3px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="xh-sub-val" id="xhFD">—</div>
+          <div class="xh-sub-tag">Weighted avg rate</div>
         </div>
-
       </div>
     </div>
+
+    <!-- Divider -->
+    <div class="xirr-divider" style="background:rgba(255,255,255,.07)"></div>
+
+    <!-- RIGHT: Returns + Daily Earnings -->
+    <div style="padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between">
+      <div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:14px">Returns</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;color:#94A3B8">Unrealised</span>
+            <div onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px;font-weight:700;color:#86EFAC;font-family:'DM Mono',monospace" id="kUnreal">—</span>
+              <svg style="display:inline;vertical-align:middle;margin-left:4px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#86EFAC" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;color:#94A3B8">Realised</span>
+            <div onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px;font-weight:700;color:#93C5FD;font-family:'DM Mono',monospace" id="kBooked">—</span>
+              <svg style="display:inline;vertical-align:middle;margin-left:4px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,.07)"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;font-weight:600;color:#E2E8F0">Total Returns</span>
+            <span style="font-size:16px;font-weight:800;color:#4ADE80;font-family:'DM Mono',monospace" id="kTotalPL">—</span>
+          </div>
+        </div>
+      </div>
+      <!-- Teal daily earnings card — flush to bottom, matches MF/FD box height -->
+      <div onclick="showDailyModal()" style="background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);border-radius:6px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:opacity .15s;margin-top:14px" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+        <div>
+          <div style="font-size:9px;color:#0F6E56;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;font-weight:700">Earning per day</div>
+          <div style="font-size:22px;font-weight:800;color:#5DCAA5;font-family:'DM Mono',monospace" id="dailyTotal">—</div>
+        </div>
+        <svg style="flex-shrink:0" width="12" height="12" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#5DCAA5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+  </div>
+</div>
+```
+
   </div>
 
   <!-- Row: MF + FD side by side -->
+
   <div class="row row-2" style="margin-bottom:16px">
     <div class="panel">
       <div class="ph" style="flex-wrap:wrap;gap:8px">
@@ -356,32 +460,37 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="pb" id="mfBody"></div>
     </div>
 
-    <div class="panel">
-      <div class="ph" style="flex-wrap:wrap;gap:8px">
-        <span class="ph-title">Active Fixed Deposits</span>
-        <div style="display:flex;gap:12px;margin-left:auto;align-items:center">
-          <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTagInvested">—</div>
-          </div>
-          <div style="width:1px;height:24px;background:var(--line)"></div>
-          <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTag">—</div>
-          </div>
-          <div style="width:1px;height:24px;background:var(--line)"></div>
-          <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Interest</div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)" id="fdTagInterest">—</div>
-          </div>
-        </div>
+```
+<div class="panel">
+  <div class="ph" style="flex-wrap:wrap;gap:8px">
+    <span class="ph-title">Active Fixed Deposits</span>
+    <div style="display:flex;gap:12px;margin-left:auto;align-items:center">
+      <div style="text-align:right">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTagInvested">—</div>
       </div>
-      <div class="pb" id="fdBody" style="padding:12px"></div>
+      <div style="width:1px;height:24px;background:var(--line)"></div>
+      <div style="text-align:right">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="fdTag">—</div>
+      </div>
+      <div style="width:1px;height:24px;background:var(--line)"></div>
+      <div style="text-align:right">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Interest</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green)" id="fdTagInterest">—</div>
+      </div>
     </div>
+  </div>
+  <div class="pb" id="fdBody" style="padding:12px"></div>
+</div>
+```
+
   </div>
 
   <!-- Charts -->
+
   <!-- Cash Position chart with 3 tabs -->
+
   <div class="panel" style="margin-bottom:16px">
     <div class="ph" style="align-items:center">
       <span class="ph-title">Cash Position</span>
@@ -401,30 +510,34 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="pb"><div class="chart-wrap" style="height:230px"><canvas id="moChart" role="img" aria-label="Monthly flows"></canvas></div></div>
     </div>
 
-    <!-- XIRR History -->
-    <div class="panel">
-      <div class="ph">
-        <span class="ph-title">XIRR Trend</span>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="ph-tag" id="xirrHistCount">No snapshots yet</span>
-          <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">Auto-logged nightly at 11:59 PM IST on data refresh days</span>
-        </div>
-      </div>
-      <div id="xirrHistBody" class="pb">
-        <div id="xirrEmpty" style="text-align:center;padding:28px;color:var(--muted);font-size:13px">
-          No XIRR history yet — auto-logged nightly when data is refreshed.
-        </div>
-        <div class="chart-wrap" style="height:175px;display:none" id="xirrChartWrap">
-          <canvas id="xirrChart" role="img" aria-label="XIRR trend"></canvas>
-        </div>
-      </div>
+```
+<!-- XIRR History -->
+<div class="panel">
+  <div class="ph">
+    <span class="ph-title">XIRR Trend</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="ph-tag" id="xirrHistCount">No snapshots yet</span>
+      <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">Auto-logged nightly at 11:59 PM IST on data refresh days</span>
     </div>
+  </div>
+  <div id="xirrHistBody" class="pb">
+    <div id="xirrEmpty" style="text-align:center;padding:28px;color:var(--muted);font-size:13px">
+      No XIRR history yet — auto-logged nightly when data is refreshed.
+    </div>
+    <div class="chart-wrap" style="height:175px;display:none" id="xirrChartWrap">
+      <canvas id="xirrChart" role="img" aria-label="XIRR trend"></canvas>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 
   <!-- Cashflow ledger -->
+
   <div class="panel">
     <div class="ph"><span class="ph-title">Cashflow Ledger</span><span class="ph-tag" id="cfCount">—</span></div>
-    <div class="cf-wrap">
+    <div class="cf-table-wrap cf-wrap">
       <table class="cf-table">
         <thead><tr>
           <th>#</th><th>Date</th><th>Instrument</th><th>Asset</th><th>Type</th>
@@ -442,6 +555,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </div>
 
 <!-- ── REALISED P&L MODAL ──────────────────────────────────── -->
+
 <div id="realisedModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeRealisedModal()">
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(740px,95vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
@@ -481,6 +595,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </div>
 
 <!-- ── UNREALISED P&L MODAL ─────────────────────────────────── -->
+
 <div id="unrealisedModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeUnrealisedModal()">
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(860px,95vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
@@ -516,6 +631,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </div>
 
 <!-- ── XIRR WORKINGS MODAL ───────────────────────────────────── -->
+
 <div id="xirrModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeXirrModal()">
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(820px,95vw);max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="padding:18px 24px;background:var(--ink);flex-shrink:0">
@@ -549,6 +665,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </div>
 
 <!-- ── DAILY EARNINGS MODAL ──────────────────────────────────── -->
+
 <div id="dailyModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeDailyModal()">
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(560px,95vw);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
@@ -769,20 +886,49 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     const bi2 = BANK_ORDER.findIndex(n => b.bank_name.includes(n) || n.includes(b.bank_name));
     return (ai === -1 ? 99 : ai) - (bi2 === -1 ? 99 : bi2);
   });
-  document.getElementById('bankBalBody').innerHTML = banks.length ?
-    `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">` +
-    sortedBanks.map(b=>`
-      <div style="padding:10px 12px;background:var(--bg);border-radius:3px;border:1px solid var(--line)">
-        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.bank_name}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink)">${cr(+b.balance)}</div>
-        ${b.last_txn_date ? `<div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:3px">Last txn: ${fmtD(b.last_txn_date)}</div>` : ''}
-      </div>`).join('') +
-    `</div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--ink);border-radius:3px;margin-top:8px">
-      <span style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em">Total</span>
-      <span style="font-family:'Inter',sans-serif;font-size:16px;color:var(--gold)">${cr(bankTotal)}</span>
-    </div>`
-    : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
+  // Bank groupings for display
+  const MOBISY_INDIA = ['HDFC','HDFC OD','HDFC Capital','HSBC INDIA','Kotak Nodal','Kotak Autopay'];
+  const MOBISY_UK    = ['HSBC UK'];
+  const BIZOM_ERTM   = ['Kotak Bizom E RTM'];
+  const groupBanks = (names) => sortedBanks.filter(b => names.some(n => b.bank_name === n));
+  const groupTotal = (names) => groupBanks(names).reduce((s,b) => s + (+b.balance), 0);
+
+  const bankRow = (b, i) => `
+    ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--ink)">${b.bank_name}</div>
+        ${b.last_txn_date ? `<div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px">Last txn: ${fmtD(b.last_txn_date)}</div>` : ''}
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)">${cr(+b.balance)}</div>
+    </div>`;
+
+  const bankGroup = (label, names, color) => {
+    const rows = groupBanks(names);
+    if (!rows.length) return '';
+    return `
+      <div style="flex:${names === MOBISY_INDIA ? 3 : 1};min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;border-bottom:2px solid ${color}">
+          <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">${label}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--ink)">${cr(groupTotal(names))}</span>
+        </div>
+        ${rows.map((b,i) => bankRow(b, i)).join('')}
+      </div>`;
+  };
+
+  document.getElementById('bankBalBody').innerHTML = banks.length ? `
+    <div class="bank-groups" style="display:flex;gap:20px;align-items:flex-start">
+      ${bankGroup('Mobisy India', MOBISY_INDIA, '#3B82F6')}
+      <div class="bank-vsep" style="width:1px;background:var(--line);align-self:stretch"></div>
+      ${bankGroup('Mobisy UK', MOBISY_UK, '#8B5CF6')}
+      <div class="bank-vsep" style="width:1px;background:var(--line);align-self:stretch"></div>
+      ${bankGroup('Bizom ERTM', BIZOM_ERTM, '#F59E0B')}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">
+      <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Total Bank</span>
+      <span style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--gold)">${cr(bankTotal)}</span>
+    </div>
+  ` : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
   // ── MF — collapsed shows name + invested + current + profit + xirr
   //         expanded shows per-tranche: buy date, units, buy nav, current nav, buy value, profit, xirr
@@ -1522,5 +1668,6 @@ function closeXirrModal() {
 // ── BOOT ─────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', loadAll);
 </script>
+
 </body>
 </html>
