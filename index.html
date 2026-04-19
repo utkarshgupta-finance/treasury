@@ -190,60 +190,67 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 <div class="main">
 
   <!-- KPIs — 3 wide cards -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px">
-
-    <!-- Card 1: Total Cash Position -->
-    <div class="kpi primary">
-      <div class="kpi-label">Total Cash Position</div>
-      <div class="kpi-value" id="kCash">—</div>
+  <!-- Single KPI container — dark header + Bank/Treasury below -->
+  <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;margin-bottom:20px">
+    <!-- Dark header: Total Cash Position -->
+    <div style="background:var(--ink);padding:14px 24px;display:flex;align-items:baseline;gap:14px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#64748B;white-space:nowrap">Total Cash Position</div>
+      <div style="font-size:32px;font-weight:800;color:var(--white);letter-spacing:-1.5px;font-family:'DM Mono',monospace" id="kCash">—</div>
     </div>
+    <!-- White body: Bank + Treasury side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1px 1fr;background:var(--white)">
 
-    <!-- Card 2: Cash in Bank -->
-    <div class="kpi">
-      <div class="kpi-label">Cash in Bank</div>
-      <div class="kpi-value" id="kBankTotal" style="margin-bottom:12px">—</div>
-      <div style="border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:40px">India</span>
-          <div style="text-align:right"><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankIndia">—</div></div>
-        </div>
-        <div style="height:1px;background:var(--line)"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:40px">UK</span>
-          <div style="text-align:right"><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankUK">—</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 3: Cash in Treasury -->
-    <div class="kpi">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-        <div class="kpi-label">Cash in Treasury</div>
-      </div>
-      <div class="kpi-value" id="kTotal" style="margin-bottom:12px">—</div>
-      <div style="border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px">
-        <!-- MF row -->
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:60px">Mutual Funds</span>
-          <div style="display:flex;gap:14px">
-            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFInvested">—</div></div>
-            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFCurrent">—</div></div>
-            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kMFReturns">—</div></div>
+      <!-- Bank -->
+      <div style="padding:14px 20px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px">Cash in Bank</div>
+        <div style="font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--ink);font-family:'DM Mono',monospace;margin-bottom:10px" id="kBankTotal">—</div>
+        <div style="border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:10px;font-weight:600;color:var(--muted)">Mobisy India</span>
+            <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankIndia">—</span>
           </div>
-        </div>
-        <div style="height:1px;background:var(--line)"></div>
-        <!-- FD row -->
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:60px">Fixed Dep.</span>
-          <div style="display:flex;gap:14px">
-            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDInvested">—</div></div>
-            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDCurrent">—</div></div>
-            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kFDReturns">—</div></div>
+          <div style="height:1px;background:var(--line)"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:10px;font-weight:600;color:var(--muted)">Mobisy UK</span>
+            <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankUK">—</span>
+          </div>
+          <div style="height:1px;background:var(--line)"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:10px;font-weight:600;color:var(--muted)">Bizom ERTM</span>
+            <span style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankERTM">—</span>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- Separator -->
+      <div style="background:var(--line)"></div>
+
+      <!-- Treasury -->
+      <div style="padding:14px 20px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px">Cash in Treasury</div>
+        <div style="font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--ink);font-family:'DM Mono',monospace;margin-bottom:10px" id="kTotal">—</div>
+        <div style="border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap">Mutual Funds</span>
+            <div style="display:flex;gap:12px">
+              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFInvested">—</div></div>
+              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFCurrent">—</div></div>
+              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kMFReturns">—</div></div>
+            </div>
+          </div>
+          <div style="height:1px;background:var(--line)"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap">Fixed Deposit</span>
+            <div style="display:flex;gap:12px">
+              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDInvested">—</div></div>
+              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDCurrent">—</div></div>
+              <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kFDReturns">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- Row: bank + XIRR side by side -->
@@ -306,7 +313,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
               <div style="height:1px;background:rgba(255,255,255,.07)"></div>
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <span style="font-size:11px;font-weight:600;color:#E2E8F0">Total Returns</span>
-                <span style="font-size:20px;font-weight:800;color:#4ADE80;font-family:'DM Mono',monospace" id="kTotalPL">—</span>
+                <span style="font-size:16px;font-weight:800;color:#4ADE80;font-family:'DM Mono',monospace" id="kTotalPL">—</span>
               </div>
             </div>
           </div>
@@ -738,11 +745,13 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('kCash').textContent     = cr(total + bankTotal);
   // (kTreasury and kBank badges removed from card 1)
   document.getElementById('kBankTotal').textContent = cr(bankTotal);
-  // India vs UK bank split
-  const hsbcUK    = banks.find(b => b.bank_name === 'HSBC UK')?.balance || 0;
-  const indiaBank = bankTotal - (+hsbcUK);
+  // Bank groupings
+  const ertm       = banks.find(b => b.bank_name === 'Kotak Bizom E RTM')?.balance || 0;
+  const hsbcUK     = banks.find(b => b.bank_name === 'HSBC UK')?.balance || 0;
+  const indiaBank  = bankTotal - (+hsbcUK) - (+ertm);
   document.getElementById('kBankIndia').textContent = cr(indiaBank);
   document.getElementById('kBankUK').textContent    = cr(hsbcUK);
+  document.getElementById('kBankERTM').textContent  = cr(ertm);
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)}%` : '—';
   document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)}%`;
   document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)}%`;
