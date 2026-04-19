@@ -193,38 +193,54 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px">
 
     <!-- Card 1: Total Cash Position -->
-    <div class="kpi primary" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-      <div>
-        <div class="kpi-label">Total Cash Position</div>
-        <div class="kpi-value" id="kCash">—</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-        <span class="badge bb" id="kTreasury" style="text-align:right">Treasury —</span>
-        <span class="badge bb" id="kBank" style="text-align:right">Bank —</span>
-      </div>
+    <div class="kpi primary">
+      <div class="kpi-label">Total Cash Position</div>
+      <div class="kpi-value" id="kCash">—</div>
     </div>
 
     <!-- Card 2: Cash in Bank -->
-    <div class="kpi" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-      <div>
-        <div class="kpi-label">Cash in Bank</div>
-        <div class="kpi-value" id="kBankTotal">—</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-        <span class="badge bb" id="kBankIndia" style="text-align:right">India —</span>
-        <span class="badge bb" id="kBankUK" style="text-align:right">UK —</span>
+    <div class="kpi">
+      <div class="kpi-label">Cash in Bank</div>
+      <div class="kpi-value" id="kBankTotal" style="margin-bottom:12px">—</div>
+      <div style="border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:40px">India</span>
+          <div style="text-align:right"><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankIndia">—</div></div>
+        </div>
+        <div style="height:1px;background:var(--line)"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:40px">UK</span>
+          <div style="text-align:right"><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankUK">—</div></div>
+        </div>
       </div>
     </div>
 
     <!-- Card 3: Cash in Treasury -->
-    <div class="kpi" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-      <div>
+    <div class="kpi">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
         <div class="kpi-label">Cash in Treasury</div>
-        <div class="kpi-value" id="kTotal">—</div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-        <span class="badge bb" id="kMF" style="text-align:right">MF —</span>
-        <span class="badge bb" id="kFD" style="text-align:right">FD —</span>
+      <div class="kpi-value" id="kTotal" style="margin-bottom:12px">—</div>
+      <div style="border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px">
+        <!-- MF row -->
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:60px">Mutual Funds</span>
+          <div style="display:flex;gap:14px">
+            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFInvested">—</div></div>
+            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFCurrent">—</div></div>
+            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kMFReturns">—</div></div>
+          </div>
+        </div>
+        <div style="height:1px;background:var(--line)"></div>
+        <!-- FD row -->
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:60px">Fixed Dep.</span>
+          <div style="display:flex;gap:14px">
+            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Invested</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDInvested">—</div></div>
+            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Current</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDCurrent">—</div></div>
+            <div style="text-align:right"><div style="font-size:8px;color:var(--muted);margin-bottom:1px">Returns</div><div style="font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kFDReturns">—</div></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -240,42 +256,72 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div class="pb" id="bankBalBody" style="padding:12px"></div>
     </div>
 
-    <!-- XIRR hero with P&L rows added -->
-    <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;flex-direction:column;gap:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-          <div class="xh-label">Portfolio XIRR Since Inception <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="xh-val" id="xhVal">—</div>
-        </div>
-        <div class="xh-grid">
-          <div class="xh-sub" onclick="showXirrModal('mf')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Mutual Funds <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">Transaction-calculated</div>
+    <!-- XIRR hero — Option D: two-column split -->
+    <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;padding:0">
+      <div style="display:grid;grid-template-columns:1fr 1px 1fr;height:100%">
+
+        <!-- LEFT: Performance -->
+        <div style="padding:20px 22px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:10px">Performance</div>
+          <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s;display:inline-block;margin-bottom:12px" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div class="xh-val" id="xhVal" style="margin-bottom:2px">—</div>
+            <div style="font-size:9px;color:#475569;font-family:'DM Mono',monospace" id="xirrHistCount">Since inception</div>
           </div>
-          <div class="xh-sub" onclick="showXirrModal('fd')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Fixed Deposits <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">Weighted avg rate</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
+            <div class="xh-sub" onclick="showXirrModal('mf')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+              <div class="xh-sub-label">Mutual Funds <svg style="display:inline;vertical-align:middle;margin-left:3px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="xh-sub-val" id="xhMF">—</div>
+              <div class="xh-sub-tag">Transaction-calculated</div>
+            </div>
+            <div class="xh-sub" onclick="showXirrModal('fd')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+              <div class="xh-sub-label">Fixed Deposits <svg style="display:inline;vertical-align:middle;margin-left:3px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="xh-sub-val" id="xhFD">—</div>
+              <div class="xh-sub-tag">Weighted avg rate</div>
+            </div>
           </div>
-        </div>
-      </div>
-      <!-- Returns row -->
-      <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:14px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:10px">Returns</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-          <div class="xh-sub" onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Unrealised <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="xh-sub-val" id="kUnreal" style="color:#86EFAC">—</div>
-            <div class="xh-sub-tag">Mark to market</div>
-          </div>
-          <div class="xh-sub" onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Realised <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="xh-sub-val" id="kBooked" style="color:#93C5FD">—</div>
-            <div class="xh-sub-tag">Booked gains</div>
-          </div>
-          <div class="xh-sub">
-            <div class="xh-sub-label">Total</div>
-            <div class="xh-sub-val" id="kTotalPL" style="color:#4ADE80">—</div>
-            <div class="xh-sub-tag">Unrealised + Realised</div>
+          <!-- Teal daily earnings card -->
+          <div onclick="showDailyModal()" style="background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);border-radius:6px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <div>
+              <div style="font-size:9px;color:#0F6E56;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;font-weight:700">Earning per day</div>
+              <div style="font-size:22px;font-weight:800;color:#5DCAA5;font-family:'DM Mono',monospace" id="dailyTotal">—</div>
+            </div>
+            <svg style="flex-shrink:0" width="12" height="12" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#5DCAA5" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
         </div>
+
+        <!-- Divider -->
+        <div style="background:rgba(255,255,255,.07)"></div>
+
+        <!-- RIGHT: Returns -->
+        <div style="padding:20px 22px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:14px">Returns</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;color:#94A3B8">Unrealised</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+                  <span style="font-size:16px;font-weight:700;color:#86EFAC;font-family:'DM Mono',monospace" id="kUnreal">—</span>
+                  <svg style="display:inline;vertical-align:middle;margin-left:4px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#86EFAC" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;color:#94A3B8">Realised</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+                  <span style="font-size:16px;font-weight:700;color:#93C5FD;font-family:'DM Mono',monospace" id="kBooked">—</span>
+                  <svg style="display:inline;vertical-align:middle;margin-left:4px" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,.07)"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;font-weight:600;color:#E2E8F0">Total Returns</span>
+              <span style="font-size:20px;font-weight:800;color:#4ADE80;font-family:'DM Mono',monospace" id="kTotalPL">—</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -497,6 +543,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   </div>
 </div>
 
+<!-- ── DAILY EARNINGS MODAL ──────────────────────────────────── -->
+<div id="dailyModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeDailyModal()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(560px,95vw);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <div style="font-family:'Inter',sans-serif;font-size:20px;color:#5DCAA5">Earning Per Day</div>
+        <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Portfolio × XIRR ÷ 365 · calculated separately per asset class</div>
+      </div>
+      <button onclick="closeDailyModal()" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
+    </div>
+    <div style="padding:20px 24px;display:flex;flex-direction:column;gap:16px" id="dailyBody"></div>
+  </div>
+</div>
+
 <script>
 // ── SUPABASE CONFIG ──────────────────────────────────────────────
 const SB_URL  = 'https://djjwbhgqbboqowwxooji.supabase.co';
@@ -650,8 +710,29 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
 
   // ── KPIs
   document.getElementById('kTotal').textContent    = cr(total);
-  document.getElementById('kMF').textContent       = `MF ${cr(mfTotal)}`;
-  document.getElementById('kFD').textContent       = `FD ${cr(fdTotal)}`;
+  // Old MF/FD badge IDs removed — now using new strip ids
+  if(document.getElementById('kMF')) document.getElementById('kMF').textContent = `MF ${cr(mfTotal)}`;
+  if(document.getElementById('kFD')) document.getElementById('kFD').textContent = `FD ${cr(fdTotal)}`;
+
+  // Treasury card MF/FD strip
+  const mfInvested = mfH.reduce((s,f) => s + (+f.current_value - +f.notional_pl), 0);
+  const mfReturns  = mfH.reduce((s,f) => s + (+f.notional_pl), 0);
+  const fdInvested = fds.reduce((s,f) => s + (+f.principal), 0);
+  const fdReturns  = fds.reduce((s,f) => s + (+f.interest_earned), 0);
+  document.getElementById('kMFInvested').textContent = cr(mfInvested);
+  document.getElementById('kMFCurrent').textContent  = cr(mfTotal);
+  document.getElementById('kMFReturns').textContent  = `+${cr(mfReturns)}`;
+  document.getElementById('kFDInvested').textContent = cr(fdInvested);
+  document.getElementById('kFDCurrent').textContent  = cr(fdTotal);
+  document.getElementById('kFDReturns').textContent  = `+${cr(fdReturns)}`;
+
+  // Daily earnings: portfolio * XIRR / 365, separately for MF and FD
+  const dailyMF  = mfTotal  * (xirrMF / 100) / 365;
+  const dailyFD  = fdTotal  * (xirrFD / 100) / 365;
+  const dailyAll = dailyMF + dailyFD;
+  window._daily = { mf: dailyMF, fd: dailyFD, total: dailyAll, mfXirr: xirrMF, fdXirr: xirrFD, mfVal: mfTotal, fdVal: fdTotal };
+  const fmtRs = v => '₹' + Math.round(v).toLocaleString('en-IN');
+  document.getElementById('dailyTotal').textContent = fmtRs(dailyAll);
   // P&L in XIRR box
   document.getElementById('kTotalPL').textContent  = `+${cr(totalPL)}`;
   document.getElementById('kBooked').textContent   = `+${cr(booked)}`;
@@ -663,8 +744,8 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   // India vs UK bank split
   const hsbcUK    = banks.find(b => b.bank_name === 'HSBC UK')?.balance || 0;
   const indiaBank = bankTotal - (+hsbcUK);
-  document.getElementById('kBankIndia').textContent = `India ${cr(indiaBank)}`;
-  document.getElementById('kBankUK').textContent    = `UK ${cr(hsbcUK)}`;
+  document.getElementById('kBankIndia').textContent = cr(indiaBank);
+  document.getElementById('kBankUK').textContent    = cr(hsbcUK);
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)}%` : '—';
   document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)}%`;
   document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)}%`;
@@ -700,7 +781,6 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   // ── MF — collapsed shows name + invested + current + profit + xirr
   //         expanded shows per-tranche: buy date, units, buy nav, current nav, buy value, profit, xirr
   const mfMax = Math.max(...mfH.map(f=>+f.current_value));
-  const mfInvested = mfH.reduce((s,f)=>s+(+f.current_value - +f.notional_pl),0);
   const mfPL       = mfH.reduce((s,f)=>s+(+f.notional_pl),0);
   document.getElementById('mfTag').textContent         = cr(mfTotal);
   document.getElementById('mfTagInvested').textContent = cr(mfInvested);
@@ -843,7 +923,6 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   }).join('');
 
   // ── FD — one row per bank (grouped), expanded shows individual FDs
-  const fdInvested = fds.reduce((s,f)=>s+(+f.principal),0);
   const fdInterest = fds.reduce((s,f)=>s+(+f.interest_earned),0);
   document.getElementById('fdTag').textContent          = cr(fdTotal);
   document.getElementById('fdTagInvested').textContent  = cr(fdInvested);
@@ -1207,8 +1286,45 @@ document.addEventListener('keydown', e => {
     closeRealisedModal();
     closeUnrealisedModal();
     closeXirrModal();
+    closeDailyModal();
   }
 });
+
+function showDailyModal() {
+  const d = window._daily;
+  if (!d) return;
+  document.getElementById('dailyModal').style.display = 'block';
+  const fmtRs = v => '₹' + Math.round(v).toLocaleString('en-IN');
+  const fmtCr = v => '₹' + (v/1e7).toFixed(2) + ' Cr';
+  const row = (label, val, xirr, portfolio, daily, color) => `
+    <div style="background:var(--bg);border-radius:6px;padding:16px 18px;border:1px solid var(--line)">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px">${label}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+        <div><div style="font-size:9px;color:var(--muted);margin-bottom:3px">Portfolio Value</div><div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)">${fmtCr(portfolio)}</div></div>
+        <div><div style="font-size:9px;color:var(--muted);margin-bottom:3px">XIRR</div><div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--gold)">${xirr.toFixed(2)}%</div></div>
+        <div><div style="font-size:9px;color:var(--muted);margin-bottom:3px">÷ 365 days</div><div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--muted)">daily rate</div></div>
+      </div>
+      <div style="border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">${fmtCr(portfolio)} × ${xirr.toFixed(2)}% ÷ 365</div>
+        <div style="font-size:22px;font-weight:800;font-family:'DM Mono',monospace;color:${color}">${fmtRs(daily)}</div>
+      </div>
+    </div>`;
+  const totalBlock = `
+    <div style="background:rgba(29,158,117,.08);border-radius:6px;padding:14px 18px;border:1px solid rgba(29,158,117,.2);display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0F6E56;margin-bottom:4px">Combined Daily Earnings</div>
+        <div style="font-size:11px;font-family:'DM Mono',monospace;color:#475569">MF ${fmtRs(d.mf)} + FD ${fmtRs(d.fd)}</div>
+      </div>
+      <div style="font-size:28px;font-weight:800;font-family:'DM Mono',monospace;color:#5DCAA5">${fmtRs(d.total)}</div>
+    </div>`;
+  document.getElementById('dailyBody').innerHTML =
+    row('Mutual Funds', d.mfVal, d.mfXirr, d.mfVal, d.mf, '#86EFAC') +
+    row('Fixed Deposits', d.fdVal, d.fdXirr, d.fdVal, d.fd, '#93C5FD') +
+    totalBlock;
+}
+function closeDailyModal() {
+  document.getElementById('dailyModal').style.display = 'none';
+}
 
 // ── UNREALISED P&L MODAL ─────────────────────────────────────
 let _mfHoldings = [];
