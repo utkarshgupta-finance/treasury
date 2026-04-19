@@ -348,33 +348,33 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <!-- Treasury -->
       <div style="padding:12px 20px">
         <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#3B82F6;margin-bottom:7px">Cash in Treasury</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;min-width:90px">Mutual Funds</span>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;flex:1;margin-left:16px">
-              <div><div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:3px">Invested</div><div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFInvested">—</div></div>
-              <div><div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:3px">Current</div><div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFCurrent">—</div></div>
-              <div><div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:3px">Returns</div><div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kMFReturns">—</div></div>
-            </div>
-          </div>
-          <div style="height:1px;background:var(--line)"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;min-width:90px">Fixed Deposit</span>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;flex:1;margin-left:16px">
-              <div><div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:3px">Invested</div><div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDInvested">—</div></div>
-              <div><div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:3px">Current</div><div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDCurrent">—</div></div>
-              <div><div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:3px">Returns</div><div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kFDReturns">—</div></div>
-            </div>
-          </div>
-          <div style="height:1px;background:var(--line)"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;background:#EFF6FF;margin:0 -20px;padding:5px 20px">
-            <span style="font-size:11px;font-weight:700;color:#1E40AF;white-space:nowrap;margin-right:12px">Total</span>
-            <div style="display:flex;gap:16px;flex-shrink:0">
-              <div style="text-align:right"><div style="font-size:8px;color:#3B82F6;margin-bottom:1px">Invested</div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#1E40AF;white-space:nowrap" id="kTotalInvested">—</div></div>
-              <div style="text-align:right"><div style="font-size:8px;color:#3B82F6;margin-bottom:1px">Current</div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#1E40AF;white-space:nowrap" id="kTotal">—</div></div>
-              <div style="text-align:right"><div style="font-size:8px;color:#3B82F6;margin-bottom:1px">Returns</div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#1D4ED8;white-space:nowrap" id="kTotalReturns">—</div></div>
-            </div>
-          </div>
+        <!-- One shared grid: label | Invested | Current | Returns -->
+        <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0">
+
+          <!-- Header row -->
+          <div style="padding:0 0 5px 0;border-bottom:1px solid var(--line)"></div>
+          <div style="padding:0 0 5px 8px;border-bottom:1px solid var(--line);font-size:11px;font-weight:500;color:var(--muted);text-align:right">Invested</div>
+          <div style="padding:0 0 5px 8px;border-bottom:1px solid var(--line);font-size:11px;font-weight:500;color:var(--muted);text-align:right">Current</div>
+          <div style="padding:0 0 5px 8px;border-bottom:1px solid var(--line);font-size:11px;font-weight:500;color:var(--muted);text-align:right">Returns</div>
+
+          <!-- MF row -->
+          <div style="padding:8px 0;font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;border-bottom:1px solid var(--line)">Mutual Funds</div>
+          <div style="padding:8px 8px;text-align:right;border-bottom:1px solid var(--line)"><span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFInvested">—</span></div>
+          <div style="padding:8px 8px;text-align:right;border-bottom:1px solid var(--line)"><span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kMFCurrent">—</span></div>
+          <div style="padding:8px 8px;text-align:right;border-bottom:1px solid var(--line)"><span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kMFReturns">—</span></div>
+
+          <!-- FD row -->
+          <div style="padding:8px 0;font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;border-bottom:1px solid var(--line)">Fixed Deposit</div>
+          <div style="padding:8px 8px;text-align:right;border-bottom:1px solid var(--line)"><span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDInvested">—</span></div>
+          <div style="padding:8px 8px;text-align:right;border-bottom:1px solid var(--line)"><span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink)" id="kFDCurrent">—</span></div>
+          <div style="padding:8px 8px;text-align:right;border-bottom:1px solid var(--line)"><span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green)" id="kFDReturns">—</span></div>
+
+          <!-- Total row -->
+          <div style="padding:7px 0;font-size:11px;font-weight:700;color:#1E40AF;display:flex;align-items:center;background:#EFF6FF;margin-left:-20px;padding-left:20px">Total</div>
+          <div style="padding:7px 8px;text-align:right;background:#EFF6FF"><span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#1E40AF;white-space:nowrap" id="kTotalInvested">—</span></div>
+          <div style="padding:7px 8px;text-align:right;background:#EFF6FF"><span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#1E40AF;white-space:nowrap" id="kTotal">—</span></div>
+          <div style="padding:7px 8px;text-align:right;background:#EFF6FF;margin-right:-20px;padding-right:20px"><span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green);white-space:nowrap" id="kTotalReturns">—</span></div>
+
         </div>
       </div>
 
