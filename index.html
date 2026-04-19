@@ -244,15 +244,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="xirr-hero" style="border-radius:4px;margin-bottom:0;align-self:stretch;flex-direction:column;gap:16px">
       <div style="display:flex;align-items:center;justify-content:space-between">
         <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-          <div class="xh-label">Portfolio XIRR Since Inception ↗</div>
+          <div class="xh-label">Portfolio XIRR Since Inception <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="xh-val" id="xhVal">—</div>
         </div>
         <div class="xh-grid">
           <div class="xh-sub" onclick="showXirrModal('mf')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Mutual Funds ↗</div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">Transaction-calculated</div>
+            <div class="xh-sub-label">Mutual Funds <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="xh-sub-val" id="xhMF">—</div><div class="xh-sub-tag">Transaction-calculated</div>
           </div>
           <div class="xh-sub" onclick="showXirrModal('fd')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Fixed Deposits ↗</div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">Weighted avg rate</div>
+            <div class="xh-sub-label">Fixed Deposits <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="xh-sub-val" id="xhFD">—</div><div class="xh-sub-tag">Weighted avg rate</div>
           </div>
         </div>
       </div>
@@ -261,14 +261,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
         <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#475569;margin-bottom:10px">Returns</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
           <div class="xh-sub" onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Unrealised ↗</div>
+            <div class="xh-sub-label">Unrealised <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             <div class="xh-sub-val" id="kUnreal" style="color:#86EFAC">—</div>
-            <div class="xh-sub-tag">Mark to market · click for breakup</div>
+            <div class="xh-sub-tag">Mark to market</div>
           </div>
           <div class="xh-sub" onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <div class="xh-sub-label">Realised ↗</div>
+            <div class="xh-sub-label">Realised <svg style="display:inline;vertical-align:middle;margin-left:4px" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             <div class="xh-sub-val" id="kBooked" style="color:#93C5FD">—</div>
-            <div class="xh-sub-tag">Booked gains · click for breakup</div>
+            <div class="xh-sub-tag">Booked gains</div>
           </div>
           <div class="xh-sub">
             <div class="xh-sub-label">Total</div>
@@ -393,23 +393,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 <!-- ── REALISED P&L MODAL ──────────────────────────────────── -->
 <div id="realisedModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeRealisedModal()">
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(740px,95vw);max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
-    <!-- Header -->
     <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
       <div>
         <div style="font-family:'Inter',sans-serif;font-size:20px;color:var(--white)">Realised Gains</div>
         <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Booked P&amp;L from redemptions and FD maturities</div>
       </div>
-      <div style="text-align:right">
-        <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Total Realised</div>
-        <div style="font-family:'Inter',sans-serif;font-size:26px;color:var(--gold)" id="modalTotal">—</div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Total Realised</div>
+          <div style="font-family:'Inter',sans-serif;font-size:26px;color:var(--gold)" id="modalTotal">—</div>
+        </div>
+        <button onclick="closeRealisedModal()" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
       </div>
     </div>
     <!-- Filters -->
-    <div style="padding:12px 24px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-shrink:0;background:var(--bg)">
-      <button onclick="filterRealised('all')"  id="rf-all"  style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">All</button>
-      <button onclick="filterRealised('mf')"   id="rf-mf"   style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Mutual Funds</button>
-      <button onclick="filterRealised('fd')"   id="rf-fd"   style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">Fixed Deposits</button>
-      <button onclick="closeRealisedModal()" style="margin-left:auto;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer">✕ Close</button>
+    <div style="padding:10px 24px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-shrink:0;background:var(--bg)">
+      <button onclick="filterRealised('all')" id="rf-all" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer">All</button>
+      <button onclick="filterRealised('mf')"  id="rf-mf"  style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Mutual Funds</button>
+      <button onclick="filterRealised('fd')"  id="rf-fd"  style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">Fixed Deposits</button>
     </div>
     <!-- Table -->
     <div style="overflow-y:auto;flex:1">
