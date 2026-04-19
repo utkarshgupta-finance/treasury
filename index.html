@@ -923,47 +923,37 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     'Mobisy Singapore': { line: '#059669', text: '#065F46' },
   };
 
-  const bankRow = (b, entityTotal) => {
-    const pct = entityTotal > 0 ? ((+b.balance / entityTotal) * 100).toFixed(0) : 0;
-    return `<tr style="border-bottom:1px solid var(--line)">
-      <td style="padding:7px 0;font-size:13px;font-weight:500;color:var(--ink)">${b.bank_name}</td>
-      <td style="padding:7px 4px;font-size:11px;font-weight:400;color:var(--muted);font-family:'DM Mono',monospace;text-align:center">${pct}%</td>
-      <td style="padding:7px 0;font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);text-align:right;white-space:nowrap">${cr(+b.balance)}</td>
-      <td style="padding:7px 0 7px 10px;font-size:10px;font-weight:400;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</td>
-    </tr>`;
-  };
+  const bankRow = (b, i) => `
+    ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;gap:8px">
+      <div style="min-width:0">
+        <div style="font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.bank_name}</div>
+        ${b.last_txn_date ? `<div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px">${fmtD(b.last_txn_date)}</div>` : ''}
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;flex-shrink:0">${cr(+b.balance)}</div>
+    </div>`;
 
   const bankGroup = (label, names, placeholder) => {
     const ec = ENTITY_COLORS[label] || { line: '#94A3B8', text: '#475569' };
     const rows = [...groupBanks(names)].sort((a,b) => (+b.balance) - (+a.balance));
     const total = groupTotal(names);
-    const tableRows = rows.length
-      ? rows.map(b => bankRow(b, total)).join('')
-      : `<tr><td colspan="4" style="padding:10px 0;font-size:12px;color:var(--muted)">${placeholder||'—'}<br><span style="font-size:10px">Account opening in progress</span></td></tr>`;
+    const content = rows.length
+      ? rows.map((b,i) => bankRow(b, i)).join('')
+      : `<div style="padding:10px 0;font-size:12px;font-weight:500;color:var(--muted)">${placeholder||'—'}<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>`;
     return `
-      <div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:7px;border-bottom:2px solid ${ec.line}">
-          <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:${ec.text}">${label}</span>
-          <span style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--ink)">${cr(total)}</span>
-        </div>
-        <table style="width:100%;border-collapse:collapse">
-          <thead><tr>
-            <th style="padding:5px 0 3px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left">Account</th>
-            <th style="padding:5px 4px 3px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:center">%</th>
-            <th style="padding:5px 0 3px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Balance</th>
-            <th style="padding:5px 0 3px 10px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Last Txn</th>
-          </tr></thead>
-          <tbody>${tableRows}</tbody>
-        </table>
-      </div>`;
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:7px;border-bottom:2px solid ${ec.line}">
+        <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:${ec.text}">${label}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--ink)">${cr(total)}</span>
+      </div>
+      ${content}`;
   };
 
   document.getElementById('bankBalBody').innerHTML = banks.length ? `
     <div class="bank-groups" style="display:flex;gap:0;align-items:flex-start">
-      <div style="flex:6;min-width:0;padding-right:18px;border-right:1px solid var(--line)">${bankGroup('Mobisy India', MOBISY_INDIA)}</div>
-      <div style="flex:2;min-width:0;padding:0 18px;border-right:1px solid var(--line)">${bankGroup('Mobisy UK', MOBISY_UK)}</div>
-      <div style="flex:2;min-width:0;padding:0 18px;border-right:1px solid var(--line)">${bankGroup('Bizom ERTM', BIZOM_ERTM)}</div>
-      <div style="flex:2;min-width:0;padding-left:18px">${bankGroup('Mobisy Singapore', MOBISY_SG, 'OCBC')}</div>
+      <div style="flex:3;min-width:0;padding-right:20px;border-right:1px solid var(--line)">${bankGroup('Mobisy India', MOBISY_INDIA)}</div>
+      <div style="flex:1;min-width:0;padding:0 20px;border-right:1px solid var(--line)">${bankGroup('Mobisy UK', MOBISY_UK)}</div>
+      <div style="flex:1;min-width:0;padding:0 20px;border-right:1px solid var(--line)">${bankGroup('Bizom ERTM', BIZOM_ERTM)}</div>
+      <div style="flex:1;min-width:0;padding-left:20px">${bankGroup('Mobisy Singapore', MOBISY_SG, 'OCBC')}</div>
     </div>
   ` : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
