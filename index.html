@@ -291,23 +291,23 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <!-- KPI container — light theme, amber accent on total -->
   <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
     <!-- Header: Total Cash Position with amber accent + Bank/Treasury top right -->
-    <div class="kpi-top-header" style="padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:4px;height:40px;background:var(--gold);flex-shrink:0;align-self:flex-end;margin-bottom:2px"></div>
+    <div class="kpi-top-header" style="padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+      <div style="display:flex;align-items:flex-end;gap:12px">
+        <div style="width:4px;height:40px;background:var(--gold);flex-shrink:0"></div>
         <div>
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:3px">Total Cash Position</div>
           <div style="font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-2px;font-family:'DM Mono',monospace;line-height:1" id="kCash">—</div>
         </div>
       </div>
-      <div style="display:flex;gap:24px;flex-shrink:0">
+      <div style="display:flex;gap:24px;flex-shrink:0;align-items:flex-end;padding-bottom:2px">
         <div style="text-align:right">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Bank</div>
-          <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankTotalHdr">—</div>
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:2px">Bank</div>
+          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankTotalHdr">—</div>
         </div>
-        <div style="width:1px;background:var(--line)"></div>
+        <div style="width:1px;background:var(--line);height:28px"></div>
         <div style="text-align:right">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Treasury</div>
-          <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kTotalHdr">—</div>
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:2px">Treasury</div>
+          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kTotalHdr">—</div>
         </div>
       </div>
     </div>
@@ -316,7 +316,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 
       <!-- Bank -->
       <div style="padding:12px 18px;border-right:1px solid var(--line)">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px">Cash in Bank</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#3B82F6;margin-bottom:7px">Cash in Bank</div>
         <div style="display:flex;flex-direction:column;gap:5px">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <span style="font-size:11px;font-weight:600;color:var(--muted)">Mobisy India</span>
@@ -338,16 +338,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
             <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--muted);white-space:nowrap" id="kBankSG">₹0.00 Cr</span>
           </div>
           <div style="height:1px;background:var(--line)"></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;background:#FAFAF8;margin:0 -18px;padding:5px 18px;border-radius:0">
-            <span style="font-size:11px;font-weight:700;color:var(--ink)">Total</span>
-            <span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="kBankTotal">—</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:#F0F4FF;margin:0 -18px;padding:5px 18px">
+            <span style="font-size:11px;font-weight:700;color:#1E40AF">Total</span>
+            <span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#1E40AF;white-space:nowrap" id="kBankTotal">—</span>
           </div>
         </div>
       </div>
 
       <!-- Treasury -->
       <div style="padding:12px 20px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px">Cash in Treasury</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#059669;margin-bottom:7px">Cash in Treasury</div>
         <div style="display:flex;flex-direction:column;gap:8px">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <span style="font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;min-width:90px">Mutual Funds</span>
@@ -367,12 +367,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
             </div>
           </div>
           <div style="height:1px;background:var(--line)"></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;background:#FAFAF8;margin:0 -20px;padding:5px 20px">
-            <span style="font-size:11px;font-weight:700;color:var(--ink);min-width:90px">Total</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#ECFDF5;margin:0 -20px;padding:5px 20px">
+            <span style="font-size:11px;font-weight:700;color:#065F46;min-width:90px">Total</span>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;flex:1;margin-left:16px">
-              <div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kTotalInvested">—</div></div>
-              <div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kTotal">—</div></div>
-              <div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green)" id="kTotalReturns">—</div></div>
+              <div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#065F46" id="kTotalInvested">—</div></div>
+              <div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#065F46" id="kTotal">—</div></div>
+              <div><div style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#059669" id="kTotalReturns">—</div></div>
             </div>
           </div>
         </div>
@@ -384,26 +384,26 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <!-- XIRR container — structurally identical to left KPI container -->
   <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
 
-    <!-- Header: Performance % + MF/FD on right — mirrors left header exactly -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:4px;height:40px;background:var(--gold);flex-shrink:0;align-self:flex-end;margin-bottom:2px"></div>
+    <!-- Header: Performance % + MF/FD on right — fix 5: use min-width to prevent squeezing -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div style="display:flex;align-items:flex-end;gap:12px;flex-shrink:0">
+        <div style="width:4px;height:40px;background:var(--gold);flex-shrink:0"></div>
         <div>
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:3px">Performance</div>
           <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-            <div style="font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-2px;line-height:1;font-family:'DM Mono',monospace" id="xhVal">—</div>
+            <div style="font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-2px;line-height:1;font-family:'DM Mono',monospace;white-space:nowrap" id="xhVal">—</div>
           </div>
         </div>
       </div>
-      <div style="display:flex;gap:24px;flex-shrink:0">
-        <div style="text-align:right;cursor:pointer" onclick="showXirrModal('mf')">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Mutual Funds</div>
-          <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="xhMF">—</div>
+      <div style="display:flex;gap:16px;align-items:flex-end;padding-bottom:2px">
+        <div style="text-align:right;cursor:pointer;min-width:60px" onclick="showXirrModal('mf')">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:2px">Mutual Funds</div>
+          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="xhMF">—</div>
         </div>
-        <div style="width:1px;background:var(--line)"></div>
-        <div style="text-align:right;cursor:pointer" onclick="showXirrModal('fd')">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Fixed Deposits</div>
-          <div style="font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="xhFD">—</div>
+        <div style="width:1px;background:var(--line);height:28px"></div>
+        <div style="text-align:right;cursor:pointer;min-width:60px" onclick="showXirrModal('fd')">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:2px">Fixed Deposits</div>
+          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="xhFD">—</div>
         </div>
       </div>
     </div>
@@ -413,24 +413,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px">Returns</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:11px;font-weight:600;color:var(--muted)">Unrealised</span>
-          <div onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:4px;white-space:nowrap" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-            <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:#16A34A" id="kUnreal">—</span>
-            <svg style="flex-shrink:0" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div onclick="showUnrealisedModal()" style="cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:5px" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+            <span style="font-size:11px;font-weight:600;color:var(--muted)">Unrealised</span>
+            <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
+          <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:#16A34A;white-space:nowrap" id="kUnreal">—</span>
         </div>
         <div style="height:1px;background:var(--line)"></div>
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:11px;font-weight:600;color:var(--muted)">Realised</span>
-          <div onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:4px;white-space:nowrap" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-            <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:#2563EB" id="kBooked">—</span>
-            <svg style="flex-shrink:0" width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div onclick="showRealisedModal()" style="cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:5px" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+            <span style="font-size:11px;font-weight:600;color:var(--muted)">Realised</span>
+            <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
+          <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:#2563EB;white-space:nowrap" id="kBooked">—</span>
         </div>
         <div style="height:1px;background:var(--line)"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;background:#FAFAF8;margin:0 -20px;padding:5px 20px">
-          <span style="font-size:11px;font-weight:700;color:var(--ink)">Total Returns</span>
-          <span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#16A34A;white-space:nowrap" id="kTotalPL">—</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#ECFDF5;margin:0 -20px;padding:5px 20px">
+          <span style="font-size:11px;font-weight:700;color:#065F46">Total Returns</span>
+          <span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:#059669;white-space:nowrap" id="kTotalPL">—</span>
         </div>
       </div>
     </div>
@@ -453,9 +453,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="panel">
       <div class="ph" style="justify-content:space-between">
         <span class="ph-title">Bank Balances</span>
-        <div style="display:flex;align-items:center;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px">
           <span class="ph-tag" id="bankSyncTag">—</span>
-          <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--ink)" id="bankTotalHdr">—</div>
+          <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--white);background:var(--ink);padding:3px 10px;border-radius:3px" id="bankTotalHdr">—</div>
         </div>
       </div>
       <div class="pb" id="bankBalBody" style="padding:12px"></div>
@@ -863,6 +863,8 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('kFDInvested').textContent = cr(fdInvested);
   document.getElementById('kFDCurrent').textContent  = cr(fdTotal);
   document.getElementById('kFDReturns').textContent  = `+${cr(fdReturns)}`;
+  if(document.getElementById('kTotalInvested')) document.getElementById('kTotalInvested').textContent = cr(mfInvested + fdInvested);
+  if(document.getElementById('kTotalReturns'))  document.getElementById('kTotalReturns').textContent  = `+${cr(mfReturns + fdReturns)}`;
 
   // Daily earnings: portfolio * XIRR / 365, separately for MF and FD
   const dailyMF  = mfTotal  * (xirrMF / 100) / 365;
@@ -885,6 +887,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('kBankIndia').textContent = cr(indiaBank);
   document.getElementById('kBankUK').textContent    = cr(hsbcUK);
   document.getElementById('kBankERTM').textContent  = cr(ertm);
+  if(document.getElementById('kBankSG')) document.getElementById('kBankSG').textContent = cr(0);
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)} %` : '—';
   document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)} %`;
   document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)} %`;
@@ -940,18 +943,11 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   };
 
   document.getElementById('bankBalBody').innerHTML = banks.length ? `
-    <div class="bank-groups" style="display:flex;gap:20px;align-items:flex-start">
-      ${bankGroup('Mobisy India',     MOBISY_INDIA, '#3B82F6', 3)}
-      <div class="bank-vsep" style="width:1px;background:var(--line);align-self:stretch"></div>
-      ${bankGroup('Mobisy UK',        MOBISY_UK,    '#8B5CF6', 1)}
-      <div class="bank-vsep" style="width:1px;background:var(--line);align-self:stretch"></div>
-      ${bankGroup('Bizom ERTM',       BIZOM_ERTM,   '#F59E0B', 1)}
-      <div class="bank-vsep" style="width:1px;background:var(--line);align-self:stretch"></div>
-      ${bankGroup('Mobisy Singapore', MOBISY_SG,    '#10B981', 1, 'OCBC')}
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">
-      <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Total Bank</span>
-      <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--gold)">${cr(bankTotal)}</span>
+    <div class="bank-groups" style="display:flex;gap:0;align-items:flex-start">
+      <div style="flex:1;min-width:0;padding-right:16px;border-right:1px solid var(--line)">${bankGroup('Mobisy India',     MOBISY_INDIA, '#3B82F6', 1)}</div>
+      <div style="flex:1;min-width:0;padding:0 16px;border-right:1px solid var(--line)">${bankGroup('Mobisy UK',        MOBISY_UK,    '#8B5CF6', 1)}</div>
+      <div style="flex:1;min-width:0;padding:0 16px;border-right:1px solid var(--line)">${bankGroup('Bizom ERTM',       BIZOM_ERTM,   '#F59E0B', 1)}</div>
+      <div style="flex:1;min-width:0;padding-left:16px">${bankGroup('Mobisy Singapore', MOBISY_SG, '#10B981', 1, 'OCBC')}</div>
     </div>
   ` : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
