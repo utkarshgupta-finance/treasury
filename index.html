@@ -33,6 +33,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 /* LOGIN SCREEN */
 #loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000}
 #loginScreen.hidden{display:none}
+.hidden{display:none !important}
 .login-wrap{display:flex;flex-direction:column;align-items:center;width:100%}
 .login-hdr{display:flex;align-items:center;gap:10px;margin-bottom:36px}
 .login-hdr-icon{width:36px;height:36px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(20,71,166,.25)}
@@ -315,7 +316,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </div>
 
 <!-- RESET PASSWORD SCREEN (shown after first login) -->
-<div id="resetScreen" class="hidden" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000">
+<div id="resetScreen" class="hidden" style="position:fixed;inset:0;background:var(--bg);align-items:center;justify-content:center;z-index:1000">
   <div class="login-wrap">
     <div class="login-hdr">
       <div class="login-hdr-icon"><div class="login-hdr-icon-inner"></div></div>
@@ -785,6 +786,12 @@ function getHdrs() {
 }
 
 // ── AUTH ─────────────────────────────────────────────────────────
+function showResetScreen() {
+  const rs = document.getElementById('resetScreen');
+  rs.classList.remove('hidden');
+  rs.style.display = 'flex';
+}
+
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass  = document.getElementById('loginPassword').value;
@@ -819,11 +826,8 @@ async function doLogin() {
     // Check if user must reset password
     const profile = await sb('user_profiles', 'select=must_reset_password');
     if (profile && profile[0]?.must_reset_password) {
-      // Show reset screen instead of dashboard
       document.getElementById('loginScreen').classList.add('hidden');
-      const rs = document.getElementById('resetScreen');
-      rs.classList.remove('hidden');
-      rs.style.display = 'flex';
+      showResetScreen();
     } else {
       document.getElementById('loginScreen').classList.add('hidden');
       loadAll();
@@ -890,12 +894,20 @@ async function getMyUserId() {
   return d.id;
 }
 
-function checkExistingSession() {
+async function checkExistingSession() {
   const token = sessionStorage.getItem('sb_token');
   const exp   = sessionStorage.getItem('sb_token_exp');
   if (token && exp && Date.now() < +exp) {
     _authToken = token;
     document.getElementById('loginScreen').classList.add('hidden');
+    // Still check if password reset is pending
+    try {
+      const profile = await sb('user_profiles', 'select=must_reset_password');
+      if (profile && profile[0]?.must_reset_password) {
+        showResetScreen();
+        return true;
+      }
+    } catch(e) { /* if profile check fails, proceed to dashboard */ }
     return true;
   }
   return false;
@@ -1896,13 +1908,16 @@ function closeXirrModal() {
 }
 
 // ── BOOT ─────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  if (!checkExistingSession()) {
-    // Show login, hide loader
+window.addEventListener('DOMContentLoaded', async () => {
+  const hasSession = await checkExistingSession();
+  if (!hasSession) {
+    // No session — show login, hide loader
     const l = document.getElementById('loader');
     if (l) l.style.display = 'none';
   } else {
-    loadAll();
+    // Session restored and no reset pending — load dashboard
+    const mustReset = document.getElementById('resetScreen')?.style.display === 'flex';
+    if (!mustReset) loadAll();
   }
 });
 </script>
