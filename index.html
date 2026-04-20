@@ -358,9 +358,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div style="font-size:10px;color:#94A3B8;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;font-weight:500">Treasury · Portfolio</div>
     </div>
   </div>
-  <div style="text-align:right">
-    <div style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#94A3B8;margin-bottom:2px">As of</div>
-    <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:#1D4ED8" id="hdrDate">—</div>
+  <div style="text-align:right;display:flex;align-items:center;gap:16px">
+    <div>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#94A3B8;margin-bottom:2px">As of</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:#1D4ED8" id="hdrDate">—</div>
+    </div>
+    <button onclick="doLogout()" title="Sign out" style="background:none;border:1px solid #E2E8F0;border-radius:6px;padding:7px 14px;font-size:11px;font-weight:600;color:#64748B;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s" onmouseover="this.style.borderColor='#1447A6';this.style.color='#1447A6'" onmouseout="this.style.borderColor='#E2E8F0';this.style.color='#64748B'">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign out
+    </button>
   </div>
 </div>
 
@@ -913,6 +919,51 @@ async function checkExistingSession() {
   return false;
 }
 
+// ── LOGOUT ───────────────────────────────────────────────────────
+function doLogout() {
+  sessionStorage.clear();
+  _authToken = null;
+  location.reload();
+}
+
+// ── IDLE AUTO-SIGNOUT (10 min) ───────────────────────────────────
+const IDLE_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
+let _idleTimer = null;
+let _idleWarningTimer = null;
+
+function resetIdleTimer() {
+  clearTimeout(_idleTimer);
+  clearTimeout(_idleWarningTimer);
+  // Remove any existing warning banner
+  const w = document.getElementById('idleWarning');
+  if (w) w.remove();
+
+  // Warn at 9 min
+  _idleWarningTimer = setTimeout(() => {
+    if (!_authToken) return;
+    const banner = document.createElement('div');
+    banner.id = 'idleWarning';
+    banner.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1E293B;color:#E2E8F0;padding:14px 20px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:12px;border-left:3px solid var(--amber)';
+    banner.innerHTML = `<span>⏱ You'll be signed out in <b>1 minute</b> due to inactivity.</span><button onclick="resetIdleTimer()" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">Stay signed in</button>`;
+    document.body.appendChild(banner);
+  }, IDLE_TIMEOUT_MS - 60000);
+
+  // Sign out at 10 min
+  _idleTimer = setTimeout(() => {
+    if (!_authToken) return;
+    const w = document.getElementById('idleWarning');
+    if (w) w.remove();
+    doLogout();
+  }, IDLE_TIMEOUT_MS);
+}
+
+function startIdleWatch() {
+  ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(e =>
+    document.addEventListener(e, resetIdleTimer, { passive: true })
+  );
+  resetIdleTimer();
+}
+
 async function sb(table, params='') {
   const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {headers: getHdrs()});
   if (r.status === 401) { sessionStorage.clear(); location.reload(); throw new Error('Session expired'); }
@@ -1019,6 +1070,7 @@ async function loadAll() {
 
     if(document.getElementById('dataLabel')) document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Live · Supabase`;
     if(document.getElementById('dataTs')) document.getElementById('dataTs').textContent = `Refreshed ${new Date().toLocaleTimeString()}`;
+    startIdleWatch();
     document.getElementById('hdrDate').textContent = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 
   } catch(e) {
