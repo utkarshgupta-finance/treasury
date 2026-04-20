@@ -317,19 +317,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
           </div>
           <div style="padding:0 10px;flex:1">
             <div style="padding:6px 0;border-bottom:0.5px solid #DBEAFE;display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:11px;font-weight:500;color:#1D4ED8">Mobisy India</span>
+              <span style="font-size:11px;font-weight:500;color:var(--ink)">Mobisy India</span>
               <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="kBankIndia">—</span>
             </div>
             <div style="padding:6px 0;border-bottom:0.5px solid #DBEAFE;display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:11px;font-weight:500;color:#7C3AED">Mobisy UK</span>
+              <span style="font-size:11px;font-weight:500;color:var(--ink)">Mobisy UK</span>
               <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="kBankUK">—</span>
             </div>
             <div style="padding:6px 0;border-bottom:0.5px solid #DBEAFE;display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:11px;font-weight:500;color:#D97706">Bizom ERTM</span>
+              <span style="font-size:11px;font-weight:500;color:var(--ink)">Bizom ERTM</span>
               <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--ink)" id="kBankERTM">—</span>
             </div>
             <div style="padding:6px 0;display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:11px;font-weight:500;color:#0891B2">Mobisy Singapore</span>
+              <span style="font-size:11px;font-weight:500;color:var(--ink)">Mobisy Singapore</span>
               <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--muted)" id="kBankSG">₹0.00 Cr</span>
             </div>
           </div>
@@ -837,7 +837,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   const momArr = mom>0?'▲':mom<0?'▼':'—';
 
   // ── KPIs
-  document.getElementById('kTotal').textContent     = cr(total);
+  if(document.getElementById('kTotal')) document.getElementById('kTotal').textContent     = cr(total);
   if(document.getElementById('kTotalHdr'))     document.getElementById('kTotalHdr').textContent     = cr(total);
   if(document.getElementById('kBankTotalHdr')) document.getElementById('kBankTotalHdr').textContent  = cr(bankTotal);
   // Split bar widths + pct labels
@@ -850,8 +850,8 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     if(document.getElementById('kBankPct'))      document.getElementById('kBankPct').textContent      = bankPct + '%';
     if(document.getElementById('kTreasuryPct'))  document.getElementById('kTreasuryPct').textContent  = treasPct + '%';
   }
-  if(document.getElementById('kMF')) document.getElementById('kMF').textContent = `MF ${cr(mfTotal)}`;
-  if(document.getElementById('kFD')) document.getElementById('kFD').textContent = `FD ${cr(fdTotal)}`;
+  if(document.getElementById('kMF')) if(document.getElementById('kMF')) document.getElementById('kMF').textContent = `MF ${cr(mfTotal)}`;
+  if(document.getElementById('kFD')) if(document.getElementById('kFD')) document.getElementById('kFD').textContent = `FD ${cr(fdTotal)}`;
 
   // Treasury card MF/FD rows
   const mfInvested = mfH.reduce((s,f) => s + (+f.current_value - +f.notional_pl), 0);
