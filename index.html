@@ -290,24 +290,38 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 
   <!-- KPI container — light theme, amber accent on total -->
   <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
-    <!-- Header: Total Cash Position with amber accent + Bank/Treasury top right -->
-    <div class="kpi-top-header" style="padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
-      <div style="display:flex;align-items:flex-end;gap:12px">
-        <div style="width:4px;height:40px;background:var(--gold);flex-shrink:0"></div>
+    <!-- Header: hero number left, split bar right -->
+    <div class="kpi-top-header" style="padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:24px">
+      <!-- Left: hero number -->
+      <div style="display:flex;align-items:flex-end;gap:12px;flex-shrink:0">
+        <div style="width:5px;height:52px;background:var(--gold);flex-shrink:0"></div>
         <div>
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:3px">Total Cash Position</div>
-          <div style="font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-2px;font-family:'DM Mono',monospace;line-height:1" id="kCash">—</div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:4px">Total Cash Position</div>
+          <div style="font-size:52px;font-weight:800;color:var(--ink);letter-spacing:-2px;font-family:'DM Mono',monospace;line-height:1" id="kCash">—</div>
         </div>
       </div>
-      <div style="display:flex;gap:24px;flex-shrink:0;align-items:flex-end;padding-bottom:2px">
-        <div style="text-align:right">
-          <div style="font-size:10px;font-weight:500;color:var(--muted);margin-bottom:2px">Bank</div>
-          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kBankTotalHdr">—</div>
+      <!-- Right: Bank / Treasury split bar fills remaining space -->
+      <div style="flex:1;min-width:0;padding-bottom:2px">
+        <!-- Labels + amounts row -->
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <div>
+            <span style="font-size:11px;font-weight:600;color:#1D4ED8">Bank</span>
+            <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:#1D4ED8;margin-left:8px" id="kBankTotalHdr">—</span>
+          </div>
+          <div style="text-align:right">
+            <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:#059669;margin-right:8px" id="kTotalHdr">—</span>
+            <span style="font-size:11px;font-weight:600;color:#059669">Treasury</span>
+          </div>
         </div>
-        <div style="width:1px;background:var(--line);height:28px"></div>
-        <div style="text-align:right">
-          <div style="font-size:10px;font-weight:500;color:var(--muted);margin-bottom:2px">Treasury</div>
-          <div style="font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)" id="kTotalHdr">—</div>
+        <!-- Split bar -->
+        <div style="height:8px;border-radius:4px;overflow:hidden;display:flex;gap:2px" id="kSplitBar">
+          <div style="flex:1;background:#1D4ED8;border-radius:4px 0 0 4px" id="kBarBank"></div>
+          <div style="flex:1;background:#059669;border-radius:0 4px 4px 0" id="kBarTreasury"></div>
+        </div>
+        <!-- Percentages row -->
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <div style="font-size:11px;font-weight:600;color:#1D4ED8" id="kBankPct">—</div>
+          <div style="font-size:11px;font-weight:600;color:#059669" id="kTreasuryPct">—</div>
         </div>
       </div>
     </div>
@@ -850,6 +864,16 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('kTotal').textContent     = cr(total);
   if(document.getElementById('kTotalHdr'))     document.getElementById('kTotalHdr').textContent     = cr(total);
   if(document.getElementById('kBankTotalHdr')) document.getElementById('kBankTotalHdr').textContent  = cr(bankTotal);
+  // Split bar
+  const grandTotal = bankTotal + total;
+  if(grandTotal > 0 && document.getElementById('kBarBank')) {
+    const bankPct = (bankTotal / grandTotal * 100).toFixed(1);
+    const treasPct = (total / grandTotal * 100).toFixed(1);
+    document.getElementById('kBarBank').style.flex = bankPct;
+    document.getElementById('kBarTreasury').style.flex = treasPct;
+    document.getElementById('kBankPct').textContent = bankPct + '%';
+    document.getElementById('kTreasuryPct').textContent = treasPct + '%';
+  }
   // Old MF/FD badge IDs removed — now using new strip ids
   if(document.getElementById('kMF')) document.getElementById('kMF').textContent = `MF ${cr(mfTotal)}`;
   if(document.getElementById('kFD')) document.getElementById('kFD').textContent = `FD ${cr(fdTotal)}`;
