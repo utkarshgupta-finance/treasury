@@ -453,50 +453,46 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 
   <!-- Row: MF + FD side by side -->
   <div class="row row-2" style="margin-bottom:16px">
-    <div class="panel">
-      <div class="ph" style="flex-wrap:wrap;gap:8px">
-        <span class="ph-title">Mutual Funds</span>
-        <div style="display:flex;gap:12px;margin-left:auto;align-items:center" id="mfHeaderStats">
+    <div class="panel" style="overflow:hidden">
+      <div style="padding:8px 16px;background:#EFF6FF;border-bottom:1px solid #BFDBFE;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1D4ED8">Mutual Funds</span>
+        <div style="display:flex;gap:16px;align-items:flex-end">
           <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
-            <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--ink)" id="mfTagInvested">—</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Invested</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#1E40AF" id="mfTagInvested">—</div>
           </div>
-          <div style="width:1px;height:24px;background:var(--line)"></div>
           <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
-            <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--ink)" id="mfTag">—</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Current</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#1E40AF" id="mfTag">—</div>
           </div>
-          <div style="width:1px;height:24px;background:var(--line)"></div>
           <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">P&amp;L</div>
-            <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--green)" id="mfTagPL">—</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">P&amp;L</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#059669" id="mfTagPL">—</div>
           </div>
         </div>
       </div>
-      <div class="pb" id="mfBody"></div>
+      <div id="mfBody" style="padding:0"></div>
     </div>
 
-    <div class="panel">
-      <div class="ph" style="flex-wrap:wrap;gap:8px">
-        <span class="ph-title">Fixed Deposits</span>
-        <div style="display:flex;gap:12px;margin-left:auto;align-items:center">
+    <div class="panel" style="overflow:hidden">
+      <div style="padding:8px 16px;background:#F9F8FF;border-bottom:1px solid #E5E1FF;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#7C3AED">Fixed Deposits</span>
+        <div style="display:flex;gap:16px;align-items:flex-end">
           <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Invested</div>
-            <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--ink)" id="fdTagInvested">—</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Invested</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#6D28D9" id="fdTagInvested">—</div>
           </div>
-          <div style="width:1px;height:24px;background:var(--line)"></div>
           <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Current</div>
-            <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--ink)" id="fdTag">—</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Current</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#6D28D9" id="fdTag">—</div>
           </div>
-          <div style="width:1px;height:24px;background:var(--line)"></div>
           <div style="text-align:right">
-            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Interest</div>
-            <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:var(--green)" id="fdTagInterest">—</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Interest</div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#059669" id="fdTagInterest">—</div>
           </div>
         </div>
       </div>
-      <div class="pb" id="fdBody" style="padding:12px"></div>
+      <div class="pb" id="fdBody" style="padding:0"></div>
     </div>
   </div>
 
@@ -916,9 +912,9 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   // Entity color system
   const ENTITY_COLORS = {
     'Mobisy India':     { bg: '#EFF6FF', border: '#BFDBFE', text: '#1E40AF', label: '#1D4ED8' },
-    'Mobisy UK':        { bg: '#F5F3FF', border: '#DDD6FE', text: '#6D28D9', label: '#7C3AED' },
+    'Mobisy UK':        { bg: '#F9F8FF', border: '#E9E4FE', text: '#6D28D9', label: '#7C3AED' },
     'Bizom ERTM':       { bg: '#FFFBEB', border: '#FDE68A', text: '#92400E', label: '#D97706' },
-    'Mobisy Singapore': { bg: '#F0FDFA', border: '#99F6E4', text: '#065F46', label: '#0891B2' },
+    'Mobisy Singapore': { bg: '#F5FFFE', border: '#C2F5EE', text: '#065F46', label: '#0891B2' },
   };
 
   // Fixed column widths
@@ -977,13 +973,13 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('mfTagPL').textContent       = `+${cr(mfPL)}`;
   document.getElementById('mfBody').innerHTML = `<table style="width:100%;border-collapse:collapse">
     <thead>
-      <tr style="border-bottom:2px solid var(--line)">
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left">Fund</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Invested</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Current</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Profit</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">XIRR</th>
-        <th style="padding:6px 0 6px;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Held</th>
+      <tr style="border-bottom:1px solid var(--line)">
+        <th style="padding:5px 16px 5px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left">Fund</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Invested</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Current</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Profit</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">XIRR</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Held</th>
       </tr>
     </thead>
     <tbody>` + mfH.map((f,i)=>{
@@ -1096,7 +1092,6 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         <td style="padding:10px 16px 10px 0">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:13px;font-weight:600;color:var(--ink)">${fd.bank}</span>
-            <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--muted)">${fd.fd_number.replace(' (Direct)','')}</span>
           </div>
         </td>
         <td style="padding:10px 16px 10px 0;font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap">${fd.channel || '—'}</td>
@@ -1110,14 +1105,14 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
 
   document.getElementById('fdBody').innerHTML = `<table style="width:100%;border-collapse:collapse">
     <thead>
-      <tr style="border-bottom:2px solid var(--line)">
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left">Bank</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Channel</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Invested</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Current</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Interest Earned</th>
-        <th style="padding:6px 16px 6px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">XIRR</th>
-        <th style="padding:6px 0 6px;font-size:11px;font-weight:500;color:var(--muted);text-align:right;white-space:nowrap">Time to Maturity</th>
+      <tr style="border-bottom:1px solid var(--line)">
+        <th style="padding:5px 16px 5px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left">Bank</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;white-space:nowrap">Channel</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Invested</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Current</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Interest Earned</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">XIRR</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Maturity</th>
       </tr>
     </thead>
     <tbody>${fdRows}</tbody>
