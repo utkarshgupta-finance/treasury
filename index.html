@@ -10,7 +10,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --ink:#0D1117;--ink2:#1C2333;--ink3:#2D3748;--muted:#64748B;
-  --line:#E2E8F0;--bg:#F7F8FA;--white:#FFFFFF;
+  --line:#E8ECF1;--bg:#F7F8FA;--white:#FFFFFF;
   --gold:#C9962B;--gold-lt:#FDF3DC;
   --green:#14803C;--green-lt:#DCFCE7;
   --red:#B91C1C;--red-lt:#FEE2E2;
@@ -74,9 +74,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .row{display:grid;gap:16px;margin-bottom:16px}
 .row-3{grid-template-columns:1.4fr 1fr 1fr}
 .row-2{grid-template-columns:1fr 1fr}
-.panel{background:var(--white);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-.ph{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
-.ph-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.panel{background:var(--white);border:0.5px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.ph{padding:11px 18px;border-bottom:0.5px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.ph-title{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .ph-tag{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;background:var(--bg);padding:2px 8px;border-radius:2px}
 .pb{padding:16px 18px}
 
@@ -268,10 +268,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div class="lbar"><div class="lfill"></div></div>
 </div>
 
-<div style="background:#EFF6FF;padding:14px 48px;border-bottom:1px solid #BFDBFE;display:flex;justify-content:space-between;align-items:center">
-  <div style="font-size:22px;font-weight:800;color:#1E40AF;letter-spacing:-.5px;font-family:'Inter',sans-serif">Bizom Funds</div>
+<div style="background:#FFFFFF;padding:14px 48px;border-bottom:0.5px solid #E8ECF1;display:flex;justify-content:space-between;align-items:center">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="width:32px;height:32px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;border:0.5px solid #BFDBFE;flex-shrink:0">
+      <div style="width:14px;height:14px;border-radius:3px;background:#1D4ED8"></div>
+    </div>
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#1E40AF;letter-spacing:-.3px;font-family:'Inter',sans-serif">Bizom Funds</div>
+      <div style="font-size:10px;color:#64748B;letter-spacing:.06em;margin-top:1px">Treasury · Portfolio Dashboard</div>
+    </div>
+  </div>
   <div style="text-align:right">
-    <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#93C5FD;margin-bottom:2px">As of</div>
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#94A3B8;margin-bottom:2px">As of</div>
     <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:#1D4ED8" id="hdrDate">—</div>
   </div>
 </div>
@@ -283,7 +291,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:8px;margin-bottom:20px;align-items:stretch">
 
     <!-- ══ CARD 1: Total Cash + Bank container + Treasury container ══ -->
-    <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
+    <div style="border-radius:8px;border:0.5px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
 
       <!-- Hero: big number only, no duplicate ids -->
       <div style="padding:16px 20px 12px;border-bottom:1px solid var(--line)">
@@ -295,7 +303,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 14px;flex:1">
 
         <!-- Bank container: Option B — light blue tint header, white body -->
-        <div style="background:var(--white);border-radius:6px;overflow:hidden;border:0.5px solid var(--line);display:flex;flex-direction:column">
+        <div style="background:var(--white);border-radius:8px;overflow:hidden;border:0.5px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.03);display:flex;flex-direction:column">
           <div style="padding:8px 10px;border-bottom:0.5px solid #BFDBFE;background:#EFF6FF">
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px">
               <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1D4ED8">Bank</div>
@@ -327,7 +335,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
         </div>
 
         <!-- Treasury container: Option B — light purple tint header, white body -->
-        <div style="background:var(--white);border-radius:6px;overflow:hidden;border:0.5px solid var(--line);display:flex;flex-direction:column">
+        <div style="background:var(--white);border-radius:8px;overflow:hidden;border:0.5px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.03);display:flex;flex-direction:column">
           <div style="padding:8px 10px;border-bottom:0.5px solid #E9D5FF;background:#F5F3FF">
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px">
               <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#7C3AED">Treasury</div>
@@ -370,7 +378,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     </div>
 
     <!-- ══ CARD 2: XIRR + Returns ══ -->
-    <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
+    <div style="border-radius:8px;border:0.5px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
 
       <!-- XIRR header: gold accent left, MF/FD stacked top-right -->
       <div style="padding:16px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end;gap:12px">
