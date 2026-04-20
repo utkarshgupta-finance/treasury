@@ -460,7 +460,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
             <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#1E40AF" id="mfTag">—</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">P&amp;L</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Gains</div>
             <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#059669" id="mfTagPL">—</div>
           </div>
         </div>
@@ -481,7 +481,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
             <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#6D28D9" id="fdTag">—</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Interest</div>
+            <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1px">Gains</div>
             <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#059669" id="fdTagInterest">—</div>
           </div>
         </div>
@@ -545,10 +545,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     </div>
   </div>
 
-  <div class="footer">
-    <span>B&amp;K Finserv · P&amp;L from Performance Reports · XIRR transaction-calculated from inception · Live data from Supabase</span>
-    <span id="footerXirr">—</span>
-  </div>
+  <!-- footer removed -->
 </div>
 
 <!-- ── REALISED P&L MODAL ──────────────────────────────────── -->
@@ -879,7 +876,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)} %` : '—';
   document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)} %`;
   document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)} %`;
-  document.getElementById('footerXirr').textContent = xirrAll ? `XIRR ${(xirrAll*100).toFixed(2)}% · MF ${xirrMF.toFixed(2)}% · FD ${xirrFD.toFixed(2)}%` : '';
+  if(document.getElementById('footerXirr')) document.getElementById('footerXirr').textContent = xirrAll ? `XIRR ${(xirrAll*100).toFixed(2)}% · MF ${xirrMF.toFixed(2)}% · FD ${xirrFD.toFixed(2)}%` : '';
   if(latestXirr && document.getElementById('xirrHistCount')) document.getElementById('xirrHistCount').textContent = `Last logged ${fmtD(latestXirr.logged_at)}`;
 
   // ── Bank balances panel
@@ -971,7 +968,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         <th style="padding:5px 16px 5px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left">Fund</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Invested</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Current</th>
-        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Profit</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Gains</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">XIRR</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Held</th>
       </tr>
@@ -1104,7 +1101,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;white-space:nowrap">Channel</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Invested</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Current</th>
-        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Interest Earned</th>
+        <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Gains</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">XIRR</th>
         <th style="padding:5px 16px 5px 0;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;white-space:nowrap">Maturity</th>
       </tr>
