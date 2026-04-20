@@ -1027,11 +1027,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     const profit   = +f.notional_pl;
     const plPct    = invested > 0 ? ((profit/invested)*100).toFixed(1) : '0.0';
     const curNav   = +f.current_nav || 0;
-    let warn = '';
-    if(rule && held>rule.max) {
-      const sevColor = rule.sev(held) === 'warn-r' ? '#B91C1C' : rule.sev(held) === 'warn-o' ? '#EA580C' : '#D97706';
-      warn = `<span title="Currently held: ${fmtHeld(f.first_buy_date)}&#10;Ideal hold period: ${rule.str}" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:${sevColor};color:#fff;font-size:9px;font-weight:700;cursor:help;flex-shrink:0">!</span>`;
-    }
+
     const fundId = `fund-${i}`;
     const lots   = _mfLots[f.fund_name]||[];
 
@@ -1082,26 +1078,20 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
       </tr>`;
     }).join('');
 
-    const expandHtml = lots.length ? `
-      <div style="background:var(--bg);border-top:1px solid var(--line)">
-        <table style="width:100%;border-collapse:collapse">
-          <tbody>
-            ${trancheData.map(({l, trancheCurVal, trancheProfit, txirr})=>{
-              const xirrStr = txirr !== null ? `${(txirr*100).toFixed(2)}%` : '—';
-              const trancheHeld = fmtHeld(l.purchase_date);
-              const trancheInvested = +l.cost_amount;
-              return `<tr style="border-top:1px solid var(--line)">
-                <td style="padding:8px 16px 8px 17px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap">${fmtD(l.purchase_date)}</td>
-                <td style="padding:8px 16px 8px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(trancheInvested)}</td>
-                <td style="padding:8px 16px 8px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(trancheCurVal)}</td>
-                <td style="padding:8px 16px 8px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">+${cr(trancheProfit)}</td>
-                <td style="padding:8px 16px 8px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">${xirrStr}</td>
-                <td style="padding:8px 0 8px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--ink);text-align:right;white-space:nowrap">${trancheHeld}</td>
-              </tr>`;
-            }).join('')}
-          </tbody>
-        </table>
-      </div>` : '';
+    // Tranche rows are siblings in outer tbody — same columns, perfect alignment
+    const trancheHtmlRows = lots.length ? trancheData.map(({l, trancheCurVal, trancheProfit, txirr})=>{
+      const xirrStr = txirr !== null ? `${(txirr*100).toFixed(2)}%` : '—';
+      return `<tr class="tranche-${i}" style="display:none;background:var(--bg)">
+        <td style="padding:7px 16px 7px 0">
+          <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--muted);padding-left:17px">${fmtD(l.purchase_date)}</span>
+        </td>
+        <td style="padding:7px 16px 7px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);text-align:right;white-space:nowrap">${cr(+l.cost_amount)}</td>
+        <td style="padding:7px 16px 7px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);text-align:right;white-space:nowrap">${cr(trancheCurVal)}</td>
+        <td style="padding:7px 16px 7px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--green);text-align:right;white-space:nowrap">+${cr(trancheProfit)}</td>
+        <td style="padding:7px 16px 7px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--green);text-align:right;white-space:nowrap">${xirrStr}</td>
+        <td style="padding:7px 0 7px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--ink);text-align:right;white-space:nowrap">${fmtHeld(l.purchase_date)}</td>
+      </tr>`;
+    }).join('') : '';
 
     return `
       <tr style="border-top:1px solid var(--line);cursor:pointer" onclick="toggleLots('${fundId}','icon-${i}')">
@@ -1109,7 +1099,6 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
           <div style="display:flex;align-items:center;gap:6px">
             <span class="expand-icon" id="icon-${i}" style="font-size:9px;color:var(--muted);flex-shrink:0">▶</span>
             <span style="font-size:13px;font-weight:600;color:var(--ink)">${f.fund_name.replace(' - Reg - Growth','').replace(' Fund','')}</span>
-            ${warn}
           </div>
         </td>
         <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(invested)}</td>
@@ -1118,9 +1107,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">${displayXirr}%</td>
         <td style="padding:10px 0 10px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:${held > (rule?.max||9999) ? 'var(--amber)' : 'var(--ink)'};text-align:right;white-space:nowrap">${fmtHeld(f.first_buy_date)}</td>
       </tr>
-      <tr id="${fundId}" style="display:none">
-        <td colspan="6" style="padding:0 0 8px">${expandHtml}</td>
-      </tr>`;
+      ${trancheHtmlRows}`;
   }).join('') + `</tbody></table>`;
 
   // ── FD — one row per individual FD (flat, no grouping)
@@ -1141,7 +1128,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         <td style="padding:10px 16px 10px 0">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:13px;font-weight:600;color:var(--ink)">${fd.bank}</span>
-            <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--muted)">${fd.fd_number}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--muted)">${fd.fd_number.replace(' (Direct)','')}</span>
           </div>
         </td>
         <td style="padding:10px 16px 10px 0;font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap">${fd.channel || '—'}</td>
@@ -1214,20 +1201,30 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
 }
 
 function toggleLots(panelId, iconId) {
-  // Try direct id first (FD div panels), then -expand tr variant (MF table rows)
-  let p = document.getElementById(panelId) || document.getElementById(panelId + '-expand');
   const ic = document.getElementById(iconId);
-  if(!p) return;
+  // MF: tranche rows are siblings with class tranche-{i}
+  const idx = panelId.replace('fund-', '');
+  const trancheClass = 'tranche-' + idx;
+  const trancheRows = document.querySelectorAll('.' + trancheClass);
+  if (trancheRows.length) {
+    const isOpen = trancheRows[0].style.display !== 'none';
+    trancheRows.forEach(r => r.style.display = isOpen ? 'none' : 'table-row');
+    if (ic) ic.classList.toggle('open', !isOpen);
+    return;
+  }
+  // FD: div-based lots panel
+  let p = document.getElementById(panelId) || document.getElementById(panelId + '-expand');
+  if (!p) return;
   const isTr = p.tagName === 'TR';
   let isOpen;
-  if(isTr) {
+  if (isTr) {
     isOpen = p.style.display === 'table-row';
     p.style.display = isOpen ? 'none' : 'table-row';
     isOpen = !isOpen;
   } else {
     isOpen = p.classList.toggle('open');
   }
-  if(ic) ic.classList.toggle('open', isOpen);
+  if (ic) ic.classList.toggle('open', isOpen);
 }
 
 // ── XIRR HISTORY ─────────────────────────────────────────────────
