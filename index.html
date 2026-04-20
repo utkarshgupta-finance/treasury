@@ -314,9 +314,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
           </div>
         </div>
         <!-- Split bar -->
-        <div style="height:6px;border-radius:3px;overflow:hidden;display:flex;gap:2px" id="kSplitBar">
-          <div style="flex:1;background:#1D4ED8;border-radius:3px 0 0 3px" id="kBarBank"></div>
-          <div style="flex:1;background:#059669;border-radius:0 3px 3px 0" id="kBarTreasury"></div>
+        <div style="height:5px;border-radius:2px;overflow:hidden;display:flex;gap:2px" id="kSplitBar">
+          <div style="flex:1;background:#1D4ED8;border-radius:2px 0 0 2px" id="kBarBank"></div>
+          <div style="flex:1;background:#059669;border-radius:0 2px 2px 0" id="kBarTreasury"></div>
         </div>
         <!-- Percentages row -->
         <div style="display:flex;justify-content:space-between;margin-top:4px">
@@ -400,12 +400,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <!-- XIRR container — structurally identical to left KPI container -->
   <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
 
-    <!-- Header: Treasury Performance % + MF/FD on right -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+    <!-- Header: Treasury XIRR + MF/FD on right -->
+    <div style="padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
       <div style="display:flex;align-items:flex-end;gap:12px;flex-shrink:1;min-width:0">
-        <div style="width:4px;height:40px;background:var(--green);flex-shrink:0"></div>
+        <div style="width:5px;background:var(--green);flex-shrink:0;align-self:stretch"></div>
         <div style="min-width:0">
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:3px">Treasury Performance</div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:1px">Treasury XIRR</div>
+          <div style="font-size:9px;font-weight:500;color:var(--muted);margin-bottom:4px;letter-spacing:.04em">since Mar 2025</div>
           <div onclick="showXirrModal('overall')" style="cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             <div style="font-size:40px;font-weight:800;color:var(--green);letter-spacing:-2px;line-height:1;font-family:'DM Mono',monospace;white-space:nowrap" id="xhVal">—</div>
           </div>
@@ -433,7 +434,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
             <span style="font-size:11px;font-weight:600;color:var(--muted)">Unrealised</span>
             <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
-          <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="kUnreal">—</span>
+          <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:#2563EB;white-space:nowrap" id="kUnreal">—</span>
         </div>
         <div style="height:1px;background:var(--line)"></div>
         <div style="display:flex;justify-content:space-between;align-items:center">
@@ -441,13 +442,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
             <span style="font-size:11px;font-weight:600;color:var(--muted)">Realised</span>
             <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
-          <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);white-space:nowrap" id="kBooked">—</span>
+          <span style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--muted);white-space:nowrap" id="kBooked">—</span>
         </div>
       </div>
       <div style="height:1px;background:var(--line)"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;background:#EFF6FF;margin:0 -20px;padding:5px 20px">
-        <span style="font-size:11px;font-weight:700;color:var(--green)">Total Returns</span>
-        <span style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green);white-space:nowrap" id="kTotalPL">—</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#ECFDF5;margin:0 -20px;padding:5px 20px">
+        <span style="font-size:11px;font-weight:700;color:#059669">Total Returns</span>
+        <span style="font-size:14px;font-weight:800;font-family:'DM Mono',monospace;color:#059669;white-space:nowrap" id="kTotalPL">—</span>
       </div>
     </div>
 
