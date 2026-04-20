@@ -1030,7 +1030,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     let warn = '';
     if(rule && held>rule.max) {
       const sevColor = rule.sev(held) === 'warn-r' ? '#B91C1C' : rule.sev(held) === 'warn-o' ? '#EA580C' : '#D97706';
-      warn = `<span title="Held ${fmtHeld(f.first_buy_date)} · Ideal hold: ${rule.str}" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:${sevColor};color:#fff;font-size:9px;font-weight:700;cursor:help;flex-shrink:0">!</span>`;
+      warn = `<span title="Currently held: ${fmtHeld(f.first_buy_date)}&#10;Ideal hold period: ${rule.str}" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:${sevColor};color:#fff;font-size:9px;font-weight:700;cursor:help;flex-shrink:0">!</span>`;
     }
     const fundId = `fund-${i}`;
     const lots   = _mfLots[f.fund_name]||[];
@@ -1083,7 +1083,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     }).join('');
 
     const expandHtml = `
-      <div class="lots-panel" id="${fundId}">
+      <div style="background:var(--bg)">
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)">
           <div style="background:#F8FAFC;padding:10px 12px">
             <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Invested</div>
@@ -1130,83 +1130,38 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">${displayXirr}%</td>
         <td style="padding:10px 0 10px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:${held > (rule?.max||9999) ? 'var(--amber)' : 'var(--ink)'};text-align:right;white-space:nowrap">${fmtHeld(f.first_buy_date)}</td>
       </tr>
-      <tr id="${fundId}-expand" style="display:none">
+      <tr id="${fundId}" style="display:none">
         <td colspan="6" style="padding:0 0 8px">${expandHtml}</td>
       </tr>`;
   }).join('') + `</tbody></table>`;
 
-  // ── FD — one row per bank (grouped), expanded shows individual FDs
+  // ── FD — one row per individual FD (flat, no grouping)
   const fdInterest = fds.reduce((s,f)=>s+(+f.interest_earned),0);
   document.getElementById('fdTag').textContent          = cr(fdTotal);
   document.getElementById('fdTagInvested').textContent  = cr(fdInvested);
   document.getElementById('fdTagInterest').textContent  = `+${cr(fdInterest)}`;
 
-  // Group by bank + channel so Direct FDs show separately from B&K FDs
-  const fdByBank = {};
-  fds.forEach(fd => {
-    const key = `${fd.bank}||${fd.channel}`;
-    if(!fdByBank[key]) fdByBank[key] = [];
-    fdByBank[key].push(fd);
-  });
-
-  const fdRows = Object.entries(fdByBank).map(([key, bankFds], bi)=>{
-    const bank      = bankFds[0].bank;
-    const bankInvested = bankFds.reduce((s,f)=>s+(+f.principal),0);
-    const bankCurrent  = bankFds.reduce((s,f)=>s+(+f.current_value),0);
-    const bankGain     = bankCurrent - bankInvested;
-    const bankGainPct  = ((bankGain/bankInvested)*100).toFixed(1);
-    const fdId         = `fd-bank-${bi}`;
-    const dtm          = bankFds[0]?.maturity_date ? days(today(), bankFds[0].maturity_date) : null;
-    const dtmStr       = dtm !== null ? fmtHeld(new Date(Date.now() - Math.abs(dtm)*86400000).toISOString().slice(0,10)) : null;
-    const isMatured    = dtm !== null && dtm < 0;
-
-    const individualFds = bankFds.map((fd,j)=>{
-      const gain = +fd.current_value - +fd.principal;
-      return `<div style="border-top:1px solid var(--line);padding:8px 0 8px 34px;background:var(--bg)">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-          <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--muted)">${fd.fd_number}</span>
-          ${fd.channel === 'Direct' ? '<span style="font-size:9px;font-weight:600;background:#EDE9FE;color:#4C1D95;padding:1px 5px;border-radius:2px">Direct</span>' : '<span style="font-size:9px;font-weight:600;background:var(--blue-lt);color:var(--blue);padding:1px 5px;border-radius:2px">B&K</span>'}
-        </div>
-        <table style="border-collapse:collapse">
-          <thead>
-            <tr style="border-bottom:1px solid var(--line)">
-              <th style="padding:0 20px 3px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Invested</th>
-              <th style="padding:0 20px 3px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Current</th>
-              <th style="padding:0 20px 3px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Interest</th>
-              <th style="padding:0 20px 3px 0;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Rate</th>
-              <th style="padding:0 0 3px;font-size:11px;font-weight:500;color:var(--muted);text-align:left;white-space:nowrap">Matures</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="padding:5px 20px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(+fd.principal)}</td>
-              <td style="padding:5px 20px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">${cr(+fd.current_value)}</td>
-              <td style="padding:5px 20px 0 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);white-space:nowrap">+${cr(gain)}</td>
-              <td style="padding:5px 20px 0 0;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap">${fd.interest_rate||7.4}% p.a.</td>
-              <td style="padding:5px 0 0;font-family:'DM Mono',monospace;font-size:12px;font-weight:400;color:var(--muted);white-space:nowrap">${fd.maturity_date?fmtD(fd.maturity_date):'—'}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>`;
-    }).join('');
+  const fdRows = fds.map((fd, fi)=>{
+    const gain    = +fd.current_value - +fd.principal;
+    const fdId    = `fd-row-${fi}`;
+    const dtm     = fd.maturity_date ? days(today(), fd.maturity_date) : null;
+    const dtmStr  = dtm !== null ? fmtHeld(new Date(Date.now() - Math.abs(dtm)*86400000).toISOString().slice(0,10)) : null;
+    const isMatured = dtm !== null && dtm < 0;
 
     return `
-      <tr style="border-top:1px solid var(--line);cursor:pointer" onclick="toggleLots('${fdId}','fdicon-${bi}')">
+      <tr style="border-top:1px solid var(--line)">
         <td style="padding:10px 16px 10px 0">
           <div style="display:flex;align-items:center;gap:6px">
-            <span class="expand-icon" id="fdicon-${bi}" style="font-size:9px;color:var(--muted);flex-shrink:0">▶</span>
-            <span style="font-size:13px;font-weight:600;color:var(--ink)">${bank}</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink)">${fd.bank}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--muted)">${fd.fd_number}</span>
           </div>
         </td>
-        <td style="padding:10px 16px 10px 0;font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap">${bankFds[0]?.channel || '—'}</td>
-        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(bankInvested)}</td>
-        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(bankCurrent)}</td>
-        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">+${cr(bankGain)}</td>
-        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">${(bankFds[0]?.interest_rate||7.4).toFixed(2)}%</td>
+        <td style="padding:10px 16px 10px 0;font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap">${fd.channel || '—'}</td>
+        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(+fd.principal)}</td>
+        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(+fd.current_value)}</td>
+        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">+${cr(gain)}</td>
+        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">${fd.interest_rate||7.4}%</td>
         <td style="padding:10px 0 10px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;text-align:right;white-space:nowrap;color:${isMatured ? 'var(--red)' : dtm !== null && dtm < 90 ? 'var(--amber)' : 'var(--muted)'}">${isMatured ? '⚠ Matured' : dtmStr !== null ? dtmStr : '—'}</td>
-      </tr>
-      <tr id="${fdId}-expand" style="display:none">
-        <td colspan="7" style="padding:0 0 4px">${individualFds}</td>
       </tr>`;
   }).join('');
 
