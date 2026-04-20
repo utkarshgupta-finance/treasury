@@ -1282,7 +1282,7 @@ function renderCashPosChart() {
     data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
-      layout: { padding: { top: 20 } },
+      layout: { padding: { top: 36 } },
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
@@ -1301,21 +1301,64 @@ function renderCashPosChart() {
       animation: {
         onComplete: function() {
           const chart = this;
-          const ctx = chart.ctx;
+          const ctx   = chart.ctx;
           ctx.save();
-          ctx.font = '500 9px "DM Mono", monospace';
-          ctx.textAlign = 'center';
+          ctx.font         = '500 9px "DM Mono", monospace';
           ctx.textBaseline = 'bottom';
+
+          const n = chart.data.labels.length;
+          // Collect all visible points per x-index so we can detect crowding
+          const byIndex = {}; // index → [{y, color, val, isLast, isFirst}]
           chart.data.datasets.forEach((ds, di) => {
             const meta = chart.getDatasetMeta(di);
             if(meta.hidden) return;
             ds.data.forEach((val, i) => {
               const pt = meta.data[i];
               if(!pt) return;
-              ctx.fillStyle = ds.borderColor;
-              ctx.fillText('₹' + val + ' Cr', pt.x, pt.y - 8);
+              if(!byIndex[i]) byIndex[i] = [];
+              byIndex[i].push({ pt, val, color: ds.borderColor });
             });
           });
+
+          Object.entries(byIndex).forEach(([idx, points]) => {
+            const i     = +idx;
+            const isLast  = i === n - 1;
+            const isFirst = i === 0;
+
+            // Sort by y (top to bottom) so stagger goes upward cleanly
+            points.sort((a, b) => a.pt.y - b.pt.y);
+
+            // Detect crowding: if any two y-vals within 18px, stagger them
+            let crowded = false;
+            for(let k = 1; k < points.length; k++) {
+              if(Math.abs(points[k].pt.y - points[k-1].pt.y) < 18) { crowded = true; break; }
+            }
+
+            points.forEach(({ pt, val, color }, k) => {
+              ctx.fillStyle  = color;
+              const label    = '₹' + val + ' Cr';
+              const tw       = ctx.measureText(label).width;
+
+              // Horizontal: last point → right-align (anchor left of dot); first → left-align
+              let tx, align;
+              if(isLast) {
+                tx    = pt.x - 6;
+                align = 'right';
+              } else if(isFirst) {
+                tx    = pt.x + 6;
+                align = 'left';
+              } else {
+                tx    = pt.x;
+                align = 'center';
+              }
+              ctx.textAlign = align;
+
+              // Vertical: if crowded, spread labels out in 14px steps above dot
+              const baseOffset = crowded ? 8 + k * 13 : 8;
+              ctx.fillText(label, tx, pt.y - baseOffset);
+            });
+          });
+
           ctx.restore();
         }
       }
