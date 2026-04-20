@@ -10,7 +10,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --ink:#0D1117;--ink2:#1C2333;--ink3:#2D3748;--muted:#64748B;
-  --line:#E8ECF1;--bg:#F7F8FA;--white:#FFFFFF;
+  --line:#EDF1F5;--bg:#F7F8FA;--white:#FFFFFF;
   --gold:#C9962B;--gold-lt:#FDF3DC;
   --green:#14803C;--green-lt:#DCFCE7;
   --red:#B91C1C;--red-lt:#FEE2E2;
@@ -42,7 +42,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .stale{color:var(--amber);font-weight:600}
 
 /* LAYOUT */
-.main{padding:26px 48px 48px;max-width:1440px;margin:0 auto}
+.main{padding:30px 48px 56px;max-width:1440px;margin:0 auto}
 
 /* KPI */
 .kpi-strip{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:14px;margin-bottom:20px}
@@ -74,7 +74,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 .row{display:grid;gap:16px;margin-bottom:16px}
 .row-3{grid-template-columns:1.4fr 1fr 1fr}
 .row-2{grid-template-columns:1fr 1fr}
-.panel{background:var(--white);border:0.5px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.panel{background:var(--white);border:0.5px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05),0 0 0 0.5px rgba(0,0,0,.04)}
 .ph{padding:11px 18px;border-bottom:0.5px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 .ph-title{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .ph-tag{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;background:var(--bg);padding:2px 8px;border-radius:2px}
@@ -268,14 +268,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div class="lbar"><div class="lfill"></div></div>
 </div>
 
-<div style="background:#FFFFFF;padding:14px 48px;border-bottom:0.5px solid #E8ECF1;display:flex;justify-content:space-between;align-items:center">
+<div style="background:#FFFFFF;padding:16px 48px;border-bottom:0.5px solid #EDF1F5;display:flex;justify-content:space-between;align-items:center">
   <div style="display:flex;align-items:center;gap:12px">
-    <div style="width:32px;height:32px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;border:0.5px solid #BFDBFE;flex-shrink:0">
-      <div style="width:14px;height:14px;border-radius:3px;background:#1D4ED8"></div>
+    <div style="width:36px;height:36px;background:#1D4ED8;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(29,78,216,.25)">
+      <div style="width:14px;height:14px;border-radius:3px;background:#fff;opacity:.9"></div>
     </div>
     <div>
-      <div style="font-size:16px;font-weight:700;color:#1E40AF;letter-spacing:-.3px;font-family:'Inter',sans-serif">Bizom Funds</div>
-      <div style="font-size:10px;color:#64748B;letter-spacing:.06em;margin-top:1px">Treasury · Portfolio Dashboard</div>
+      <div style="font-size:17px;font-weight:800;color:#0F172A;letter-spacing:-.4px;font-family:'Inter',sans-serif">Bizom Funds</div>
+      <div style="font-size:10px;color:#94A3B8;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;font-weight:500">Treasury · Portfolio</div>
     </div>
   </div>
   <div style="text-align:right">
@@ -499,18 +499,33 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   </div>
 
   <!-- Charts -->
-  <!-- Cash Position chart panel (hidden) -->
-  <div class="panel" style="margin-bottom:16px;display:none">
-    <div class="ph" style="align-items:center">
+  <!-- Cash Position chart panel -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="ph" style="align-items:center;justify-content:space-between">
       <span class="ph-title">Cash Position</span>
-      <div style="display:flex;gap:4px;margin-left:16px">
-        <button onclick="setCashTab('overall')" id="tab-overall" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer;letter-spacing:.04em">Overall</button>
-        <button onclick="setCashTab('treasury')" id="tab-treasury" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Treasury</button>
-        <button onclick="setCashTab('bank')" id="tab-bank" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;letter-spacing:.04em">Bank</button>
+      <div style="display:flex;align-items:center;gap:18px">
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none">
+          <input type="checkbox" id="cb-bank" checked onchange="renderCashPosChart()" style="accent-color:#1D4ED8;width:12px;height:12px;cursor:pointer">
+          <span style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:500;color:var(--muted)">
+            <span style="display:inline-block;width:20px;height:2px;background:#1D4ED8;border-radius:1px"></span>Bank
+          </span>
+        </label>
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none">
+          <input type="checkbox" id="cb-treasury" checked onchange="renderCashPosChart()" style="accent-color:#7C3AED;width:12px;height:12px;cursor:pointer">
+          <span style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:500;color:var(--muted)">
+            <span style="display:inline-block;width:20px;height:2px;background:#7C3AED;border-radius:1px"></span>Treasury
+          </span>
+        </label>
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none">
+          <input type="checkbox" id="cb-total" checked onchange="renderCashPosChart()" style="accent-color:#C9962B;width:12px;height:12px;cursor:pointer">
+          <span style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:500;color:var(--muted)">
+            <span style="display:inline-block;width:20px;height:2px;background:#C9962B;border-radius:1px;border-top:1px dashed #C9962B"></span>Total
+          </span>
+        </label>
+        <span class="ph-tag">₹ Crore · end-of-month</span>
       </div>
-      <span class="ph-tag" style="margin-left:auto">₹ Crore · end-of-month</span>
     </div>
-    <div class="pb"><div class="chart-wrap" style="height:250px"><canvas id="cashPosChart" role="img" aria-label="Cash position"></canvas></div></div>
+    <div class="pb"><div class="chart-wrap" style="height:260px"><canvas id="cashPosChart" role="img" aria-label="Cash position"></canvas></div></div>
   </div>
 
   <div class="row row-2" style="margin-bottom:16px;display:none">
@@ -927,7 +942,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     </div>`;
 
   const bankRow = (b, i, last) => `
-    <div style="display:grid;grid-template-columns:${COL};align-items:center;padding:7px 10px;${last ? '' : 'border-bottom:0.5px solid var(--line);'}">
+    <div style="display:grid;grid-template-columns:${COL};align-items:center;padding:7px 10px;cursor:default;transition:background .1s;${last ? '' : 'border-bottom:0.5px solid var(--line);'}" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
       <div style="font-size:12px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.bank_name}</div>
       <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right">${b.account_number ? '···' + b.account_number.slice(-4) : '—'}</div>
       <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
@@ -1056,7 +1071,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     }).join('') : '';
 
     return `
-      <tr style="border-top:1px solid var(--line);cursor:pointer" onclick="toggleLots('${fundId}','icon-${i}')">
+      <tr style="border-top:1px solid var(--line);cursor:pointer" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''" onclick="toggleLots('${fundId}','icon-${i}')">
         <td style="padding:10px 16px 10px 0">
           <div style="display:flex;align-items:center;gap:6px">
             <span class="expand-icon" id="icon-${i}" style="font-size:9px;color:var(--muted);flex-shrink:0">▶</span>
@@ -1086,7 +1101,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     const isMatured = dtm !== null && dtm < 0;
 
     return `
-      <tr style="border-top:1px solid var(--line)">
+      <tr style="border-top:1px solid var(--line);cursor:default" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
         <td style="padding:10px 16px 10px 0">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:13px;font-weight:600;color:var(--ink)">${fd.bank}</span>
@@ -1095,7 +1110,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
         <td style="padding:10px 16px 10px 0;font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap">${fd.channel || '—'}</td>
         <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(+fd.principal)}</td>
         <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);text-align:right;white-space:nowrap">${cr(+fd.current_value)}</td>
-        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">+${cr(gain)}</td>
+        <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:${gain>50000?'var(--green)':'var(--muted)'};text-align:right;white-space:nowrap">+${cr(gain)}</td>
         <td style="padding:10px 16px 10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--green);text-align:right;white-space:nowrap">${fd.interest_rate||7.4}%</td>
         <td style="padding:10px 0 10px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;text-align:right;white-space:nowrap;color:${isMatured ? 'var(--red)' : dtm !== null && dtm < 90 ? 'var(--amber)' : 'var(--muted)'}">${isMatured ? '⚠ Matured' : dtmStr !== null ? dtmStr : '—'}</td>
       </tr>`;
@@ -1230,83 +1245,76 @@ function setCashTab(tab) {
 }
 
 function renderCashPosChart() {
-  const data  = window._cashPosData || [];
-  const tab   = window._cashPosTab  || 'overall';
+  const data   = window._cashPosData || [];
   const labels = data.map(d => d.label);
-  const vals   = data.map(d => {
-    const v = tab === 'overall'  ? +d.overall_total  :
-              tab === 'treasury' ? +d.treasury_total  :
-                                   +d.bank_total;
-    return +(v/1e7).toFixed(2);
+  const toCr   = v => +(v/1e7).toFixed(2);
+
+  const showBank     = document.getElementById('cb-bank')?.checked ?? true;
+  const showTreasury = document.getElementById('cb-treasury')?.checked ?? true;
+  const showTotal    = document.getElementById('cb-total')?.checked ?? true;
+
+  const bankVals     = data.map(d => toCr(+d.bank_total));
+  const treasuryVals = data.map(d => toCr(+d.treasury_total));
+  const totalVals    = data.map(d => toCr(+d.overall_total));
+
+  const gridColor = '#F1F5F9';
+  const tickFont  = { family: 'DM Mono', size: 9 };
+
+  const makeDataset = (label, vals, color, dash, fill) => ({
+    label, data: vals,
+    borderColor: color, borderWidth: 2, borderDash: dash || [],
+    backgroundColor: fill ? color + '10' : 'transparent',
+    fill: fill ? 'origin' : false,
+    tension: 0.35,
+    pointRadius: vals.map((_, i) => data[i]?.data_type === 'live' ? 5 : 3),
+    pointBackgroundColor: vals.map((_, i) => data[i]?.data_type === 'live' ? color : '#fff'),
+    pointBorderColor: color, pointBorderWidth: 2,
   });
 
-  // Mark the live data point differently
-  const pointColors = data.map(d => d.data_type === 'live' ? '#C9962B' : '#1447A6');
-  const pointRadii  = data.map(d => d.data_type === 'live' ? 6 : 4);
-
-  const colors = { overall:'#1447A6', treasury:'#14803C', bank:'#C9962B' };
-  const color  = colors[tab];
+  const datasets = [];
+  if(showBank)     datasets.push(makeDataset('Bank',     bankVals,     '#1D4ED8', [],     true));
+  if(showTreasury) datasets.push(makeDataset('Treasury', treasuryVals, '#7C3AED', [],     true));
+  if(showTotal)    datasets.push(makeDataset('Total',    totalVals,    '#C9962B', [5, 3], false));
 
   if(window._cpChart) window._cpChart.destroy();
   window._cpChart = new Chart(document.getElementById('cashPosChart'), {
     type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        data:                vals,
-        borderColor:         color,
-        backgroundColor:     color + '12',
-        fill:                true,
-        tension:             .3,
-        pointRadius:         pointRadii,
-        pointBackgroundColor: pointColors,
-        pointBorderColor:    '#fff',
-        pointBorderWidth:    2,
-        borderWidth:         2.5,
-        datalabels: {
-          display: true,
-        }
-      }]
-    },
+    data: { labels, datasets },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      layout: { padding: { top: 22 } },
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 20 } },
+      interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
-          callbacks: {
-            label: c => ` ₹${c.raw.toFixed(2)} Cr`,
-            afterLabel: (c) => {
-              const d = data[c.dataIndex];
-              return d.data_type === 'live' ? '● Live' : '◆ Month-end';
-            }
-          }
+          backgroundColor: '#fff', borderColor: '#E8ECF1', borderWidth: 1,
+          titleColor: '#0F172A', bodyColor: '#64748B', padding: 10,
+          titleFont: { size: 11, weight: '600', family: 'DM Mono' },
+          bodyFont: { size: 11, family: 'DM Mono' },
+          callbacks: { label: c => ` ${c.dataset.label}: ₹${c.parsed.y.toFixed(2)} Cr` }
         }
       },
       scales: {
-        x: { ticks: { font: { family: 'DM Mono', size: 9 }, maxRotation: 45 }, grid: { display: false } },
-        y: {
-          ticks: { font: { family: 'DM Mono', size: 10 }, callback: v => `₹${v}Cr` },
-          grid: { color: '#F1F5F9' }
-        }
+        x: { ticks: { font: tickFont, maxRotation: 0 }, grid: { display: false }, border: { display: false } },
+        y: { ticks: { font: tickFont, callback: v => '₹' + v + ' Cr', padding: 8 }, grid: { color: gridColor, drawTicks: false }, border: { display: false } }
       },
       animation: {
         onComplete: function() {
-          // Draw labels manually above each point
           const chart = this;
-          const ctx   = chart.ctx;
-          const ds    = chart.data.datasets[0];
-          const meta  = chart.getDatasetMeta(0);
+          const ctx = chart.ctx;
           ctx.save();
-          ctx.font = '600 10px DM Mono, monospace';
+          ctx.font = '500 9px "DM Mono", monospace';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'bottom';
-          meta.data.forEach((pt, i) => {
-            const val = ds.data[i];
-            const isLive = data[i]?.data_type === 'live';
-            ctx.fillStyle = isLive ? '#C9962B' : color;
-            ctx.fillText(`₹${val}Cr`, pt.x, pt.y - 6);
+          chart.data.datasets.forEach((ds, di) => {
+            const meta = chart.getDatasetMeta(di);
+            if(meta.hidden) return;
+            ds.data.forEach((val, i) => {
+              const pt = meta.data[i];
+              if(!pt) return;
+              ctx.fillStyle = ds.borderColor;
+              ctx.fillText('₹' + val + ' Cr', pt.x, pt.y - 8);
+            });
           });
           ctx.restore();
         }
