@@ -268,18 +268,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   <div class="lbar"><div class="lfill"></div></div>
 </div>
 
-<div class="hdr">
-  <div>
-    <h1>Bizom Funds</h1>
+<div style="background:#EFF6FF;padding:14px 48px;border-bottom:1px solid #BFDBFE;display:flex;justify-content:space-between;align-items:center">
+  <div style="font-size:22px;font-weight:800;color:#1E40AF;letter-spacing:-.5px;font-family:'Inter',sans-serif">Bizom Funds</div>
+  <div style="text-align:right">
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#93C5FD;margin-bottom:2px">As of</div>
+    <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:#1D4ED8" id="hdrDate">—</div>
   </div>
-  <div class="hdr-right">
-    <div class="hdr-date-label">As of</div>
-    <div class="hdr-date" id="hdrDate">—</div>
-  </div>
-</div>
-<div class="data-banner">
-  <span id="dataLabel">Connecting...</span>
-  <span id="dataTs"></span>
 </div>
 
 <div class="main">
@@ -471,7 +465,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
           </div>
         </div>
       </div>
-      <div id="mfBody" style="padding:0"></div>
+      <div id="mfBody" style="padding:0 16px 16px"></div>
     </div>
 
     <div class="panel" style="overflow:hidden">
@@ -492,13 +486,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
           </div>
         </div>
       </div>
-      <div class="pb" id="fdBody" style="padding:0"></div>
+      <div id="fdBody" style="padding:0 16px 16px"></div>
     </div>
   </div>
 
   <!-- Charts -->
-  <!-- Cash Position chart with 3 tabs -->
-  <div class="panel" style="margin-bottom:16px">
+  <!-- Cash Position chart panel (hidden) -->
+  <div class="panel" style="margin-bottom:16px;display:none">
     <div class="ph" style="align-items:center">
       <span class="ph-title">Cash Position</span>
       <div style="display:flex;gap:4px;margin-left:16px">
@@ -511,7 +505,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     <div class="pb"><div class="chart-wrap" style="height:250px"><canvas id="cashPosChart" role="img" aria-label="Cash position"></canvas></div></div>
   </div>
 
-  <div class="row row-2" style="margin-bottom:16px">
+  <div class="row row-2" style="margin-bottom:16px;display:none">
     <div class="panel">
       <div class="ph"><span class="ph-title">Monthly Cashflows</span><span class="ph-tag">₹ Crore</span></div>
       <div class="pb"><div class="chart-wrap" style="height:230px"><canvas id="moChart" role="img" aria-label="Monthly flows"></canvas></div></div>
@@ -537,8 +531,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
     </div>
   </div>
 
-  <!-- Cashflow ledger -->
-  <div class="panel">
+  <!-- Cashflow ledger (hidden) -->
+  <div class="panel" style="display:none">
     <div class="ph"><span class="ph-title">Cashflow Ledger</span><span class="ph-tag" id="cfCount">—</span></div>
     <div class="cf-table-wrap cf-wrap">
       <table class="cf-table">
