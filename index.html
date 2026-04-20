@@ -447,7 +447,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
           <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--gold)" id="bankTotalHdr">—</div>
         </div>
       </div>
-      <div class="pb" id="bankBalBody" style="padding:12px"></div>
+      <div class="pb" id="bankBalBody" style="padding:0"></div>
     </div>
   </div>
 
@@ -913,86 +913,58 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
 
   if(document.getElementById('bankTotalHdr')) document.getElementById('bankTotalHdr').textContent = cr(bankTotal);
 
-  // Entity color system — one color per entity, used consistently
+  // Entity color system
   const ENTITY_COLORS = {
-    'Mobisy India':     { line: '#1D4ED8', text: '#1E40AF' },
-    'Mobisy UK':        { line: '#7C3AED', text: '#5B21B6' },
-    'Bizom ERTM':       { line: '#D97706', text: '#92400E' },
-    'Mobisy Singapore': { line: '#059669', text: '#065F46' },
+    'Mobisy India':     { bg: '#EFF6FF', border: '#BFDBFE', text: '#1E40AF', label: '#1D4ED8' },
+    'Mobisy UK':        { bg: '#F5F3FF', border: '#DDD6FE', text: '#6D28D9', label: '#7C3AED' },
+    'Bizom ERTM':       { bg: '#FFFBEB', border: '#FDE68A', text: '#92400E', label: '#D97706' },
+    'Mobisy Singapore': { bg: '#F0FDFA', border: '#99F6E4', text: '#065F46', label: '#0891B2' },
   };
 
-  // Fixed column widths — same for header and every data row so they align perfectly
-  const COL = '1fr 90px 80px 100px'; // name | acct | date | balance
+  // Fixed column widths
+  const COL = '1fr 80px 72px 96px'; // name | acct | date | balance
 
-  // India rows — uses fixed COL grid
-  const bankRowFull = (b, i) => `
-    ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
-    <div style="display:grid;grid-template-columns:${COL};align-items:center;padding:10px 0">
-      <div style="font-size:13px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.bank_name}</div>
+  const colHeaders = `
+    <div style="display:grid;grid-template-columns:${COL};padding:4px 10px 3px;border-bottom:0.5px solid var(--line)">
+      <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Account</div>
+      <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Acct No.</div>
+      <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Last Txn</div>
+      <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Balance</div>
+    </div>`;
+
+  const bankRow = (b, i, last) => `
+    <div style="display:grid;grid-template-columns:${COL};align-items:center;padding:7px 10px;${last ? '' : 'border-bottom:0.5px solid var(--line);'}">
+      <div style="font-size:12px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.bank_name}</div>
       <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right">${b.account_number ? '···' + b.account_number.slice(-4) : '—'}</div>
       <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
       <div style="font-size:13px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);text-align:right;white-space:nowrap">${cr(+b.balance)}</div>
     </div>`;
 
-  // Right-col rows — same fixed widths
-  const bankRowCompact = (b, i) => `
-    ${i > 0 ? `<div style="height:1px;background:var(--line)"></div>` : ''}
-    <div style="display:grid;grid-template-columns:${COL};align-items:center;padding:10px 0">
-      <div style="font-size:12px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.bank_name}</div>
-      <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right">${b.account_number ? '···' + b.account_number.slice(-4) : '—'}</div>
-      <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-align:right;white-space:nowrap">${b.last_txn_date ? fmtD(b.last_txn_date) : '—'}</div>
-      <div style="font-size:12px;font-weight:600;font-family:'DM Mono',monospace;color:var(--ink);text-align:right;white-space:nowrap">${cr(+b.balance)}</div>
-    </div>`;
-
-  // Shared column header row — same COL grid
-  const colHeaders = `
-    <div style="display:grid;grid-template-columns:${COL};padding:4px 0 3px;border-bottom:1px solid var(--line);margin-bottom:0">
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Account</div>
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Acct No.</div>
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Last Txn</div>
-      <div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right">Balance</div>
-    </div>`;
-
-  const bankGroupHeader = (label, names) => {
-    const ec = ENTITY_COLORS[label] || { line: '#94A3B8', text: '#475569' };
-    const total = groupTotal(names);
-    return `<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;border-bottom:2px solid ${ec.line};margin-bottom:0">
-      <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:${ec.text}">${label}</span>
-      <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--ink)">${cr(total)}</span>
-    </div>`;
-  };
-
-  // India — left half
-  const indiaRows = [...groupBanks(MOBISY_INDIA)].sort((a,b)=>(+b.balance)-(+a.balance));
-  const indiaHtml = `
-    ${bankGroupHeader('Mobisy India', MOBISY_INDIA)}
-    ${colHeaders}
-    ${indiaRows.map((b,i) => bankRowFull(b, i)).join('')}`;
-
-  // UK, ERTM, SG — right half stacked, each with their own col headers
-  const makeSmallGroup = (label, names, placeholder) => {
+  const bankCard = (label, names, placeholder) => {
+    const ec = ENTITY_COLORS[label] || { bg: '#F8FAFC', border: '#E2E8F0', text: '#475569', label: '#94A3B8' };
     const rows = [...groupBanks(names)].sort((a,b)=>(+b.balance)-(+a.balance));
-    const content = rows.length
-      ? colHeaders + rows.map((b,i) => bankRowCompact(b, i)).join('')
-      : `<div style="padding:8px 0;font-size:12px;font-weight:500;color:var(--muted)">${placeholder||'—'}<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>`;
-    return `<div style="padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line)">
-      ${bankGroupHeader(label, names)}
-      ${content}
-    </div>`;
+    const total = groupTotal(names);
+    const body = rows.length
+      ? colHeaders + rows.map((b,i) => bankRow(b, i, i === rows.length - 1)).join('')
+      : `${colHeaders}<div style="padding:8px 10px;font-size:12px;color:var(--muted)">${placeholder||'—'} <span style="font-size:10px">· Account opening in progress</span></div>`;
+    return `
+      <div style="background:var(--white);border-radius:6px;border:0.5px solid var(--line);overflow:hidden">
+        <div style="padding:7px 10px;background:${ec.bg};border-bottom:0.5px solid ${ec.border};display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${ec.label}">${label}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:${ec.text}">${cr(total)}</span>
+        </div>
+        ${body}
+      </div>`;
   };
-
-  const rightCol = `
-    ${makeSmallGroup('Mobisy UK', MOBISY_UK)}
-    ${makeSmallGroup('Bizom ERTM', BIZOM_ERTM)}
-    <div>
-      ${bankGroupHeader('Mobisy Singapore', MOBISY_SG)}
-      <div style="padding:8px 0;font-size:12px;font-weight:500;color:var(--muted)">OCBC<div style="font-size:10px;font-weight:400;margin-top:2px">Account opening in progress</div></div>
-    </div>`;
 
   document.getElementById('bankBalBody').innerHTML = banks.length ? `
-    <div class="bank-groups" style="display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:flex-start">
-      <div style="padding-right:24px;border-right:1px solid var(--line)">${indiaHtml}</div>
-      <div style="padding-left:24px">${rightCol}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px">
+      ${bankCard('Mobisy India', MOBISY_INDIA)}
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${bankCard('Mobisy UK', MOBISY_UK)}
+        ${bankCard('Bizom ERTM', BIZOM_ERTM)}
+        ${bankCard('Mobisy Singapore', MOBISY_SG, 'OCBC')}
+      </div>
     </div>
   ` : `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">No bank data yet</div>`;
 
