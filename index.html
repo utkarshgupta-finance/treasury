@@ -749,7 +749,7 @@ let _mfLots = {};
 // ── MAIN LOAD ────────────────────────────────────────────────────
 async function loadAll() {
   try {
-    document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Connecting to Supabase...`;
+    if(document.getElementById('dataLabel')) document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Connecting to Supabase...`;
 
     const [txns, mfH, fdH, banks, xirrH, lots, cashPos, realisedTotal] = await Promise.all([
       sb('transactions', 'select=transaction_date,description,asset_type,transaction_type,amount&order=transaction_date.asc,id.asc'),
@@ -778,17 +778,16 @@ async function loadAll() {
 
     render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal);
 
-    document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Live · Supabase`;
-    document.getElementById('dataTs').textContent = `Refreshed ${new Date().toLocaleTimeString()}`;
+    if(document.getElementById('dataLabel')) document.getElementById('dataLabel').innerHTML = `<span class="live">●</span> Live · Supabase`;
+    if(document.getElementById('dataTs')) document.getElementById('dataTs').textContent = `Refreshed ${new Date().toLocaleTimeString()}`;
     document.getElementById('hdrDate').textContent = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 
   } catch(e) {
     console.error(e);
-    document.getElementById('dataLabel').innerHTML = `<span class="stale">⚠</span> Error: ${e.message}`;
+    if(document.getElementById('dataLabel')) document.getElementById('dataLabel').innerHTML = `<span class="stale">⚠</span> Error: ${e.message}`;
   } finally {
     const l = document.getElementById('loader');
-    l.style.opacity='0';
-    setTimeout(()=>l.style.display='none',500);
+    if(l) { l.style.opacity='0'; setTimeout(()=>l.style.display='none',500); }
   }
 }
 
