@@ -30,6 +30,33 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 @keyframes lb{0%{width:0}60%{width:80%}100%{width:100%}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
+/* LOGIN SCREEN */
+#loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000}
+#loginScreen.hidden{display:none}
+.login-wrap{display:flex;flex-direction:column;align-items:center;width:100%}
+.login-hdr{display:flex;align-items:center;gap:10px;margin-bottom:36px}
+.login-hdr-icon{width:36px;height:36px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(20,71,166,.25)}
+.login-hdr-icon-inner{width:18px;height:18px;background:var(--white);border-radius:3px}
+.login-hdr-text{font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.3px}
+.login-hdr-sub{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:1px}
+.login-box{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:36px 40px;width:400px;max-width:92vw;box-shadow:0 4px 24px rgba(0,0,0,.07)}
+.login-title{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-.3px}
+.login-sub{font-size:12px;color:var(--muted);margin-bottom:28px}
+.login-divider{height:1px;background:var(--line);margin-bottom:24px}
+.login-label{font-size:11px;font-weight:600;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:block}
+.login-input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:11px 14px;font-size:14px;color:var(--ink);font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:16px}
+.login-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,71,166,.08);background:var(--white)}
+.login-input::placeholder{color:#CBD5E1}
+.login-btn{width:100%;background:var(--blue);border:none;border-radius:6px;padding:12px;font-size:14px;font-weight:700;color:var(--white);font-family:'Inter',sans-serif;cursor:pointer;transition:opacity .2s,background .2s;margin-top:4px;letter-spacing:.01em}
+.login-btn:hover{background:#1035A0}
+.login-btn:disabled{opacity:.55;cursor:not-allowed}
+.login-err{font-size:12px;color:var(--red);margin-top:10px;min-height:18px;text-align:center;font-weight:500}
+.login-footer{margin-top:20px;font-size:11px;color:var(--muted);text-align:center}
+.login-spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.4);border-top-color:var(--white);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.login-notice{font-size:12px;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:10px 14px;margin-bottom:20px;line-height:1.5;font-weight:500}
+.login-hint{font-size:11px;color:var(--muted);margin-top:-10px;margin-bottom:16px}
+
 /* HEADER */
 .hdr{background:var(--ink);padding:20px 48px 18px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--gold)}
 .hdr h1{font-family:'Inter',sans-serif;font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.5px}
@@ -261,6 +288,58 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </style>
 </head>
 <body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-hdr">
+      <div class="login-hdr-icon"><div class="login-hdr-icon-inner"></div></div>
+      <div>
+        <div class="login-hdr-text">Bizom Funds</div>
+        <div class="login-hdr-sub">Treasury · Portfolio</div>
+      </div>
+    </div>
+    <div class="login-box">
+      <div class="login-title">Sign in</div>
+      <div class="login-sub">Access restricted to authorised team members</div>
+      <div class="login-divider"></div>
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="loginEmail" placeholder="you@mobisy.com" autocomplete="email">
+      <label class="login-label">Password</label>
+      <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">Sign in</button>
+      <div class="login-err" id="loginErr"></div>
+    </div>
+    <div class="login-footer">Bizom · Internal use only</div>
+  </div>
+</div>
+
+<!-- RESET PASSWORD SCREEN (shown after first login) -->
+<div id="resetScreen" class="hidden" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000">
+  <div class="login-wrap">
+    <div class="login-hdr">
+      <div class="login-hdr-icon"><div class="login-hdr-icon-inner"></div></div>
+      <div>
+        <div class="login-hdr-text">Bizom Funds</div>
+        <div class="login-hdr-sub">Treasury · Portfolio</div>
+      </div>
+    </div>
+    <div class="login-box">
+      <div class="login-title">Set your password</div>
+      <div class="login-sub">You're signing in for the first time. Please set a personal password to continue.</div>
+      <div class="login-divider"></div>
+      <div class="login-notice">🔒 Your account was created with a temporary password. Choose something secure that only you know.</div>
+      <label class="login-label">New Password</label>
+      <input class="login-input" type="password" id="resetNewPass" placeholder="Min. 8 characters" autocomplete="new-password">
+      <div class="login-hint">Use at least 8 characters with a mix of letters and numbers.</div>
+      <label class="login-label">Confirm Password</label>
+      <input class="login-input" type="password" id="resetConfirmPass" placeholder="Repeat password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doResetPassword()">
+      <button class="login-btn" id="resetBtn" onclick="doResetPassword()">Set password & continue</button>
+      <div class="login-err" id="resetErr"></div>
+    </div>
+    <div class="login-footer">Bizom · Internal use only</div>
+  </div>
+</div>
 
 <div id="loader">
   <h2>Treasury</h2>
@@ -696,16 +775,141 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 // ── SUPABASE CONFIG ──────────────────────────────────────────────
 const SB_URL  = 'https://djjwbhgqbboqowwxooji.supabase.co';
 const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqandiaGdxYmJvcW93d3hvb2ppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDY2MzQsImV4cCI6MjA5MTkyMjYzNH0.oU85EUSHuSXJ6W9fVOAiSLXl5KQSjsc8tHhEESYPmmE';
-const HDRS    = {'apikey': SB_ANON, 'Authorization': `Bearer ${SB_ANON}`, 'Content-Type': 'application/json'};
+
+// Auth state
+let _authToken = null;
+
+function getHdrs() {
+  const token = _authToken || SB_ANON;
+  return {'apikey': SB_ANON, 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'};
+}
+
+// ── AUTH ─────────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const btn   = document.getElementById('loginBtn');
+  const err   = document.getElementById('loginErr');
+
+  if (!email || !pass) { err.textContent = 'Please enter your email and password.'; return; }
+
+  err.textContent = '';
+  btn.disabled = true;
+  btn.innerHTML = '<span class="login-spinner"></span>Signing in…';
+
+  try {
+    const r = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'apikey': SB_ANON, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await r.json();
+
+    if (!r.ok) {
+      err.textContent = data.error_description || 'Invalid email or password.';
+      btn.disabled = false;
+      btn.textContent = 'Sign in';
+      return;
+    }
+
+    _authToken = data.access_token;
+    sessionStorage.setItem('sb_token', _authToken);
+    sessionStorage.setItem('sb_token_exp', Date.now() + (data.expires_in * 1000));
+
+    // Check if user must reset password
+    const profile = await sb('user_profiles', 'select=must_reset_password');
+    if (profile && profile[0]?.must_reset_password) {
+      // Show reset screen instead of dashboard
+      document.getElementById('loginScreen').classList.add('hidden');
+      const rs = document.getElementById('resetScreen');
+      rs.classList.remove('hidden');
+      rs.style.display = 'flex';
+    } else {
+      document.getElementById('loginScreen').classList.add('hidden');
+      loadAll();
+    }
+  } catch(e) {
+    err.textContent = 'Network error. Please try again.';
+    btn.disabled = false;
+    btn.textContent = 'Sign in';
+  }
+}
+
+async function doResetPassword() {
+  const newPass     = document.getElementById('resetNewPass').value;
+  const confirmPass = document.getElementById('resetConfirmPass').value;
+  const btn         = document.getElementById('resetBtn');
+  const err         = document.getElementById('resetErr');
+
+  err.textContent = '';
+
+  if (newPass.length < 8) { err.textContent = 'Password must be at least 8 characters.'; return; }
+  if (newPass !== confirmPass) { err.textContent = 'Passwords do not match.'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="login-spinner"></span>Updating password…';
+
+  try {
+    // Update password via Supabase Auth
+    const r = await fetch(`${SB_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers: { 'apikey': SB_ANON, 'Authorization': `Bearer ${_authToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: newPass })
+    });
+
+    if (!r.ok) {
+      const d = await r.json();
+      err.textContent = d.message || 'Failed to update password. Please try again.';
+      btn.disabled = false;
+      btn.textContent = 'Set password & continue';
+      return;
+    }
+
+    // Clear the must_reset_password flag
+    await fetch(`${SB_URL}/rest/v1/user_profiles?id=eq.${await getMyUserId()}`, {
+      method: 'PATCH',
+      headers: { ...getHdrs(), 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ must_reset_password: false })
+    });
+
+    // Hide reset screen, load dashboard
+    document.getElementById('resetScreen').style.display = 'none';
+    loadAll();
+  } catch(e) {
+    err.textContent = 'Network error. Please try again.';
+    btn.disabled = false;
+    btn.textContent = 'Set password & continue';
+  }
+}
+
+async function getMyUserId() {
+  const r = await fetch(`${SB_URL}/auth/v1/user`, {
+    headers: { 'apikey': SB_ANON, 'Authorization': `Bearer ${_authToken}` }
+  });
+  const d = await r.json();
+  return d.id;
+}
+
+function checkExistingSession() {
+  const token = sessionStorage.getItem('sb_token');
+  const exp   = sessionStorage.getItem('sb_token_exp');
+  if (token && exp && Date.now() < +exp) {
+    _authToken = token;
+    document.getElementById('loginScreen').classList.add('hidden');
+    return true;
+  }
+  return false;
+}
 
 async function sb(table, params='') {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {headers: HDRS});
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {headers: getHdrs()});
+  if (r.status === 401) { sessionStorage.clear(); location.reload(); throw new Error('Session expired'); }
   if (!r.ok) throw new Error(`${table}: ${r.status}`);
   return r.json();
 }
 async function sbPost(table, body) {
   const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
-    method:'POST', headers:{...HDRS,'Prefer':'resolution=merge-duplicates,return=representation'}, body:JSON.stringify(body)
+    method:'POST', headers:{...getHdrs(),'Prefer':'resolution=merge-duplicates,return=representation'}, body:JSON.stringify(body)
   });
   if (!r.ok) throw new Error(`POST ${table}: ${r.status}`);
   return r.json();
@@ -1692,7 +1896,15 @@ function closeXirrModal() {
 }
 
 // ── BOOT ─────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', loadAll);
+window.addEventListener('DOMContentLoaded', () => {
+  if (!checkExistingSession()) {
+    // Show login, hide loader
+    const l = document.getElementById('loader');
+    if (l) l.style.display = 'none';
+  } else {
+    loadAll();
+  }
+});
 </script>
 </body>
 </html>
