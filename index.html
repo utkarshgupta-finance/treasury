@@ -452,9 +452,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
       </div>
     </div>
 
-    <!-- Earning per day — compact strip -->
+    <!-- Expected Earning per day — compact strip -->
     <div onclick="showDailyModal()" style="background:var(--white);border-top:1px solid var(--line);padding:7px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:500">Earning per day</div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:500">Expected Earning / day</div>
       <div style="display:flex;align-items:center;gap:6px">
         <div style="font-size:17px;font-weight:700;color:#1D4ED8;font-family:'DM Mono',monospace" id="dailyTotal">—</div>
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="#1D4ED8" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -465,7 +465,157 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 
   </div><!-- end top row grid -->
 
-  <!-- Row: bank balances (full width now) -->
+  <!-- ── VARIATION B PREVIEW ─────────────────────────────────── -->
+  <div style="margin-bottom:20px">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:4px 10px;background:var(--bg);border:1px solid var(--line);border-radius:3px;display:inline-block">New layout preview — Variation B</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr 0.9fr 0.8fr;gap:8px">
+
+      <!-- COL 1: Total Cash + Bank/Treasury sub-cells -->
+      <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
+        <div style="padding:18px 20px;border-bottom:1px solid var(--line)">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:3px">Total Cash Position</div>
+          <div style="display:flex;align-items:stretch;gap:10px">
+            <div style="width:4px;background:var(--gold);border-radius:2px;flex-shrink:0"></div>
+            <div style="font-family:'DM Mono',monospace;font-size:46px;font-weight:800;color:var(--ink);letter-spacing:-2px;line-height:1" id="vbCash">—</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;flex:1">
+          <div style="padding:14px 16px;border-right:1px solid var(--line)">
+            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1D4ED8;margin-bottom:6px">Bank</div>
+            <div style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:#1D4ED8;letter-spacing:-1px" id="vbBank">—</div>
+            <div style="margin-top:8px">
+              <div style="height:3px;border-radius:2px;background:#DBEAFE;overflow:hidden">
+                <div style="height:100%;background:#1D4ED8;border-radius:2px" id="vbBankBar"></div>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:#1D4ED8;margin-top:3px" id="vbBankPct">—</div>
+            </div>
+          </div>
+          <div style="padding:14px 16px">
+            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#059669;margin-bottom:6px">Treasury</div>
+            <div style="font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:#059669;letter-spacing:-1px" id="vbTreasury">—</div>
+            <div style="margin-top:8px">
+              <div style="height:3px;border-radius:2px;background:#D1FAE5;overflow:hidden">
+                <div style="height:100%;background:#059669;border-radius:2px" id="vbTreasuryBar"></div>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:#059669;margin-top:3px" id="vbTreasuryPct">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 2: Treasury breakdown -->
+      <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
+        <div style="padding:10px 16px;border-bottom:1px solid var(--line)">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Treasury breakdown</div>
+        </div>
+        <div style="padding:14px 16px;border-bottom:1px solid var(--line);flex:1">
+          <div style="font-size:11px;font-weight:600;color:var(--ink);margin-bottom:5px">Mutual Funds</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div>
+              <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="vbMFInv">—</span>
+              <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"> → </span>
+              <span style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--ink)" id="vbMFCur">—</span>
+            </div>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:#059669" id="vbMFGain">—</span>
+          </div>
+        </div>
+        <div style="padding:14px 16px;border-bottom:1px solid var(--line);flex:1">
+          <div style="font-size:11px;font-weight:600;color:var(--ink);margin-bottom:5px">Fixed Deposits</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div>
+              <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="vbFDInv">—</span>
+              <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"> → </span>
+              <span style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--ink)" id="vbFDCur">—</span>
+            </div>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:#059669" id="vbFDGain">—</span>
+          </div>
+        </div>
+        <div style="padding:8px 16px;background:var(--bg);border-top:1px solid var(--line);margin-top:auto">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;font-weight:700;color:#059669">Total gain</span>
+            <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:800;color:#059669" id="vbTotalGain">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 3: XIRR + Returns -->
+      <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--line)">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#059669;margin-bottom:1px">Treasury XIRR</div>
+          <div style="font-size:9px;color:var(--muted);margin-bottom:6px">since Mar 2025</div>
+          <div style="font-family:'DM Mono',monospace;font-size:36px;font-weight:800;color:#059669;letter-spacing:-2px;line-height:1;cursor:pointer" onclick="showXirrModal('overall')" id="vbXirr">—</div>
+          <div style="display:flex;gap:12px;margin-top:7px">
+            <div>
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px">Mutual Funds</div>
+              <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:#059669" id="vbXirrMF">—</div>
+            </div>
+            <div style="width:1px;background:var(--line)"></div>
+            <div>
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px">Fixed Dep.</div>
+              <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:#059669" id="vbXirrFD">—</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:12px 16px;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px">Returns</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;color:var(--muted)">Unrealised ↗</span>
+            <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:#2563EB" id="vbUnreal">—</span>
+          </div>
+          <div style="height:1px;background:var(--line)"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;color:var(--muted)">Realised ↗</span>
+            <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--muted)" id="vbBooked">—</span>
+          </div>
+          <div style="height:1px;background:var(--line)"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:#ECFDF5;margin:0 -16px;padding:7px 16px">
+            <span style="font-size:11px;font-weight:700;color:#059669">Total Returns</span>
+            <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:800;color:#059669" id="vbTotalPL">—</span>
+          </div>
+        </div>
+        <div style="padding:8px 16px;background:var(--bg);border-top:1px solid var(--line)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Exp. daily earn</span>
+            <span style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:#1D4ED8" id="vbDaily">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 4: Bank breakdown -->
+      <div style="border-radius:6px;border:1px solid var(--line);overflow:hidden;background:var(--white);display:flex;flex-direction:column">
+        <div style="padding:10px 16px;border-bottom:1px solid var(--line)">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Bank breakdown</div>
+        </div>
+        <div style="padding:10px 16px;flex:1;display:flex;flex-direction:column">
+          <div style="padding:8px 0;border-bottom:1px solid var(--line)">
+            <div style="font-size:11px;font-weight:600;color:#1D4ED8;margin-bottom:2px">Mobisy India</div>
+            <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--ink)" id="vbIndia">—</div>
+          </div>
+          <div style="padding:8px 0;border-bottom:1px solid var(--line)">
+            <div style="font-size:11px;font-weight:600;color:#7C3AED;margin-bottom:2px">Mobisy UK</div>
+            <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--ink)" id="vbUK">—</div>
+          </div>
+          <div style="padding:8px 0;border-bottom:1px solid var(--line)">
+            <div style="font-size:11px;font-weight:600;color:#D97706;margin-bottom:2px">Bizom ERTM</div>
+            <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--ink)" id="vbERTM">—</div>
+          </div>
+          <div style="padding:8px 0">
+            <div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:2px">Mobisy Singapore</div>
+            <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--muted)">₹0.00 Cr</div>
+            <div style="font-size:9px;color:var(--muted);margin-top:2px">Opening in progress</div>
+          </div>
+        </div>
+        <div style="padding:8px 16px;background:var(--bg);border-top:1px solid var(--line)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;font-weight:700;color:#1D4ED8">Total Bank</span>
+            <span style="font-family:'DM Mono',monospace;font-size:14px;font-weight:800;color:#1D4ED8" id="vbBankTotal">—</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- ── END VARIATION B PREVIEW ──────────────────────────────── -->
   <div style="margin-bottom:16px">
     <div class="panel">
       <div class="ph" style="justify-content:space-between">
@@ -915,6 +1065,38 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   document.getElementById('kBankUK').textContent    = cr(hsbcUK);
   document.getElementById('kBankERTM').textContent  = cr(ertm);
   if(document.getElementById('kBankSG')) document.getElementById('kBankSG').textContent = cr(0);
+
+  // ── Variation B preview setters ────────────────────────────
+  const grand = total + bankTotal;
+  const bPct  = grand > 0 ? (bankTotal/grand*100).toFixed(1) : '50.0';
+  const tPct  = grand > 0 ? (total/grand*100).toFixed(1)    : '50.0';
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  const setW = (id, pct) => { const el = document.getElementById(id); if(el) el.style.width = pct + '%'; };
+  set('vbCash',       cr(grand));
+  set('vbBank',       cr(bankTotal));
+  set('vbTreasury',   cr(total));
+  set('vbBankPct',    bPct + '%');
+  set('vbTreasuryPct',tPct + '%');
+  setW('vbBankBar',    Math.min(+bPct, 100));
+  setW('vbTreasuryBar',Math.min(+tPct, 100));
+  set('vbMFInv',      cr(mfInvested));
+  set('vbMFCur',      cr(mfTotal));
+  set('vbMFGain',     `+${cr(mfReturns)}`);
+  set('vbFDInv',      cr(fdInvested));
+  set('vbFDCur',      cr(fdTotal));
+  set('vbFDGain',     `+${cr(fdReturns)}`);
+  set('vbTotalGain',  `+${cr(mfReturns + fdReturns)}`);
+  set('vbXirr',       xirrAll ? `${(xirrAll*100).toFixed(2)} %` : '—');
+  set('vbXirrMF',     `${xirrMF.toFixed(2)} %`);
+  set('vbXirrFD',     `${xirrFD.toFixed(2)} %`);
+  set('vbUnreal',     `+${cr(notional)}`);
+  set('vbBooked',     `+${cr(booked)}`);
+  set('vbTotalPL',    `+${cr(totalPL)}`);
+  set('vbDaily',      fmtRs(dailyAll));
+  set('vbIndia',      cr(indiaBank));
+  set('vbUK',         cr(hsbcUK));
+  set('vbERTM',       cr(ertm));
+  set('vbBankTotal',  cr(bankTotal));
   document.getElementById('xhVal').textContent     = xirrAll ? `${(xirrAll*100).toFixed(2)} %` : '—';
   document.getElementById('xhMF').textContent      = `${xirrMF.toFixed(2)} %`;
   document.getElementById('xhFD').textContent      = `${xirrFD.toFixed(2)} %`;
