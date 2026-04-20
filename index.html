@@ -1123,6 +1123,7 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
   txns.forEach(t=>{const ym=t.transaction_date.slice(0,7);if(!mIn[ym]){mIn[ym]=0;mOut[ym]=0;}+t.amount>0?mIn[ym]+=(+t.amount)/1e7:mOut[ym]+=Math.abs(+t.amount)/1e7;});
   const mos=[...new Set([...Object.keys(mIn),...Object.keys(mOut)])].sort();
   if(window._mc) window._mc.destroy();
+  /* moChart hidden
   window._mc = new Chart(document.getElementById('moChart'),{
     type:'bar',
     data:{labels:mos.map(m=>{const[y,mo]=m.split('-');return`${MONTHS[+mo-1]} ${y.slice(2)}`}),
@@ -1150,7 +1151,8 @@ function render(txns, mfH, fds, banks, xirrH, cashPos, realisedTotal) {
     </tr>`;
   }).join('');
 
-  // ── XIRR history chart
+  */
+    // ── XIRR history chart
   renderXirrHistory(xirrH);
 }
 
@@ -1185,7 +1187,7 @@ function toggleLots(panelId, iconId) {
 function renderXirrHistory(rows) {
   if(!rows||rows.length===0) return;
   document.getElementById('xirrEmpty').style.display='none';
-  document.getElementById('xirrChartWrap').style.display='block';
+  /* xirrChart hidden */ // document.getElementById('xirrChartWrap').style.display='block';
   if(document.getElementById('xirrHistCount')) document.getElementById('xirrHistCount').textContent=`${rows.length} snapshot${rows.length>1?'s':''}`;
   const dates   = rows.map(r=>fmtD(r.logged_at));
   const overall = rows.map(r=>+r.overall_xirr);
