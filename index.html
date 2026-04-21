@@ -765,16 +765,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 </div>
 
 <!-- ── DAILY EARNINGS MODAL ──────────────────────────────────── -->
-<div id="dailyModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)" onclick="if(event.target===this)closeDailyModal()">
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:6px;width:min(560px,95vw);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
-    <div style="padding:18px 24px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+<div id="dailyModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(13,17,23,.45);backdrop-filter:blur(4px)" onclick="if(event.target===this)closeDailyModal()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--white);border-radius:10px;width:min(560px,95vw);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.15);border:0.5px solid var(--line)">
+    <div style="padding:16px 22px;background:var(--white);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
       <div>
-        <div style="font-family:'Inter',sans-serif;font-size:20px;color:#5DCAA5">Earning Per Day</div>
-        <div style="font-size:11px;color:#64748B;margin-top:2px;font-family:'DM Mono',monospace">Portfolio × XIRR ÷ 365 · calculated separately per asset class</div>
+        <div style="font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.3px">Earning Per Day</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace">Portfolio × XIRR ÷ 365 · calculated separately per asset class</div>
       </div>
-      <button onclick="closeDailyModal()" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:2px;border:1px solid #334155;background:transparent;color:#94A3B8;cursor:pointer">✕</button>
+      <button onclick="closeDailyModal()" style="font-size:16px;font-weight:400;padding:2px 8px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;line-height:1">×</button>
     </div>
-    <div style="padding:20px 24px;display:flex;flex-direction:column;gap:16px" id="dailyBody"></div>
+    <div style="padding:18px 22px;display:flex;flex-direction:column;gap:12px;background:var(--bg)" id="dailyBody"></div>
   </div>
 </div>
 
@@ -1742,30 +1742,39 @@ function showDailyModal() {
   document.getElementById('dailyModal').style.display = 'block';
   const fmtRs = v => '₹' + Math.round(v).toLocaleString('en-IN');
   const fmtCr = v => '₹' + (v/1e7).toFixed(2) + ' Cr';
-  const row = (label, val, xirr, portfolio, daily, color) => `
-    <div style="background:var(--bg);border-radius:6px;padding:16px 18px;border:1px solid var(--line)">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px">${label}</div>
+  const row = (label, val, xirr, portfolio, daily, accentColor, numColor) => `
+    <div style="background:var(--white);border-radius:8px;padding:16px 18px;border:0.5px solid var(--line);box-shadow:0 1px 4px rgba(0,0,0,.04)">
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:12px">${label}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
-        <div><div style="font-size:9px;color:var(--muted);margin-bottom:3px">Portfolio Value</div><div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)">${fmtCr(portfolio)}</div></div>
-        <div><div style="font-size:9px;color:var(--muted);margin-bottom:3px">XIRR</div><div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--gold)">${xirr.toFixed(2)}%</div></div>
-        <div><div style="font-size:9px;color:var(--muted);margin-bottom:3px">÷ 365 days</div><div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--muted)">daily rate</div></div>
+        <div>
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Portfolio Value</div>
+          <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)">${fmtCr(portfolio)}</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">XIRR</div>
+          <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--gold)">${xirr.toFixed(2)}%</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">÷ 365 days</div>
+          <div style="font-size:11px;font-weight:500;font-family:'DM Mono',monospace;color:var(--muted)">daily rate</div>
+        </div>
       </div>
       <div style="border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between;align-items:center">
         <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">${fmtCr(portfolio)} × ${xirr.toFixed(2)}% ÷ 365</div>
-        <div style="font-size:22px;font-weight:800;font-family:'DM Mono',monospace;color:${color}">${fmtRs(daily)}</div>
+        <div style="font-size:22px;font-weight:800;font-family:'DM Mono',monospace;color:${numColor}">${fmtRs(daily)}</div>
       </div>
     </div>`;
   const totalBlock = `
-    <div style="background:rgba(29,158,117,.08);border-radius:6px;padding:14px 18px;border:1px solid rgba(29,158,117,.2);display:flex;justify-content:space-between;align-items:center">
+    <div style="background:#F0FDF4;border-radius:8px;padding:14px 18px;border:1px solid #BBF7D0;display:flex;justify-content:space-between;align-items:center">
       <div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0F6E56;margin-bottom:4px">Combined Daily Earnings</div>
-        <div style="font-size:11px;font-family:'DM Mono',monospace;color:#475569">MF ${fmtRs(d.mf)} + FD ${fmtRs(d.fd)}</div>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:4px">Combined Daily Earnings</div>
+        <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">MF ${fmtRs(d.mf)} + FD ${fmtRs(d.fd)}</div>
       </div>
-      <div style="font-size:28px;font-weight:800;font-family:'DM Mono',monospace;color:#5DCAA5">${fmtRs(d.total)}</div>
+      <div style="font-size:28px;font-weight:800;font-family:'DM Mono',monospace;color:var(--green)">${fmtRs(d.total)}</div>
     </div>`;
   document.getElementById('dailyBody').innerHTML =
-    row('Mutual Funds', d.mfVal, d.mfXirr, d.mfVal, d.mf, '#86EFAC') +
-    row('Fixed Deposits', d.fdVal, d.fdXirr, d.fdVal, d.fd, '#93C5FD') +
+    row('Mutual Funds',    d.mfVal, d.mfXirr, d.mfVal, d.mf, '#1447A6', '#1447A6') +
+    row('Fixed Deposits',  d.fdVal, d.fdXirr, d.fdVal, d.fd, '#7C3AED', '#7C3AED') +
     totalBlock;
 }
 function closeDailyModal() {
